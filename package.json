@@ -1,0 +1,25 @@
+{
+  "name": "sports_amigos",
+  "version": "1.0.0",
+  "description": "Sports Amigos betting App",
+  "main": "index.js",
+  "type":"module",
+  "scripts": {
+    "start": "nodemon server.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author":"Fabian Soto, Rowel Almuete, Diego, Efren",
+  "license": "ISC",
+  "devDependencies": {
+    "dotenv": "^16.0.3",
+    "nodemon": "^2.0.21"
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "debug": "^4.3.4",
+    "ejs": "^3.1.8",
+    "express": "^4.18.2",
+    "mongoose": "^7.0.0",
+    "path": "^0.12.7"
+  }
+}
