@@ -1,7 +1,7 @@
-import { Schema, model } from 'mongoose';
+import mongoose, { Schema, model } from 'mongoose';
 
 //many to many
-const userLeagueSchema = new mongoose.Schema({
+const userLeagueSchema = new Schema({
     user: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'User',
@@ -21,3 +21,7 @@ const userLeagueSchema = new mongoose.Schema({
       default: 0,
     },
   });
+
+  const UserLeague = model('UserLeague', userLeagueSchema);
+
+export default UserLeague;
