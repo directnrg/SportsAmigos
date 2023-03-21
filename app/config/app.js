@@ -7,36 +7,36 @@ const { connect, connection } = mongoose;
 import dotenv from 'dotenv';
 
 //app
-const app = express()
+const app = express();
 
 //environment variables
 dotenv.config();
 
 connect(process.env.APP_DATABASE_URL, {
-    useNewUrlParser: true
-})
-const db = connection
-db.on('error', (error) => console.error(error))
-db.once('open', () => console.log('Connected to MongoDB Atlas'))
+  useNewUrlParser: true,
+});
+const db = connection;
+db.on('error', (error) => console.error(error));
+db.once('open', () => console.log('Connected to MongoDB Atlas'));
 
-app.use(json())
+app.use(json());
 app.use(cors());
 
 //construct absolute path
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
-const viewsPath = resolve(__dirname, '../views')
+const viewsPath = resolve(__dirname, '../views');
 
 // default view engine
 app.set('views', viewsPath);
 app.set('view engine', 'ejs');
 
-
 //routing
-import {userRouter} from '../routes/user.js';
+import { userRouter } from '../routes/user.js';
+import articleRoute from '../routes/articleRoute.js';
 
-app.use('/api/', userRouter)
-
+app.use('/api/', userRouter);
+app.use('/api/article', articleRoute);
 
 //test users autopopulate
 // const arrayUsers =
@@ -197,7 +197,6 @@ app.use('/api/', userRouter)
 //         }
 //     }
 // ]
-
 
 // arrayUsers.forEach(async function (user) {
 
