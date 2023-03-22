@@ -14,6 +14,9 @@ const userSchema = new Schema({
     type: String,
     required: true
   },
+  phone: {
+    type: String,
+  },
   avatar: {
     type: String
   },

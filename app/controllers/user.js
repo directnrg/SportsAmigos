@@ -25,110 +25,91 @@ const showUserByUserName = (req,res) => {
 const addUser = async (req, res) => {
   const {
     fullName,
-    dateOfBirth,
     email,
-    avatar,
-    phone,
-    address,
-    username,
     password,
-    preferredCurrency,
-    bettingPreferences,
-    paymentInformation,
-    termsAndConditions,
+    phone,
+    avatar,
+    date,
+    funds,
+    leagues,
+    wallet,
+    paymentMethods,
   } = req.body;
 
-  if (!fullName || !dateOfBirth || !email || !phone || !username || !password || !preferredCurrency || !termsAndConditions) {
+  if (!fullName || !email || !password) {
     return res.status(400).json({ message: 'Required fields are missing' });
   }
 
-  const user = new User({
-    fullName,
-    dateOfBirth,
-    email,
-    avatar,
-    phone,
-    address,
-    username,
-    password,
-    preferredCurrency,
-    bettingPreferences,
-    paymentInformation,
-    termsAndConditions,
-  });
-
   try {
+    const user = new User({
+      fullName,
+      email,
+      password,
+      phone,
+      avatar,
+      date,
+      funds,
+      leagues,
+      wallet,
+      paymentMethods,
+    });
     const newUser = await user.save();
     res.status(201).json({ message: 'User created successfully', user: newUser });
   } catch (error) {
     if (error.code === 11000) {
-      res.status(400).json({ message: 'Username or email already exists' });
+      res.status(400).json({ message: 'Email already exists' });
     } else {
       res.status(500).json({ message: 'Error creating user', error });
     }
   }
 };
 
-
-
 // Updating One user
 const updateUserById = async (req, res) => {
   const {
     fullName,
-    dateOfBirth,
     email,
-    avatar,
-    phone,
-    address,
-    username,
     password,
-    preferredCurrency,
-    bettingPreferences,
-    paymentInformation,
-    termsAndConditions,
+    avatar,
+    date,
+    funds,
+    leagues,
+    wallet,
+    paymentMethods,
   } = req.body;
 
   if (fullName !== null) {
     res.user.fullName = fullName;
   }
-  if (dateOfBirth !== null) {
-    res.user.dateOfBirth = dateOfBirth;
-  }
   if (email !== null) {
     res.user.email = email;
-  }
-  if (avatar !== null) {
-    res.user.avatar = avatar;
-  }
-  if (phone !== null) {
-    res.user.phone = phone;
-  }
-  if (address !== null) {
-    res.user.address = address;
-  }
-  if (username !== null) {
-    res.user.username = username;
   }
   if (password !== null) {
     res.user.password = password;
   }
-  if (preferredCurrency !== null) {
-    res.user.preferredCurrency = preferredCurrency;
+  if (avatar !== null) {
+    res.user.avatar = avatar;
   }
-  if (bettingPreferences !== null) {
-    res.user.bettingPreferences = bettingPreferences;
+  if (date !== null) {
+    res.user.date = date;
   }
-  if (paymentInformation !== null) {
-    res.user.paymentInformation = paymentInformation;
+  if (funds !== null) {
+    res.user.funds = funds;
   }
-  if (termsAndConditions !== null) {
-    res.user.termsAndConditions = termsAndConditions;
+  if (leagues !== null) {
+    res.user.leagues = leagues;
+  }
+  if (wallet !== null) {
+    res.user.wallet = wallet;
+  }
+  if (paymentMethods !== null) {
+    res.user.paymentMethods = paymentMethods;
   }
 
   try {
     const updatedUser = await res.user.save();
     res.json(updatedUser);
-    console.log("Updated User",updatedUser)
+    console.log("Updated User", updatedUser);
   } catch (err) {
     res.status(400).json({ message: err.message });
   }
