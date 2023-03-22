@@ -34,10 +34,10 @@ app.set('view engine', 'ejs');
 //routing
 import { userRouter } from '../routes/user.js';
 import articleRoute from '../routes/articleRoute.js';
-import myLeagueRoute from '../routes/myLeagueRoute.js'; // Import the new route
+import myLeagueRoute from '../routes/myLeagueRoute.js';
 
 app.use('/api/', userRouter);
 app.use('/api/', articleRoute);
-app.use('/api/', myLeagueRoute); // Add the new route to the middleware stack
+app.use('/api/', myLeagueRoute);
 
 export default app;
