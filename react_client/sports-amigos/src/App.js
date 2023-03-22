@@ -6,12 +6,13 @@ import Nav from 'react-bootstrap/Nav';
 import Container from 'react-bootstrap/Container';
 import Home from './components/Home';
 import SignUp from './components/SignUp';
-import HowToPlay from './components/HowToPlay';
+import HowToPlay from './components/Guides/HowToPlay';
 import Button from 'react-bootstrap/Button';
 import Login from './components/Login';
 import Footer from './components/Footer';
-import LeagueList from './components/LeagueList';
-import MyLeagues from './components/MyLeagues';
+import LeagueList from './components/Leagues/LeagueList';
+import MyLeagues from './components/Leagues/MyLeagues';
+import Article from './components/Guides/Article';
 
 function SportsAmigosApp() {
 
@@ -39,7 +40,7 @@ function SportsAmigosApp() {
           <Navbar.Collapse id="basic-navbar-nav">
             <Nav className="me-auto">
               <Nav.Link as={Link} to="/">Home</Nav.Link>
-              <Nav.Link as={Link}  to="/how-to-play">How To Play</Nav.Link>
+              <Nav.Link as={Link}  to="/guides">Guides</Nav.Link>
               <Nav.Link as={Link}  to="/league-list">League List</Nav.Link>
               <Nav.Link as={Link}  to="/my-leagues">My Leagues</Nav.Link>
               <Button as={Link}  to="/" onClick={loginToggle} >Log Out</Button>{' '}
@@ -53,12 +54,11 @@ function SportsAmigosApp() {
           <Routes>
             <Route index element={<Home/>} />
             <Route path="sign-up" element={<SignUp/>} />   
-            <Route path="/how-to-play" element={<HowToPlay/>} />  
+            <Route path="/guides" element={<HowToPlay/>} />  
+            <Route path="/guides/article/:id" element={<Article/>} /> 
             <Route path="/log-in" element={<Login/>} /> 
             <Route path="/league-list" element={<LeagueList/>} />  
-            <Route path="/my-leagues" element={<MyLeagues/>} /> 
-            
-            
+            <Route path="/my-leagues" element={<MyLeagues/>} />          
             
             {/*Add the route to your component if necessary */}
           </Routes>
@@ -85,7 +85,7 @@ function SportsAmigosApp() {
           <Navbar.Collapse id="basic-navbar-nav">
             <Nav className="me-auto">
               <Nav.Link as={Link} to="/">Home</Nav.Link>
-              <Nav.Link as={Link}  to="/how-to-play">How To Play</Nav.Link>
+              <Nav.Link as={Link}  to="/guides">Guides</Nav.Link>
               <Button as={Link}  to="/sign-up">Sign up</Button>{' '}
               <Button onClick={loginToggle}  >Log in</Button>
               
@@ -99,7 +99,7 @@ function SportsAmigosApp() {
           <Routes>
             <Route index element={<Home/>} />
             <Route path="sign-up" element={<SignUp/>} />   
-            <Route path="/how-to-play" element={<HowToPlay/>} />  
+            <Route path="/guides" element={<HowToPlay/>} />  
             <Route path="/log-in" element={<Login/>} /> 
             
             {/*Add the route to your component if necessary */}
