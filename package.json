@@ -3,12 +3,12 @@
   "version": "1.0.0",
   "description": "Sports Amigos betting App",
   "main": "index.js",
-  "type":"module",
+  "type": "module",
   "scripts": {
     "start": "nodemon server.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author":"Fabian Soto, Rowel Almuete, Diego, Efren",
+  "author": "Fabian Soto, Rowel Almuete, Diego, Efren",
   "license": "ISC",
   "devDependencies": {
     "dotenv": "^16.0.3",
