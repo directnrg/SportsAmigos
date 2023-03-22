@@ -25,44 +25,39 @@ const showUserByUserName = (req,res) => {
 const addUser = async (req, res) => {
   const {
     fullName,
-    dateOfBirth,
     email,
-    avatar,
-    phone,
-    address,
-    username,
     password,
-    preferredCurrency,
-    bettingPreferences,
-    paymentInformation,
-    termsAndConditions,
+    phone,
+    avatar,
+    date,
+    funds,
+    leagues,
+    wallet,
+    paymentMethods,
   } = req.body;
 
-  if (!fullName || !dateOfBirth || !email || !phone || !username || !password || !preferredCurrency || !termsAndConditions) {
+  if (!fullName || !email || !password) {
     return res.status(400).json({ message: 'Required fields are missing' });
   }
 
-  const user = new User({
-    fullName,
-    dateOfBirth,
-    email,
-    avatar,
-    phone,
-    address,
-    username,
-    password,
-    preferredCurrency,
-    bettingPreferences,
-    paymentInformation,
-    termsAndConditions,
-  });
-
   try {
+    const user = new User({
+      fullName,
+      email,
+      password,
+      phone,
+      avatar,
+      date,
+      funds,
+      leagues,
+      wallet,
+      paymentMethods,
+    });
     const newUser = await user.save();
     res.status(201).json({ message: 'User created successfully', user: newUser });
   } catch (error) {
     if (error.code === 11000) {
-      res.status(400).json({ message: 'Username or email already exists' });
+      res.status(400).json({ message: 'Email already exists' });
     } else {
       res.status(500).json({ message: 'Error creating user', error });
     }
@@ -100,33 +95,29 @@ const addNewUser = async (req,res)=>{
 
 
 
-
-
 // Updating One user
 const updateUserById = async (req, res) => {
   const {
     fullName,
-    dateOfBirth,
     email,
+    password,
     avatar,
     phone,
-    address,
-    username,
-    password,
-    preferredCurrency,
-    bettingPreferences,
-    paymentInformation,
-    termsAndConditions,
+    date,
+    funds,
+    leagues,
+    wallet,
+    paymentMethods,
   } = req.body;
 
   if (fullName !== null) {
     res.user.fullName = fullName;
   }
-  if (dateOfBirth !== null) {
-    res.user.dateOfBirth = dateOfBirth;
-  }
   if (email !== null) {
     res.user.email = email;
+  }
+  if (password !== null) {
+    res.user.password = password;
   }
   if (avatar !== null) {
     res.user.avatar = avatar;
@@ -134,32 +125,26 @@ const updateUserById = async (req, res) => {
   if (phone !== null) {
     res.user.phone = phone;
   }
-  if (address !== null) {
-    res.user.address = address;
+  if (date !== null) {
+    res.user.date = date;
   }
-  if (username !== null) {
-    res.user.username = username;
+  if (funds !== null) {
+    res.user.funds = funds;
   }
-  if (password !== null) {
-    res.user.password = password;
+  if (leagues !== null) {
+    res.user.leagues = leagues;
   }
-  if (preferredCurrency !== null) {
-    res.user.preferredCurrency = preferredCurrency;
+  if (wallet !== null) {
+    res.user.wallet = wallet;
   }
-  if (bettingPreferences !== null) {
-    res.user.bettingPreferences = bettingPreferences;
-  }
-  if (paymentInformation !== null) {
-    res.user.paymentInformation = paymentInformation;
-  }
-  if (termsAndConditions !== null) {
-    res.user.termsAndConditions = termsAndConditions;
+  if (paymentMethods !== null) {
+    res.user.paymentMethods = paymentMethods;
   }
 
   try {
     const updatedUser = await res.user.save();
     res.json(updatedUser);
-    console.log("Updated User",updatedUser)
+    console.log("Updated User", updatedUser);
   } catch (err) {
     res.status(400).json({ message: err.message });
   }
