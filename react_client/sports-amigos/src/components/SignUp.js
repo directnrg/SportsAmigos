@@ -25,7 +25,7 @@ export default function SignUp() {
   const lastNameRef = useRef('');
   const emailRef = useRef('');
   const passwordRef = useRef('');
-  const avatarRef = useRef('');
+  
 
   const [errorMsgs, setErrorMsg] =  useState([]);
 
@@ -37,7 +37,6 @@ export default function SignUp() {
     const lastName = lastNameRef.current.value;
     const email = emailRef.current.value;
     const password = passwordRef.current.value;
-    const avatar = avatarRef.current.value;
     console.log("On Submit", errorMsgs)
     
 
@@ -61,10 +60,7 @@ export default function SignUp() {
       canPost = false;
     }
 
-    if (!validation.path.test(avatar)){
-      valErrors.push('Avatar should be a directory file path')
-      canPost = false;
-    }
+  
 
     
 
@@ -75,8 +71,7 @@ export default function SignUp() {
         const newUser = {
           fullName: `${firstName} ${lastName}`,
           email: email,
-          password:password,
-          avatar:avatar
+          password:password
 
         }
         
@@ -150,11 +145,7 @@ export default function SignUp() {
 
           </MDBRow>
 
-          <MDBRow>
-            <MDBCol col='6'>
-            <MDBInput ref={avatarRef} wrapperClass='mb-4' label='Avatar' id='avatar' type='text' />
-            </MDBCol>
-          </MDBRow>
+    
 
           <MDBBtn className='w-100 mb-4' size='md' onClick={onsubmit} >sign up</MDBBtn>
 

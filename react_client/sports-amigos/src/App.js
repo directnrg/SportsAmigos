@@ -89,7 +89,8 @@ function SportsAmigosApp() {
             <Nav.Link as={Link}  to="/how-to-play">HowToPlay</Nav.Link>
             <Nav.Link as={Link}  to="/league-standings">League Standings</Nav.Link>
             <Button as={Link}  to="/sign-up">Sign up</Button>{' '}
-            <Button as={Link}  to="/log-in">Log in</Button>{' '}
+            <Button as={Link}  to="/log-in" onClick={loginToggle}>Log in</Button>{' '}
+            
            
           </Nav>
         </Navbar.Collapse>
@@ -106,6 +107,8 @@ function SportsAmigosApp() {
           
           {/*Add the route to your component if necessary */}
         </Routes>
+
+        <Footer></Footer>
       </div>
       </>
 
