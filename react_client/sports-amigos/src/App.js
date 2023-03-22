@@ -9,20 +9,11 @@ import HowToPlay from './components/HowToPlay';
 import PlayerEntrance from './components/PlayerEntrance';
 import Button from 'react-bootstrap/Button';
 import Login from './components/Login';
-import { Helmet } from 'react-helmet';
 
 function SportsAmigosApp() {
   return (
     
     <>
-
-<Helmet>
-      <script
-    type="module"
-    src="https://widgets.api-sports.io/2.0.3/widgets.js">
-</script>
-      </Helmet>
-    
     <Navbar bg="light" expand="lg">
       <Container>
         <Navbar.Brand  as={Link} to="/">Sports Amigos</Navbar.Brand>

@@ -4,6 +4,7 @@ import Table from 'react-bootstrap/Table';
 
 export default function PlayerEntrance() {
     const [data, setData] = useState([]);
+    const [weeklyPool, setWeeklyPool] = useState([]);
     const apiUrl = "https://v3.football.api-sports.io/fixtures?league=262&season=2022&round=Clausura - 13&timezone=America/Toronto";
     useEffect(() => {
       const fetchData = async () => {
