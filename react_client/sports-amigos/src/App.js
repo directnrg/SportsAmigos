@@ -6,12 +6,13 @@ import Nav from 'react-bootstrap/Nav';
 import Container from 'react-bootstrap/Container';
 import Home from './components/Home';
 import SignUp from './components/SignUp';
-import HowToPlay from './components/HowToPlay';
+import HowToPlay from './components/Guides/HowToPlay';
 import Button from 'react-bootstrap/Button';
 import Login from './components/Login';
 import Footer from './components/Footer';
 import LeagueList from './components/Leagues/LeagueList';
 import MyLeagues from './components/Leagues/MyLeagues';
+import LeagueStandings from './components/Leagues/LeagueStandings';
 import Article from './components/Guides/Article';
 
 function SportsAmigosApp() {
@@ -86,6 +87,7 @@ function SportsAmigosApp() {
           <Nav className="me-auto">
             <Nav.Link as={Link} to="/">Home</Nav.Link>
             <Nav.Link as={Link}  to="/how-to-play">HowToPlay</Nav.Link>
+            <Nav.Link as={Link}  to="/league-standings">League Standings</Nav.Link>
             <Button as={Link}  to="/sign-up">Sign up</Button>{' '}
             <Button as={Link}  to="/log-in">Log in</Button>{' '}
            
@@ -98,7 +100,8 @@ function SportsAmigosApp() {
         <Routes>
           <Route index element={<Home/>} />
           <Route path="sign-up" element={<SignUp/>} />   
-          <Route path="/how-to-play" element={<HowToPlay/>} />  
+          <Route path="/how-to-play" element={<HowToPlay/>} /> 
+          <Route path="/league-standings" element={<LeagueStandings/>} /> 
           <Route path="/log-in" element={<Login/>} /> 
           
           {/*Add the route to your component if necessary */}
