@@ -1,0 +1,67 @@
+.carousel-container {
+    width: 90%;
+    margin: auto;
+  }
+
+.slick-arrow.custom-prev {
+  color: #000; /* Change the color of the left arrow to black */
+  left: -50px; /* Position the left arrow 50px from the left edge of the carousel */
+}
+
+.slick-arrow.custom-next {
+  color: #000; /* Change the color of the right arrow to black */
+  right: -50px; /* Position the right arrow 50px from the right edge of the carousel */
+}
+
+.slick-slide:last-child {
+    margin-right: 0;
+}
+
+.slick-prev:before,
+.slick-next:before {
+  color: black;
+}
+
+.slick-prev {
+    left:-35px;
+    width: 30px;
+    height: 30px;
+}
+.slick-next {
+    right: -35px;
+    width: 30px;
+    height: 30px;
+}
+
+.card {
+    height: 100%;
+    border-radius: 8px;
+    overflow: hidden;
+    padding: 20px;
+    box-sizing: border-box;
+    margin: 0 10px;
+    background-color: #fff;
+    border-radius: 5px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+.card-body {
+    padding: 16px;
+}
+
+.card-title {
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin-bottom: 8px;
+}
+
+.card-text {
+    font-size: 1rem;
+    color: #666;
+    line-height: 1.5;
+}
+
+
+.read-more-btn {
+    display: inline;
+}
