@@ -19,7 +19,7 @@ export default function SignUp() {
 
   const navigate = useNavigate();
 
-  const URL = 'http://localhost:3000'//'https://catfact.ninja/fact' // 'http://localhost:3000/';
+  const URL = 'http://localhost:3100/api/user'//'https://catfact.ninja/fact' // 'http://localhost:3000/';
   //Using Refs
   const firstNameRef = useRef('');
   const lastNameRef = useRef('');
@@ -64,7 +64,7 @@ export default function SignUp() {
       canPost = false;
     }
 
-    setErrorMsg(valErrors)
+    
 
 
 
@@ -77,9 +77,23 @@ export default function SignUp() {
           avatar:avatar
 
         }
-        const response = await httpService.post(URL+'/user',newUser);
-        console.log(response)
-        navigate('/log-in')
+        console.log('newUser:', newUser)
+        const response = await httpService.post(URL,newUser);
+        console.log('response:',response.response.status)
+        console.log('response:',response.response.data)
+
+        if(response.response.status ===400|500){
+          valErrors.push(response.response.data.message)
+        } else {
+          navigate('/log-in')
+
+        }
+
+
+
+       
+        
+        
 
       }
 
@@ -89,11 +103,14 @@ export default function SignUp() {
       
       
     } else console.log(valErrors)
+
+    setErrorMsg(valErrors)
     
 
   }
 
   useEffect(()=>{
+    console.log(URL+'/user')
     console.log(errorMsgs)
   },);
 

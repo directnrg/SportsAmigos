@@ -3,11 +3,7 @@ import axios from 'axios';
 
 const get = async (path, obj)=>{
     try{
-        const {data} = await axios.get(path,obj, {
-            headers: {
-              'Content-Type': 'application/json'
-            }
-          })
+        const {data} = await axios.get(path,obj)
         return data; 
 
     }
@@ -17,11 +13,8 @@ const get = async (path, obj)=>{
 
 const post = async (path, obj)=>{
     try{
-        const {data} = await axios.post('/user', document.querySelector('#my-form'), {
-            headers: {
-              'Content-Type': 'application/json'
-            }
-          })
+        const {data} = await axios.post(path, obj)
+        return data;
 
     }
 
