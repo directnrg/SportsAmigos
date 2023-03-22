@@ -34,8 +34,10 @@ app.set('view engine', 'ejs');
 //routing
 import { userRouter } from '../routes/user.js';
 import articleRoute from '../routes/articleRoute.js';
+import myLeagueRoute from '../routes/myLeagueRoute.js';
 
 app.use('/api/', userRouter);
 app.use('/api/', articleRoute);
+app.use('/api/', myLeagueRoute);
 
 export default app;
