@@ -12,7 +12,6 @@ userRouter.get('/user/uname/:username', getByUserName, showUserByUserName)
 //mongodb id
 userRouter.route('/user/:id')
 .get(getUser, showUserById)
-.post(addUser)
 .patch(getUser, updateUserById)
 .delete(deleteUserById)
 
