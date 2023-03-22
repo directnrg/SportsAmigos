@@ -7,17 +7,17 @@ export default function MyLeagues() {
   const [leaguesList, setleagueList] = useState([]);
 
   useEffect(
-    () =>
+    () => {
       axios
         .get("http://localhost:3100/api/leagues/")
-        .then((res) => {
-          setleagueList(res.data);
-          //debug
-          console.log(res.data);
-        })
-        .catch((err) => console.error(err)),
-    []
-  );
+      .then((res) => {
+        setleagueList(res.data);
+        //debug
+        console.log(res.data);
+      })
+      .catch((err) => console.error(err))
+    }
+    , []);
 
   const sampleLeagueList = {
     _id: "60a43c5a5f93ec5c5bb5d5fe",

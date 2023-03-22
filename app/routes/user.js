@@ -1,5 +1,5 @@
 import { Router } from 'express'
-import { getAllUsers, showUserByUserName, showUserById, addUser, updateUserById, deleteUserById } from '../controllers/user.js'
+import { getAllUsers, showUserByUserName, showUserById, addUser, updateUserById, deleteUserById,addNewUser } from '../controllers/user.js'
 import { getUser, getByUserName } from '../middleware/user.js'
 
 const userRouter = Router()
@@ -16,5 +16,8 @@ userRouter.route('/user/:id')
 .get(getUser, showUserById)
 .patch(getUser, updateUserById)
 .delete(deleteUserById)
+
+
+userRouter.route('/user').post(addUser);
 
 export {userRouter};
