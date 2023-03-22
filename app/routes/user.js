@@ -9,7 +9,7 @@ userRouter.get('/users', getAllUsers);
 
 userRouter.get('/user/uname/:username', getByUserName, showUserByUserName)
 
-userRouter.post('/user', addUser)
+//userRouter.post('/user', addUser)
 //base path for user RUD
 //mongodb id
 userRouter.route('/user/:id')
