@@ -7,9 +7,9 @@ export default function HowToPlay() {
     <div>HowToPlay</div>
     {/*TODO - ADD tutorial of the app here... terms used, images, gifs, etc */}
     <div>Articles</div>
-    <div>
+    
     <ArticlesCarousel/>
-    </div>
+
     </>
   )
 }
