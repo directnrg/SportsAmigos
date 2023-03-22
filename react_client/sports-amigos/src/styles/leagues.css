@@ -1,0 +1,27 @@
+.league-modal, .overlay {
+    width: 100vw;
+    height: 100vw;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    position: fixed;
+  }
+  
+  .overlay {
+    background: rgba(0, 0, 0, 0.5);
+  }
+
+  .league-modal-content {
+    position: fixed;
+    top: 40%;
+    left: 50%;
+    width: 600px;
+    height: auto;
+    transform: translate(-50%,-50%);
+    background-color: white;
+    border-radius: 25px;
+    padding: 20px;
+    border-style: solid;
+    border-width: 1px;
+  }
