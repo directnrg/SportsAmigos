@@ -13,6 +13,10 @@ const leagueSchema = new Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Game',
     }],
+    isPrivate: {
+        type: Boolean,
+        default: false,
+    },
 });
 
 const League = model('League', leagueSchema);
