@@ -6,13 +6,14 @@ const userRouter = Router()
 
 userRouter.get('/users', getAllUsers);
 //user Name property
+
 userRouter.get('/user/uname/:username', getByUserName, showUserByUserName)
 
-//base path for user CRUD
+userRouter.post('/user', addUser)
+//base path for user RUD
 //mongodb id
 userRouter.route('/user/:id')
 .get(getUser, showUserById)
-.post(addUser)
 .patch(getUser, updateUserById)
 .delete(deleteUserById)
 
