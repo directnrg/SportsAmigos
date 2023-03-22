@@ -29,6 +29,10 @@ const userSchema = new Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'League'
   }],
+  wallet: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Wallet'
+  },
   paymentMethods: {
     type: [String],
     default: []
