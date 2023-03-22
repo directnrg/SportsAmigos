@@ -27,7 +27,7 @@ export default function SignUp() {
   const passwordRef = useRef('');
   const avatarRef = useRef('');
 
-  const [errorMsgs, setErrorMsg] = useState([]);
+  const [errorMsgs, setErrorMsg] =  useState([]);
 
   //Callbacks
   const onsubmit = async()=>{
@@ -38,6 +38,8 @@ export default function SignUp() {
     const email = emailRef.current.value;
     const password = passwordRef.current.value;
     const avatar = avatarRef.current.value;
+    console.log("On Submit", errorMsgs)
+    
 
     //Validating
     if(!validation.name.test(firstName)){
@@ -77,28 +79,24 @@ export default function SignUp() {
           avatar:avatar
 
         }
-        console.log('newUser:', newUser)
+        
         const response = await httpService.post(URL,newUser);
-        console.log('response:',response.response.status)
-        console.log('response:',response.response.data)
+       
+        //navigate('/log-in')
 
-        if(response.response.status ===400|500){
+        if(response.response && response.response.status===400|500){
+          console.log('response status:',response.response.status)
+          console.log('response data:',response.response.data)
           valErrors.push(response.response.data.message)
         } else {
+          alert('User Created')
           navigate('/log-in')
-
         }
-
-
-
-       
-        
-        
 
       }
 
       catch(e){
-        valErrors.push(e.msg)
+        console.log(e.message)
       }
       
       
@@ -114,6 +112,10 @@ export default function SignUp() {
     console.log(errorMsgs)
   },);
 
+  useEffect(()=>{
+    setErrorMsg([])
+  },[])
+
 
   return (
     <MDBContainer fluid>
@@ -127,10 +129,10 @@ export default function SignUp() {
 
           <MDBRow>
             <MDBCol col='6'>
-              <MDBInput ref= {firstNameRef} wrapperClass='mb-4' label='Full name' id='First name' type='text' />
+              <MDBInput ref= {firstNameRef} wrapperClass='mb-4' label='First name' id='First name' type='text' />
             </MDBCol>
             <MDBCol col='6'>
-              <MDBInput ref= {lastNameRef} wrapperClass='mb-4' label='Full name' id='Last name' type='text' />
+              <MDBInput ref= {lastNameRef} wrapperClass='mb-4' label='Last name' id='Last name' type='text' />
             </MDBCol>
 
           </MDBRow>

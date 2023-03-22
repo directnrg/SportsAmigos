@@ -81,7 +81,7 @@ const addNewUser = async (req,res)=>{
 
     catch (error)
     {
-      //console.log(error.message)
+      console.log(error.message)
       if (error.code === 11000) {
         res.status(400).json({ message:error.message});
       } else {

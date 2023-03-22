@@ -1,5 +1,5 @@
 import { Router } from 'express'
-import { getAllUsers, showUserByUserName, showUserById, addUser, updateUserById, deleteUserById, addNewUser } from '../controllers/user.js'
+import { getAllUsers, showUserByUserName, showUserById, addUser, updateUserById, deleteUserById,addNewUser } from '../controllers/user.js'
 import { getUser, getByUserName } from '../middleware/user.js'
 
 const userRouter = Router()
@@ -16,6 +16,6 @@ userRouter.route('/user/:id')
 .delete(deleteUserById)
 
 
-userRouter.route('/user').post(addNewUser);
+userRouter.route('/user').post(addUser);
 
 export {userRouter};
