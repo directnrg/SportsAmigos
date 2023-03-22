@@ -71,6 +71,7 @@ const updateUserById = async (req, res) => {
     email,
     password,
     avatar,
+    phone,
     date,
     funds,
     leagues,
@@ -89,6 +90,9 @@ const updateUserById = async (req, res) => {
   }
   if (avatar !== null) {
     res.user.avatar = avatar;
+  }
+  if (phone !== null) {
+    res.user.phone = phone;
   }
   if (date !== null) {
     res.user.date = date;
