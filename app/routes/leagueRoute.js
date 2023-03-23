@@ -8,22 +8,22 @@ import {
 } from '../controllers/leagueController.js';
 import { checkLeagueAdmin } from '../middleware/checkLeagueAdmin.js';
 
-const router = express.Router();
+const leagueRouter = express.Router();
 
-router.get('/leagues', getLeagues);
-router.post('/league', createLeague);
-router.get('/league/:leagueId', getLeague);
-//route that require middleware to check permission first 
-//router.put('/league/:leagueId', checkLeagueAdmin, updateLeague); 
-//router.delete('/league/:leagueId', checkLeagueAdmin, deleteLeague);
+leagueRouter.get('/leagues', getLeagues);
+leagueRouter.post('/league', createLeague);
+leagueRouter.get('/league/:leagueId', getLeague);
+//leagueRouter that require middleware to check permission first 
+//leagueRouter.put('/league/:leagueId', checkLeagueAdmin, updateLeague); 
+//leagueRouter.delete('/league/:leagueId', checkLeagueAdmin, deleteLeague);
 
 //bypassing middleware 
-router.put('/league/:leagueId', updateLeague);
-router.delete('/league/:leagueId', deleteLeague);
+leagueRouter.put('/league/:leagueId', updateLeague);
+leagueRouter.delete('/league/:leagueId', deleteLeague);
 
 // Add a catch-all route to return a 404 error for /api/article without an ID
-router.all('/league', (req, res) => {
+leagueRouter.all('/league', (req, res) => {
   res.status(404).json({ error: 'API Not Found' });
 });
 
-export default router;
+export default leagueRouter;
