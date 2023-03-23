@@ -4,7 +4,6 @@ const gameSchema = new Schema({
   league: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'League',
-    required: true,
   },
   homeTeam: {
     type: String,

@@ -46,7 +46,7 @@ export const updateArticle = async (req, res) => {
     const updatedArticle = await Article.findByIdAndUpdate(
       req.params.id,
       { $set: req.body, updatedAt: Date.now() },
-      { new: true }
+      { new: true, runValidators: true }
     );
     res.json(updatedArticle);
   } catch (err) {

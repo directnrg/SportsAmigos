@@ -40,15 +40,23 @@ import Guess from '../models/guess.js';
 import Game from '../models/game.js';
 
 //routing
-import { userRouter } from '../routes/user.js';
+import userRouter from '../routes/user.js';
 import articleRoute from '../routes/articleRoute.js';
 import myLeagueRoute from '../routes/myLeagueRoute.js';
 import leagueRoute from '../routes/leagueRoute.js';
+import walletRouter from '../routes/walletRoute.js';
+import gameRouter from '../routes/gameRoute.js';
+import guessRouter from '../routes/guessRoute.js';
+import userLeagueRouter from '../routes/userLeagueRoute.js';
 
 app.use('/api/', userRouter);
 app.use('/api/', articleRoute);
 app.use('/api/', myLeagueRoute);
 app.use('/api/', leagueRoute);
+app.use('/api/', gameRouter);
+app.use('/api/', walletRouter);
+app.use('/api/', guessRouter);
+app.use('/api/', userLeagueRouter);
 
 
 export default app;

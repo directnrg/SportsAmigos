@@ -20,4 +20,4 @@ userRouter.route('/user/:id')
 
 userRouter.route('/user').post(addUser);
 
-export {userRouter};
+export default userRouter;

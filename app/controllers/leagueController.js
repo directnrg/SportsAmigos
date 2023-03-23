@@ -44,7 +44,7 @@ export const updateLeague = async (req, res) => {
     const league = await League.findByIdAndUpdate(
       leagueId,
       updatedLeagueData,
-      { new: true }
+      { new: true, runValidators: true }
     );
 
     if (!league) {
