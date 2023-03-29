@@ -89,7 +89,8 @@ function SportsAmigosApp() {
               <Button as={Link}  to="/sign-up">Sign up</Button>{' '}
               <Button onClick={loginToggle}  >Log in</Button>
               
-             
+              
+           
             </Nav>
           </Navbar.Collapse>
         </Container>
@@ -105,7 +106,9 @@ function SportsAmigosApp() {
             
             {/*Add the route to your component if necessary */}
           </Routes>
-        </div>
+  
+        <Footer></Footer>
+      </div>
   
         <Footer></Footer>
   

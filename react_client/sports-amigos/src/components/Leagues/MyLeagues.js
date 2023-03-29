@@ -1,57 +1,100 @@
 import React, { useState, useEffect } from "react";
 import LeagueModal from "./LeagueModal";
-import axios from "axios";
+import { httpService } from "../../services/service";
+import Table from 'react-bootstrap/Table';
+import Container from 'react-bootstrap/Container';
+
 
 export default function MyLeagues() {
   const [showLeagueModal, setShowLeagueModal] = useState(false);
-  const [leaguesList, setleagueList] = useState([]);
+  const [leaguesList, setLeagueList] = useState([]);
+  const [selectedLeague, setSelectedLeague] = useState({});
 
-  useEffect(
-    () => {
-      axios
-        .get("http://localhost:3100/api/leagues/")
-      .then((res) => {
-        setleagueList(res.data);
-        //debug
-        console.log(res.data);
-      })
-      .catch((err) => console.error(err))
+  const URL = 'http://localhost:3100/api/leagues'
+
+  const getLeagues = async ()=>{
+    try{
+      const res = await httpService.get(URL,{});
+    console.log('Leagues:',res)
+    setLeagueList(res)
+
     }
+    catch(e){
+      console.log(e.message)
+    }
+    
+  }
+
+  useEffect(  () => {
+   
+
+      getLeagues();
+
+      
+
+    }
+
+    
     , []);
 
-    //sample data
-  // const sampleLeagueList = {
-  //   _id: "60a43c5a5f93ec5c5bb5d5fe",
-  //   users: ["60a43c5a5f93ec5c5bb5d5ff", "60a43c5a5f93ec5c5bb5d600"],
-  //   guesses: [
-  //     "60a43c5a5f93ec5c5bb5d601",
-  //     "60a43c5a5f93ec5c5bb5d602",
-  //     "60a43c5a5f93ec5c5bb5d603",
-  //   ],
-  //   games: ["60a43c5a5f93ec5c5bb5d604", "60a43c5a5f93ec5c5bb5d605"],
-  // };
+    useEffect(()=>{
+      console.log("League List:",leaguesList)
+    })
+
+  const onLeagueClick=(league)=>{
+    setSelectedLeague(league)
+    toggleLeagueModal();
+  }
 
   //toggle function
   const toggleLeagueModal = () => {
     setShowLeagueModal(!showLeagueModal);
   };
 
+
   return (
-    <>
-      <div>MyLeagues</div>
-      {/**TODO - button should be per league */}
-      {leaguesList.length > 0 && (
-        leaguesList.map((league) => (
-          <div key={league._id}>
-            <button onClick={toggleLeagueModal}>Details</button>
-            {showLeagueModal && (
-              <LeagueModal
-                leagueModalToggle={setShowLeagueModal}
-                leagueId={league._id}
-              />
-            )}
-          </div>
-        )))}
-    </>
+    <Container>
+        <Table striped bordered hover variant="dark" className='text-center'>
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>Type</th>
+                <th>Players</th>
+              </tr>
+            </thead>
+            <tbody>
+            { leaguesList.map((league, index)=>{
+              return(
+              <tr onClick={()=>onLeagueClick(league)} key={index}>
+                <td>{league.name}</td>
+                <td>{league.isPrivate? 'private': 'public'}</td>
+                <td>{league.users.length>0?league.users.length:0}</td>
+              </tr>)
+            })}
+
+            </tbody>
+
+            
+          </Table>
+    </Container>
   );
+
+  // return (
+  //   <>
+  //     <div>MyLeagues</div>
+  //     {/**TODO - button should be per league */}
+  //     {sampleLeagueList.length > 0 && (
+  //       sampleLeagueList.map((league) => (
+  //         <div key={league._id}>
+  //           <button onClick={toggleLeagueModal}>Details</button>
+  //           {showLeagueModal && (
+  //             <LeagueModal
+  //               leagueModalToggle={setShowLeagueModal}
+  //               leagueId={league._id}
+  //             />
+  //           )}
+  //         </div>
+  //       )))}
+  //   </>
+  // );
 }
