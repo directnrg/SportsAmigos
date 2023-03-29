@@ -1,5 +1,5 @@
 import express from 'express';
-import {createUserLeague, getAllUserLeagues, getUserLeagueById, updateUserLeague, deleteUserLeague} from './controllers/userLeagueController.mjs';
+import {createUserLeague, getAllUserLeagues, getUserLeagueById, updateUserLeague, deleteUserLeague} from '../controllers/userLeagueController.js';
 
 const userLeagueRouter = express.Router();
 

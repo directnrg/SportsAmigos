@@ -1,12 +1,12 @@
-import express from 'express';
-import { getGuesses, getGuessById, createGuess, updateGuess, deleteGuess } from '../controllers/guessController.js'
+import { Router } from 'express';
+import { getAllGuesses, getGuessById, createGuess, updateGuess, deleteGuess } from '../controllers/guessController.js'
 
-const guessRouter = express().router()
+const guessRouter = Router()
 
 // Create a new guess
 guessRouter.post('/guess', createGuess);
 // Get all guesses
-guessRouter.get('/guesses', getGuesses);
+guessRouter.get('/guesses', getAllGuesses);
 
 // Get a single guess by id
 guessRouter.get('/guess/:guessId', getGuessById);

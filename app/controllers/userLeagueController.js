@@ -1,4 +1,4 @@
-import UserLeague from '../models/UserLeague.mjs';
+import UserLeague from '../models/UserLeague.js';
 
 export const createUserLeague = async (req, res) => {
   try {
