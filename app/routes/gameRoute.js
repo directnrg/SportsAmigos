@@ -1,7 +1,7 @@
 import express from 'express';
 import {
   getGames,
-  updateGames,
+  updateGameResultManually,
   deleteGame,
 } from '../controllers/gameController.js';
 import { getGameById } from '../middleware/gameMiddleWare.js';
@@ -14,7 +14,7 @@ gameRouter.get('/games', getGames);
 gameRouter.get('/game/:gameId', getGameById);
 
 // Update a game
-gameRouter.put('/game/:gameId', getGameById, updateGames);
+gameRouter.patch('/game/:gameId', getGameById, updateGameResultManually);
 
 // Delete a game
 gameRouter.delete('/game/:gameId', getGameById, deleteGame);
