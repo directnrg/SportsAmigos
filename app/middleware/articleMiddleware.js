@@ -1,6 +1,5 @@
 import Article from '../models/Article.js';
 
-//TODO - check if is really used - current approach for articles seems to not be using this
 export const findArticleById = async (req, res, next) => {
   let article;
   try {
