@@ -16,8 +16,8 @@ export default function LeagueStandings() {
       const fetchnextWeek = async () => {
         axios.get(nextWeekApi, {
           headers: {
-          "x-rapidapi-host": "v3.football.api-sports.io",
-		      "x-rapidapi-key": "5a5e62422ae2bb5cc2b8485fdb968a64"
+          "x-rapidapi-host": process.env.REACT_APP_API_SPORTS_HOST,
+		      "x-rapidapi-key": process.env.REACT_APP_API_SPORTS_KEY
           }
           }).then(result => {
             console.log('result.nextWeek:',result.data)

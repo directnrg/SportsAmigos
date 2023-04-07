@@ -16,10 +16,7 @@ const userLeagueSchema = new Schema({
       type: Number,
       default: 0,
     },
-    betAmount: {
-      type: Number,
-      default: 0,
-    },
+ 
   });
 
   const UserLeague = model('UserLeague', userLeagueSchema);

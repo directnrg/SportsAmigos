@@ -30,10 +30,7 @@ const addUser = async (req, res) => {
     phone,
     avatar,
     date,
-    funds,
     leagues,
-    wallet,
-    paymentMethods,
   } = req.body;
 
   if (!fullName || !email || !password) {
@@ -48,10 +45,7 @@ const addUser = async (req, res) => {
       phone,
       avatar,
       date,
-      funds,
       leagues,
-      wallet,
-      paymentMethods,
     });
     const newUser = await user.save();
     res.status(201).json({ message: 'User created successfully', user: newUser });

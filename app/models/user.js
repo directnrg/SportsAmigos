@@ -24,24 +24,11 @@ const userSchema = new Schema({
     type: Date,
     default: Date.now
   },
-  funds: {
-    type: Number,
-    default: 0
-  },
   leagues: [{
     type: mongoose.Schema.Types.ObjectId,
     ref: 'League',
     default:null
   }],
-  wallet: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'Wallet',
-    default:null
-  },
-  paymentMethods: {
-    type: [String],
-    default: []
-  },
 });
 
 const User = model('User', userSchema);
