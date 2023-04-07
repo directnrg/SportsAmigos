@@ -1,6 +1,6 @@
 import Game from "../models/game.js"
 
-// Get a single game by id
+// Get a single game by id - mongodb id
 export const getGameById = async (req, res, next) => {
   let game;
   try {

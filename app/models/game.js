@@ -1,9 +1,10 @@
 import mongoose, { Schema, model } from 'mongoose';
 
 const gameSchema = new Schema({
-  league: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'League',
+  //fixture Id will be the fixture id retrieved from the api
+  fixtureId:  {
+    type: String,
+    required: true
   },
   homeTeam: {
     type: String,

@@ -13,8 +13,8 @@ export const getAllArticles = async (req, res) => {
 // Get an article by ID
 export const getArticleById = async (req, res) => {
   try {
-    const article = await Article.findById(req.params.id);
-    res.json(article);
+    const article = req.article;
+    res.status(200).json(article);
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
@@ -43,8 +43,8 @@ export const createArticle = async (req, res) => {
 // Update an article by ID
 export const updateArticle = async (req, res) => {
   try {
-    const updatedArticle = await Article.findByIdAndUpdate(
-      req.params.id,
+    const updatedArticle = await Article.findOneAndUpdate(
+      {_id: req.article._id},
       { $set: req.body, updatedAt: Date.now() },
       { new: true, runValidators: true }
     );
@@ -57,8 +57,8 @@ export const updateArticle = async (req, res) => {
 // Delete an article by ID
 export const deleteArticle = async (req, res) => {
   try {
-    const deletedArticle = await Article.findByIdAndDelete(req.params.id);
-    res.json(deletedArticle);
+    const deletedArticle = await Article.deleteOne({ _id: req.article._id});
+    res.status(200).json(deletedArticle);
   } catch (err) {
     res.status(500).json({ message: err.message });
   }

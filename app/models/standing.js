@@ -1,7 +1,7 @@
 import mongoose, { Schema, model } from 'mongoose';
 
 //many to many
-const userLeagueSchema = new Schema({
+const standingSchema = new Schema({
     user: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'User',
@@ -16,12 +16,9 @@ const userLeagueSchema = new Schema({
       type: Number,
       default: 0,
     },
-    betAmount: {
-      type: Number,
-      default: 0,
-    },
+ 
   });
 
-  const UserLeague = model('UserLeague', userLeagueSchema);
+  const Standing = model('Standing', standingSchema);
 
-export default UserLeague;
+export default Standing;
