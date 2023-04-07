@@ -1,4 +1,6 @@
 import Guess from '../models/guess.js'
+import Game from '../models/game.js';
+import Standing from '../models/standing.js';
 
 export const createGuess = async (req, res) => {
     try {
@@ -63,4 +65,46 @@ export const deleteGuess = async (req, res) => {
         res.status(400).json({ message: 'Error deleting guess', error });
     }
 }
+
+//function to calculate the guesses done in a week
+export const updateGuessPoints = async () => {
+    try {
+        // Get the start and end dates for the current week
+        const currentDate = new Date();
+        const startOfWeek = new Date(currentDate);
+        startOfWeek.setDate(currentDate.getDate() - currentDate.getDay());
+        const endOfWeek = new Date(startOfWeek);
+        endOfWeek.setDate(startOfWeek.getDate() + 7);
+
+        // Find all guesses made in the current week
+        const guesses = await Guess.find({
+            createdAt: { $gte: startOfWeek, $lte: endOfWeek },
+        })
+            .populate('user')
+            .populate('game');
+
+        for (const guess of guesses) {
+            if (guess.guess === guess.game.result) {
+                // Find the Standing record for the user in the league
+                let standing = await Standing.findOne({
+                    user: guess.user._id,
+                    league: guess.game.league,
+                });
+                if (!standing) {
+                    standing = new Standing({
+                        user: guess.user._id,
+                        league: guess.game.league,
+                        points: 0
+                    })
+                }
+
+                // Increment the user's points by 1
+                standing.points += 1;
+                await standing.save();
+            }
+        }
+    } catch (error) {
+        console.error('Error updating guess points:', error);
+    }
+};
 
