@@ -33,22 +33,27 @@ const viewsPath = resolve(__dirname, '../views');
 app.set('views', viewsPath);
 app.set('view engine', 'ejs');
 
-// Import the models
-import User from '../models/user.js';
-import League from '../models/league.js';
-import Guess from '../models/guess.js';
-import Game from '../models/game.js';
+
 
 //routing
-import { userRouter } from '../routes/user.js';
+import userRouter from '../routes/user.js';
 import articleRoute from '../routes/articleRoute.js';
 import myLeagueRoute from '../routes/myLeagueRoute.js';
 import leagueRoute from '../routes/leagueRoute.js';
+import gameRouter from '../routes/gameRoute.js';
+import guessRouter from '../routes/guessRoute.js';
+import standingRouter from '../routes/standingRoute.js';
+import apiLeagueRouter from '../routes/apiLeagueRoute.js';
 
-app.use('/api/', userRouter);
-app.use('/api/', articleRoute);
-app.use('/api/', myLeagueRoute);
-app.use('/api/', leagueRoute);
+const apiBase = '/api';
+app.use(apiBase, userRouter);
+app.use(apiBase, articleRoute);
+app.use(apiBase, myLeagueRoute);
+app.use(apiBase, leagueRoute);
+app.use(apiBase, gameRouter);
+app.use(apiBase, guessRouter);
+app.use(apiBase, standingRouter);
+app.use(apiBase, apiLeagueRouter);
 
 
 export default app;

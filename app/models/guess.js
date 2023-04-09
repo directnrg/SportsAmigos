@@ -6,10 +6,6 @@ const guessSchema = new Schema({
     ref: 'User',
     required: true,
   },
-  betamount: {
-    type: Number,
-    required: true,
-  },
   game: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Game',
@@ -21,7 +17,7 @@ const guessSchema = new Schema({
     enum: ['home', 'away', 'tie'],
     default: null,
   },
-  // 0 o 1 points for accuracy
+  // 0 or 1 points for accuracy
   userPoints: {
     type: Number,
     default: 0,

@@ -1,6 +1,10 @@
 import { useState, useEffect } from "react";
 import "../../styles/leagues.css";
 import axios from "axios";
+import Table from 'react-bootstrap/Table';
+import Container from 'react-bootstrap/Container';
+import Row from 'react-bootstrap/Row';
+import Col from 'react-bootstrap/Col';
 
 export default function LeagueModal({ leagueModalToggle, leagueId }) {
   const [league, setLeague] = useState({});
@@ -26,26 +30,22 @@ export default function LeagueModal({ leagueModalToggle, leagueId }) {
         <div onClick={hideModal} className="overlay">
           <div className="league-modal-content">
             <p>MY LEAGUE</p>
-            <table>
+            <Container>
+            <Table>
               <thead>
                 <tr>
                   <th> Name</th>
                   <th> Avatar </th>
-                  <th> Last Name </th>
-                  <th> Program </th>
-                  <th> Email </th>
-                  <th> Address </th>
-                  <th> City </th>
-                  <th> Phone </th>
                   <th> </th>
                   <th> </th>
                 </tr>
               </thead>
               <tr>
-                <td>{league.user.fullName}</td>
-                <td>{league.user.avatar}</td>
+                {/*<td>{league.user.fullName}</td>
+                <td>{league.user.avatar}</td>*/}
               </tr>
-            </table>
+            </Table>
+            </Container>
             <button onClick={hideModal} className="close-modal">
               Close
             </button>

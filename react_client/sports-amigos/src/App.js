@@ -33,8 +33,7 @@ function SportsAmigosApp() {
   if(isLoggedIn){
     return (
     
-      <>
-      
+      <> 
       <Navbar bg="light" expand="lg">
         <Container>
           <Navbar.Brand  as={Link} to="/">Sports Amigos</Navbar.Brand>
@@ -58,8 +57,8 @@ function SportsAmigosApp() {
           <Routes>
             <Route index element={<Home/>} />
             <Route path="sign-up" element={<SignUp/>} />   
-            <Route path="/guides" element={<HowToPlay/>} />  
-            <Route path="/guides/article/:id" element={<Article/>} /> 
+            <Route path="/guides/" element={<HowToPlay />}/>
+            <Route path="/guides/article/:id" element={<Article/>}/>
             <Route path="/log-in" element={<Login/>} /> 
             <Route path="/league-list" element={<LeagueList/>} />  
             <Route path="/my-leagues" element={<MyLeagues/>} />
@@ -112,11 +111,15 @@ function SportsAmigosApp() {
         </Routes>
         <Footer></Footer>
       </div>
-      </>
-
-    
-  );
-}
+  
+        <Footer></Footer>
+  
+       
+        </>
+  
+      
+    );
+  }
 
 }
 

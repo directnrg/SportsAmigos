@@ -6,19 +6,18 @@ import {
   updateArticle,
   deleteArticle,
 } from '../controllers/articleController.js';
-import { findArticleById } from '../middleware/articleMiddleware.js';
 
-const router = express.Router();
+const articleRouter = express.Router();
 
-router.get('/articles', getAllArticles);
-router.get('/article/:id', findArticleById, getArticleById);
-router.post('/article', createArticle);
-router.put('/article/:id', findArticleById, updateArticle);
-router.delete('/article/:id', findArticleById, deleteArticle);
+articleRouter.get('/articles', getAllArticles);
+articleRouter.get('/article/:id', getArticleById);
+articleRouter.post('/article', createArticle);
+articleRouter.put('/article/:id', getArticleById, updateArticle);
+articleRouter.delete('/article/:id', getArticleById, deleteArticle);
 
 // Add a catch-all route to return a 404 error for /api/article without an ID
-router.all('/article', (req, res) => {
-  res.status(404).json({ error: 'Not Found' });
+articleRouter.all('/article', (req, res) => {
+  res.status(404).json({ error: 'Article Not Found' });
 });
 
-export default router;
+export default articleRouter;
