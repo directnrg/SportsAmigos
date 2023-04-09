@@ -14,6 +14,7 @@ import LeagueList from './components/Leagues/LeagueList';
 import MyLeagues from './components/Leagues/MyLeagues';
 import LeagueStandings from './components/Leagues/LeagueStandings';
 import Article from './components/Guides/Article';
+import CreateLeague from './components/Leagues/CreateLeague';
 
 function SportsAmigosApp() {
 
@@ -42,7 +43,9 @@ function SportsAmigosApp() {
             <Nav className="me-auto">
               <Nav.Link as={Link} to="/">Home</Nav.Link>
               <Nav.Link as={Link}  to="/guides">Guides</Nav.Link>
+              <Nav.Link as={Link}  to="/create-league">Create League</Nav.Link>
               <Nav.Link as={Link}  to="/league-list">League List</Nav.Link>
+              <Nav.Link as={Link}  to="/league-standings">League Standings</Nav.Link>
               <Nav.Link as={Link}  to="/my-leagues">My Leagues</Nav.Link>
               <Button as={Link}  to="/" onClick={loginToggle} >Log Out</Button>{' '}
              
@@ -59,7 +62,10 @@ function SportsAmigosApp() {
             <Route path="/guides/article/:id" element={<Article/>} /> 
             <Route path="/log-in" element={<Login/>} /> 
             <Route path="/league-list" element={<LeagueList/>} />  
-            <Route path="/my-leagues" element={<MyLeagues/>} />          
+            <Route path="/my-leagues" element={<MyLeagues/>} />
+            <Route path="/league-standings" element={<LeagueStandings/>} />   
+            <Route path="/create-league" element={<CreateLeague/>} />   
+
             
             {/*Add the route to your component if necessary */}
           </Routes>
@@ -87,9 +93,8 @@ function SportsAmigosApp() {
           <Nav className="me-auto">
             <Nav.Link as={Link} to="/">Home</Nav.Link>
             <Nav.Link as={Link}  to="/how-to-play">HowToPlay</Nav.Link>
-            <Nav.Link as={Link}  to="/league-standings">League Standings</Nav.Link>
             <Button as={Link}  to="/sign-up">Sign up</Button>{' '}
-            <Button as={Link}  to="/log-in">Log in</Button>{' '}
+            <Button as={Link}  to="/log-in" onClick={loginToggle} >Log in</Button>{' '}
            
           </Nav>
         </Navbar.Collapse>
@@ -101,11 +106,11 @@ function SportsAmigosApp() {
           <Route index element={<Home/>} />
           <Route path="sign-up" element={<SignUp/>} />   
           <Route path="/how-to-play" element={<HowToPlay/>} /> 
-          <Route path="/league-standings" element={<LeagueStandings/>} /> 
           <Route path="/log-in" element={<Login/>} /> 
           
           {/*Add the route to your component if necessary */}
         </Routes>
+        <Footer></Footer>
       </div>
       </>
 
