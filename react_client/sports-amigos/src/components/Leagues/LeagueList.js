@@ -1,13 +1,15 @@
 import React, { useState, useEffect } from "react";
-import LeagueModal from "./LeagueModal";
 import { httpService } from "../../services/service";
 import Table from 'react-bootstrap/Table';
 import Container from 'react-bootstrap/Container';
+import Button from "react-bootstrap/esm/Button";
+import LeagueModalGrid from "./LeagueModalGrid";
 
 
 export default function LeagueList() {
   const [allLeagueList, setAllLeagueList] = useState([]);
   const [allSelectedLeague, setAllSelectedLeague] = useState({});
+  const [leagueListModalShow, setLeagueListModalShow] = useState(false);
 
   const URL = 'http://localhost:3100/api/leagues'
 
@@ -42,6 +44,13 @@ export default function LeagueList() {
 
   const onLeagueClick=(league)=>{
     setAllSelectedLeague(league)
+    setLeagueListModalShow(true);
+  }
+
+  const modalProps = {
+    show:leagueListModalShow,
+     onHide:() => setLeagueListModalShow(false),
+     league:allSelectedLeague
   }
 
   return (
@@ -68,7 +77,18 @@ export default function LeagueList() {
 
             
           </Table>
+          <>
+
+      {/*<LeagueModalGrid show={leagueListModalShow} onHide={() => setLeagueListModalShow(false)}  />*/}
+      <LeagueModalGrid modalProps={modalProps}  />
+      
+    </>
+
+
+
     </Container>
+
+    
   );
 
 }

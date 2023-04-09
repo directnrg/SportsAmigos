@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import LeagueModal from "./LeagueModal";
 import { httpService } from "../../services/service";
 import Table from 'react-bootstrap/Table';
 import Container from 'react-bootstrap/Container';
