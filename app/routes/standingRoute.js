@@ -9,6 +9,7 @@ import {
   deleteStanding,
   removeUserStandingInLeague
 } from '../controllers/standingsController.js';
+import { getStandingById } from '../middleware/standingsMiddleware.js';
 
 const standingRouter = express.Router();
 
@@ -34,7 +35,7 @@ standingRouter.put(
   updateStanding
 );  // look for the Standings record with specified league and user and update only the points
 
-standingRouter.get('/standings/league/:id', getStanding); //  accepts a League.id as a parameter and returns the standings for that league
+standingRouter.get('/standings/league/:id',getStandingById, getStanding); //  accepts a League.id as a parameter and returns the standings for that league
 standingRouter.get('/standings/user/:id', getAllUserStandings); //accepts a User.id as a parameter and returns a list of standings where this User.id belongs to
 standingRouter.delete('/standings/league/:league', deleteStanding); // delete all standing belong to that league
 standingRouter.patch('/standings/remove-user/:user', removeUserInStanding); // delete specified user in All standing
