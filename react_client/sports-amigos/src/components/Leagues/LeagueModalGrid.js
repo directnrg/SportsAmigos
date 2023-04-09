@@ -6,8 +6,12 @@ import Modal from 'react-bootstrap/Modal';
 import Row from 'react-bootstrap/Row';
 import Table from 'react-bootstrap/Table';
 
+
 export default function LeagueModalGrid({modalProps}) {
 
+    const onCreateGuess = (guessProps)=>{
+
+    }
     useEffect(()=>{
         console.log("Modal props",modalProps);
     });
@@ -24,9 +28,7 @@ export default function LeagueModalGrid({modalProps}) {
             <Col xs={12} md={6}>
              Name: {modalProps.league.name}
             </Col>
-            <Col xs={6} md={5}>
-            Games
-            </Col>
+        
           </Row>
 
           <Row>
@@ -41,6 +43,7 @@ export default function LeagueModalGrid({modalProps}) {
                 <th>Away</th>
                 <th>Started</th>
                 <th>Result</th>
+                <th>Action</th>
               </tr>
             </thead>
             <tbody>
@@ -51,6 +54,7 @@ export default function LeagueModalGrid({modalProps}) {
                 <td>{game.awayTeam}</td>
                 <td>{game.startTime}</td>
                 <td>{game.result}</td>
+                <td><Button onClick={()=>{onCreateGuess(game)}}>Create guess</Button></td>
               </tr>)
             }) 
             }
@@ -122,6 +126,7 @@ export default function LeagueModalGrid({modalProps}) {
       </Modal.Body>
       <Modal.Footer>
         <Button onClick={modalProps.onHide}>Close</Button>
+        <Button onClick={modalProps.onHide}>Create guess</Button>
       </Modal.Footer>
     </Modal>
   );

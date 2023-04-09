@@ -14,14 +14,24 @@ import LeagueList from './components/Leagues/LeagueList';
 import MyLeagues from './components/Leagues/MyLeagues';
 import LeagueStandings from './components/Leagues/LeagueStandings';
 import Article from './components/Guides/Article';
+import LoginModal from './components/LoginModal';
 
 function SportsAmigosApp() {
 
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [loginModalShow, setLoginModalShow] = useState(false);
+  const modalProps = {
+    show:loginModalShow,
+     onHide:() => setLoginModalShow(false),
+  }
 
   const loginToggle = ()=>{
     setIsLoggedIn(!isLoggedIn)
 
+  }
+
+  const onLogin = ()=>{
+    setLoginModalShow(true)
   }
 
   useEffect(() => {
@@ -87,7 +97,8 @@ function SportsAmigosApp() {
               <Nav.Link as={Link} to="/">Home</Nav.Link>
               <Nav.Link as={Link}  to="/guides">Guides</Nav.Link>
               <Button as={Link}  to="/sign-up">Sign up</Button>{' '}
-              <Button onClick={loginToggle}  >Log in</Button>
+              <Button onClick={onLogin}  >Log in</Button>
+              <LoginModal modalProps={modalProps}  />
               
               
            
@@ -107,7 +118,7 @@ function SportsAmigosApp() {
             {/*Add the route to your component if necessary */}
           </Routes>
   
-        <Footer></Footer>
+       
       </div>
   
         <Footer></Footer>
