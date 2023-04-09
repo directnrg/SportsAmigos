@@ -9,6 +9,7 @@ dotenv.config()
 const apiKey = process.env.API_SPORTS; 
 const apiHost = process.env.API_SPORTS_HOST;
 
+//fetch current mexican leagues we migth not need it.
 export const fecthMexicanLeagues = async (req, res) => {
     const options = {
       method: 'GET',
