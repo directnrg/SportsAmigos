@@ -32,6 +32,7 @@ function SportsAmigosApp() {
 
   const onLogin = ()=>{
     setLoginModalShow(true)
+    
   }
 
   useEffect(() => {
