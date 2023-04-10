@@ -14,7 +14,7 @@ const guessSchema = new Schema({
 
   guess: {
     type: String,
-    enum: ['home', 'away', 'tie'],
+    enum: ['home', 'away', 'tie', null],
     default: null,
   },
   // 0 or 1 points for accuracy

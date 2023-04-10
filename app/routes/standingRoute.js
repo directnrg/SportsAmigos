@@ -4,12 +4,14 @@ import {
   removeUserInStanding,
   createLeagueStanding,
   getAllUserStandings,
-  getStanding,
+  getStandingById,
+  getStandingByLeagueId,
   updateStanding,
   deleteStanding,
+  deleteStandingByLeague,
   removeUserStandingInLeague
 } from '../controllers/standingsController.js';
-import { getStandingById } from '../middleware/standingsMiddleware.js';
+import { findStandingById } from '../middleware/standingsMiddleware.js';
 
 const standingRouter = express.Router();
 
@@ -35,11 +37,13 @@ standingRouter.put(
   updateStanding
 );  // look for the Standings record with specified league and user and update only the points
 
-standingRouter.get('/standings/league/:id',getStandingById, getStanding); //  accepts a League.id as a parameter and returns the standings for that league
+standingRouter.get('/standing/:id', findStandingById, getStandingById) // find a standing by its mongo Id
+standingRouter.get('/standing/league/:id', getStandingByLeagueId); //  accepts a League.id as a parameter and returns the standings for that league
 standingRouter.get('/standings/user/:id', getAllUserStandings); //accepts a User.id as a parameter and returns a list of standings where this User.id belongs to
-standingRouter.delete('/standings/league/:league', deleteStanding); // delete all standing belong to that league
-standingRouter.patch('/standings/remove-user/:user', removeUserInStanding); // delete specified user in All standing
-standingRouter.patch('/standings/remove-user', removeUserStandingInLeague); // delete specified user in specified league in the standing
+standingRouter.delete('/standing/:id',findStandingById, deleteStanding)
+standingRouter.delete('/standing/league/:league', deleteStandingByLeague); // delete a standing that belongs to a league
+standingRouter.patch('/standings/remove-user/:user', removeUserInStanding); // delete specified user in All standings
+standingRouter.patch('/standing/remove-user', removeUserStandingInLeague); // delete specified user in specified league in the standing
 
 
 export default standingRouter;

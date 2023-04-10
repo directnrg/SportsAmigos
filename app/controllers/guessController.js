@@ -6,6 +6,7 @@ export const createGuess = async (req, res) => {
     try {
         const newGuess = new Guess(req.body);
         await newGuess.save();
+
         const populatedGuess = await Guess.findById(newGuess._id).populate('user').populate('game');
         res.status(201).json({ message: 'Created guess object', data: populatedGuess });
     } catch (error) {
@@ -13,6 +14,41 @@ export const createGuess = async (req, res) => {
     }
 }
 
+/**
+ * to add multiple user guesses from frontend that assumes that all
+ * guesses sent in the request are going to have the same ID of user.
+ * this method will serve the purpose of handling a single request for adding multiple
+ * user guesses.
+ */
+export const addAllUserGuesses = async (req, res) => {
+    try {
+        //array of guesses
+        const userGuesses = req.body
+
+        // Get the user ID from the request body (assuming all guesses have the same user ID)
+        const userId = userGuesses[0].userId;
+
+        // Validate that all user IDs are the same
+        const allUserIdsSame = userGuesses.every(guess => guess.userId === userId);
+
+        if (!allUserIdsSame) {
+            return res.status(400).json({ message: 'All user IDs in the array must be the same' });
+        }
+
+        // Save all the guesses in parallel
+        await Promise.all(userGuesses.map(guess => new Guess(guess).save()));
+
+        // Return the stored guesses filtered by the user's ID
+        const storedGuesses = await Guess.find({ userId });
+        res.status(201).json({ message: 'Successfully added all guesses of user', guesses: storedGuesses });
+    } catch (error) {
+        res.status(400).json({ message: 'Error creating guess', error });
+    }
+};
+
+/**
+ * get all guesses in the database.
+ */
 export const getAllGuesses = async (req, res) => {
     try {
         const guesses = await Guess.find().populate('user').populate('game');
@@ -24,23 +60,18 @@ export const getAllGuesses = async (req, res) => {
 
 export const getGuessById = async (req, res) => {
     try {
-        const { id } = req.params;
-        const guess = await Guess.findById(id).populate('user').populate('game');
-        if (!guess) {
-            return res.status(404).json({ message: 'Guess not found' });
-        }
+        const guess = req.guess
         res.status(200).json(guess);
     } catch (error) {
-        res.status(400).json({ message: 'Error fetching guess', error });
+        res.status(400).json({ message: 'Error fetching guesses', error: error });
     }
 }
 
 export const updateGuess = async (req, res) => {
     try {
-        const { id } = req.params;
+        const { id } = req.guess;
         const { user, betamount, game, guess, userPoints } = req.body;
-        const updatedGuess = await Guess.findByIdAndUpdate(
-            id,
+        const updatedGuess = await Guess.findOneAndUpdate({ _id: id },
             { user, betamount, game, guess, userPoints },
             { new: true, runValidators: true }
         );
@@ -55,8 +86,8 @@ export const updateGuess = async (req, res) => {
 
 export const deleteGuess = async (req, res) => {
     try {
-        const { id } = req.params;
-        const deletedGuess = await Guess.findByIdAndDelete(id);
+        const { id } = req.guess;
+        const deletedGuess = await Guess.findOneAndDelete({ _id: id });
         if (!deletedGuess) {
             return res.status(404).json({ message: 'Guess not found' });
         }

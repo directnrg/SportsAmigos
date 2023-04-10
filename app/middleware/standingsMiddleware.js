@@ -1,7 +1,7 @@
 import Standing from "../models/standing.js";
 
 // User league holds the standings per user per league.
-export const getStandingById = async (req, res, next) => {
+export const findStandingById = async (req, res, next) => {
     let standing;
     try {
       const { id } = req.params;
@@ -11,12 +11,11 @@ export const getStandingById = async (req, res, next) => {
       if (!standing) {
         return res.status(404).json({ message: 'Standing not found' });
       }
+      req.standing = standing;
+      next();
     } catch (error) {
       return res.status(500).json({ message: error.message });
     }
-  
-    req.standing = standing;
-    next();
   };
 
 

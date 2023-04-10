@@ -22,6 +22,7 @@ userRouter.get('/users', getAllUsers);
 userRouter.get('/user/uname/:username', getByUserName, showUserByUserName);
 
 //userRouter.post('/user', addUser)
+
 //base path for user RUD
 //mongodb id
 userRouter
@@ -30,8 +31,6 @@ userRouter
   .patch(getUser, updateUserById)
   .delete(deleteUserById);
 
-  // old route to add user - no token jwt
-userRouter.route('/user').post(addUser);
 userRouter.get('/check-token', auth, checkToken);
 userRouter.route('/auth').post(loginUser);
 userRouter.route('/register').post(registerUser);
