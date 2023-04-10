@@ -20,10 +20,11 @@ export const getLeagues = async (req, res) => {
   }
 };
 
-
 export const getLeague = async (req, res) => {
   try {
-    const league = await League.findById(req.params.leagueId).populate('users guesses games');
+    const league = await League.findById(req.params.leagueId).populate(
+      'users guesses games'
+    );
     if (league) {
       res.status(200).json(league);
     } else {
@@ -35,20 +36,24 @@ export const getLeague = async (req, res) => {
   }
 };
 
-export const updateLeague = async (req, res) => {
+export const updateLeagueName = async (req, res) => {
   const { leagueId } = req.params;
 
-  const updatedLeagueData = req.body;
+  const { name } = req.body;
 
   try {
-    const league = await League.findByIdAndUpdate(
-      leagueId,
-      updatedLeagueData,
-      { new: true, runValidators: true }
-    );
+    const league = await League.findById(leagueId);
 
     if (!league) {
       res.status(404).json({ message: 'League not found' });
+      return;
+    }
+
+    if (name) {
+      league.name = name;
+      await league.save();
+    } else {
+      res.status(400).json({ message: 'Missing name field in request body' });
       return;
     }
 
@@ -59,15 +64,71 @@ export const updateLeague = async (req, res) => {
   }
 };
 
+export const userJoinLeague = async (req, res) => {
+  const { leagueId, userId } = req.body;
 
+  try {
+    const league = await League.findById(leagueId);
 
+    if (!league) {
+      res.status(404).json({ message: 'League not found' });
+      return;
+    }
+
+    if (league.users.includes(userId)) {
+      res.status(400).json({ message: 'User already joined this league' });
+      return;
+    }
+
+    league.users.push(userId);
+    await league.save();
+
+    res.status(200).json(league);
+  } catch (error) {
+    console.error('Error in userJoinLeague:', error);
+    res.status(500).json({ message: 'Internal server error', error: {} });
+  }
+};
+
+export const removeUserInLeague = async (req, res) => {
+  const { leagueId, userId } = req.body;
+
+  try {
+    const league = await League.findById(leagueId);
+
+    if (!league) {
+      res.status(404).json({ message: 'League not found' });
+      return;
+    }
+
+    if (!league.users.includes(userId)) {
+      res.status(400).json({ message: 'User is not part of this league' });
+      return;
+    }
+
+    league.users = league.users.filter((user) => user.toString() !== userId);
+    await league.save();
+
+    res.status(200).json(league);
+  } catch (error) {
+    console.error('Error in removeUserInLeague:', error);
+    res.status(500).json({ message: 'Internal server error', error: {} });
+  }
+};
 
 export const deleteLeague = async (req, res) => {
   try {
-    const league = await League.findByIdAndRemove(req.params.leagueId);
+    const league = await League.findById(req.params.leagueId);
 
     if (league) {
-      res.status(200).json({ message: 'League successfully deleted' });
+      if (league.users.length > 0) {
+        res
+          .status(400)
+          .json({ message: 'There is existing user in the league.' });
+      } else {
+        await league.remove();
+        res.status(200).json({ message: 'League successfully deleted' });
+      }
     } else {
       res.status(404).json({ message: 'League not found' });
     }
