@@ -23,7 +23,7 @@ const gameSchema = new Schema({
   // it will store the name of the winner team according to the api response.
   result: {
     type: String,
-    enum: ['home', 'away', 'tie'],
+    enum: ['home', 'away', 'tie', null],
     default: null,
   },
 });

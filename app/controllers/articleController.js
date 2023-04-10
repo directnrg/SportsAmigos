@@ -57,7 +57,8 @@ export const updateArticle = async (req, res) => {
 // Delete an article by ID
 export const deleteArticle = async (req, res) => {
   try {
-    const deletedArticle = await Article.deleteOne({ _id: req.article._id});
+    const { id } = req.article
+    const deletedArticle = await Article.deleteOne({ _id: id});
     res.status(200).json(deletedArticle);
   } catch (err) {
     res.status(500).json({ message: err.message });

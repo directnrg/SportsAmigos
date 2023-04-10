@@ -29,7 +29,7 @@ const showUserByUserName = (req, res) => {
   res.json(res.user);
 };
 
-//Check Token
+//Check Token - for testing purposes only
 const checkToken = async (req, res) => {
   try {
     const user = await User.findById(req.user.id).select('-password');

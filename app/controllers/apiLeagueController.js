@@ -6,18 +6,19 @@ import dotenv from 'dotenv';
 dotenv.config()
 
 // API KEY AND HOST global
-const apiKey = process.env.API_SPORTS; 
+const apiKey = process.env.API_SPORTS_KEY; 
 const apiHost = process.env.API_SPORTS_HOST;
 
+//fetch current mexican leagues we migth not need it.
 export const fecthMexicanLeagues = async (req, res) => {
     const options = {
       method: 'GET',
-      url: 'https://api-football-v1.p.rapidapi.com/v3/leagues',
+      url: 'https://v3.football.api-sports.io/leagues',
       params: {country: 'Mexico', current: 'true'},
       headers: {
         'Content-Type': 'application/json',
-        'X-RapidAPI-Key': apiKey,
-        'X-RapidAPI-Host': apiHost
+        'x-rapidapi-key': apiKey,
+        'x-rapidapi-host': apiHost
       }
     };
     
@@ -34,7 +35,7 @@ export const fecthMexicanLeagues = async (req, res) => {
         apiLeagues.push({ leagueId, leagueName, leagueLogo});
       });
   
-      res.status(200).json(apiLeagues)
+      res.status(200).json({mexicanLeagues: apiLeagues})
   
       console.log(response.data);
     }).catch((error) => {

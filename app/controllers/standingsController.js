@@ -68,13 +68,24 @@ export const getAllUserStandings = async (req, res) => {
   }
 };
 
+export const getStandingById = async (req, res) => {
+  try {
+    const standing = req.standing;
+
+    res.status(200).json(standing);
+  } catch (error) {
+    console.error(error.message);
+    res.status(500).json({ message: "Standing not found", error: error });
+  }
+}
+
 /***
 parameter   GET League.id
 //Standings for that league
 ***/
-export const getStanding = async (req, res) => {
+export const getStandingByLeagueId = async (req, res) => {
   try {
-    const leagueId = req.params.leagueId;
+    const { leagueId } = req.params;
     const standing = await Standing.findOne({ league: leagueId })
       .populate({
         path: 'standings.user',
@@ -156,23 +167,21 @@ export const updateStanding = async (req, res) => {
   }
 };
 
-/***
-parameter   DELETE user.id
 
-//This method will first find the standing with the specified league ID from the request parameters.. 
-  If the standing is not found, it will return a 404 error.
-***/
-export const deleteStanding = async (req, res) => {
+/**
+ * This method will first find the standing with the specified league ID from the request parameters.. 
+ * If the standing is not found, it will return a 404 error.
+ * @param req.standing 
+ */
+export const deleteStandingByLeague = async (req, res) => {
   const { league } = req.params;
 
   try {
-    const standing = await Standing.findOne({ league });
+    const standing = await Standing.findOneAndDelete({ league });
 
     if (!standing) {
       return res.status(404).json({ msg: 'Standing not found' });
     }
-
-    await Standing.deleteOne({ league });
     res.status(200).json({ msg: 'Standing deleted' });
   } catch (error) {
     console.error(error.message);
@@ -180,15 +189,35 @@ export const deleteStanding = async (req, res) => {
   }
 };
 
-/***
-parameter   PATCH user.id
+/**
+ * To delete a standing by mongo db id
+ * @param req 
+ * @param res 
+ */
+export const deleteStanding = async (req, res) => {
+  try {
+    const { id } = req.standing;
+    const standing = await Standing.findOneAndDelete({ id });
 
-//This method will first find all the standings with the specified user ID from the request parameters. 
-  If the user exists in any standings:
-        If the user is the only one in the standings, it will return error message. 
-        Else, delete the user from the standings and returns the updated standings. 
-   If the user is not found in any standings, it will return a 404 error.
-***/
+    if (!standing) {
+      return res.status(404).json({ msg: 'Standing not found' });
+    }
+    res.status(200).json({ msg: 'Standing deleted' });
+  } catch (error) {
+    console.error(error.message);
+    res.status(500).send('Server Error');
+  }
+};
+
+/**
+*parameter   PATCH user.id
+*
+*This method will first find all the standings with the specified user ID from the request parameters. 
+* If the user exists in any standings:
+* If the user is the only one in the standings, it will return error message.
+* Else, delete the user from the standings and returns the updated standings. 
+* If the user is not found in any standings, it will return a 404 error.
+**/
 
 export const removeUserInStanding = async (req, res) => {
   const { user } = req.params;
@@ -211,6 +240,7 @@ export const removeUserInStanding = async (req, res) => {
         const updatedStanding = await Standing.findByIdAndUpdate(
           standing._id,
           {
+            //$pull executes the remove operation of user in standings
             $pull: { standings: { user } },
           },
           { new: true }
@@ -226,18 +256,25 @@ export const removeUserInStanding = async (req, res) => {
   }
 };
 
-/***
+/**
 parameter   PATCH
-{
-  "league": "60a4b4a40c12345a6789d0b1",
-  "user": "60a4b4a40c12345a6789d0c1",
-}
-//This method will first find the standing with the specified league ID from the request body. 
-  If the league is found in the standings, it checks if the user exists in the standings.
-      If the user is the only one in the standings, it will return error message. 
-      Else, delete the user from the standings and returns the updated standings. 
-  If the user or league is not found in any standings, it will return a 404 error
-***/
+*{
+*  "league": "60a4b4a40c12345a6789d0b1",
+*  "user": "60a4b4a40c12345a6789d0c1",
+* }
+*/
+
+/**
+* This method will first find the standing with the specified league ID from the request body. 
+* If the league is found in the standings, it checks if the user from the request body
+* exists in the standings array.
+* If the user is the only one in the standings, it will return error message. 
+* Else, delete the user from the standings and returns the updated standings. 
+* If the user or league is not found in any standings, it will return a 404 error
+*/
+
+//TODO review - name convention seems strange. the remove operation seems to be
+//removing the user but not the points property in the json object
 
 export const removeUserStandingInLeague = async (req, res) => {
   const { league, user } = req.body;
@@ -250,7 +287,7 @@ export const removeUserStandingInLeague = async (req, res) => {
     }
 
     const userIndex = standing.standings.findIndex(
-      (stand) => stand.user.toString() === user
+      (standing) => standing.user.toString() === user
     );
 
     if (userIndex === -1) {

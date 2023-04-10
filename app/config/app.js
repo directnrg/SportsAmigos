@@ -43,7 +43,7 @@ import leagueRoute from '../routes/leagueRoute.js';
 import gameRouter from '../routes/gameRoute.js';
 import guessRouter from '../routes/guessRoute.js';
 import standingRouter from '../routes/standingRoute.js';
-import apiLeagueRouter from '../routes/apiLeagueRoute.js';
+import apiSportsRouter from '../routes/apiSportsRoute.js';
 
 const apiBase = '/api';
 app.use(apiBase, userRouter);
@@ -53,7 +53,7 @@ app.use(apiBase, leagueRoute);
 app.use(apiBase, gameRouter);
 app.use(apiBase, guessRouter);
 app.use(apiBase, standingRouter);
-app.use(apiBase, apiLeagueRouter);
+app.use(apiBase, apiSportsRouter);
 
 
 export default app;
