@@ -18,8 +18,7 @@ import LoginModal from './components/LoginModal';
 import { faL } from '@fortawesome/free-solid-svg-icons';
 
 
-export const MyContext = createContext();
-
+export const MyContext = createContext(
 
 function SportsAmigosApp() {
 
@@ -100,8 +99,6 @@ function SportsAmigosApp() {
 
 
       </>
-
-
     );
 
   }
