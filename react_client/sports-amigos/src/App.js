@@ -17,15 +17,20 @@ import Article from './components/Guides/Article';
 import LoginModal from './components/LoginModal';
 import { faL } from '@fortawesome/free-solid-svg-icons';
 import CreateLeague from './components/Leagues/CreateLeague';
+import jwt from 'jwt-decode'
 
 
 export const MyContext = createContext();
 
 function SportsAmigosApp() {
 
+
+
+
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [loginModalShow, setLoginModalShow] = useState(false);
-  const [data, setData] = useState({login:false});
+  const [loginData, setLoginData] = useState({login:false});
+  const [loggedId, setLoggedId] = useState({});
   const modalProps = {
     show: loginModalShow,
     onHide: () => setLoginModalShow(false),
@@ -43,7 +48,7 @@ function SportsAmigosApp() {
 
   const onLogout=()=>{
     sessionStorage.clear();
-    setData({login:false});
+    setLoginData({login:false});
 
   }
 
@@ -52,15 +57,15 @@ function SportsAmigosApp() {
   }, []);
 
   useEffect(() => {
-    console.log(data)
+    console.log("Login Data:",loginData)
   });
 
   //Display if the user has logged in
-  if (data?.login) {
+  if (loginData.login) {
     return (
 
       <>
-        <MyContext.Provider value={{ data, setData }}>
+        <MyContext.Provider value={{  loginData, setLoginData}}>
 
           <Navbar bg="light" expand="lg">
             <Container>
@@ -108,7 +113,7 @@ function SportsAmigosApp() {
     return (
 
       <>
-       <MyContext.Provider value={{ data, setData }}>
+       <MyContext.Provider value={{loginData, setLoginData }}>
 
         <Navbar bg="light" expand="lg">
           <Container>

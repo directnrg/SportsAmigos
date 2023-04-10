@@ -4,7 +4,8 @@ import {
   getGameById,
   updateGameResultManually,
   deleteGame,
-  populateGames,
+  populateGamesApi,
+  populateGamesOfTheWeek,
 } from '../controllers/gameController.js';
 import {findGameById} from '../middleware/gameMiddleWare.js';
 
@@ -13,7 +14,10 @@ const gameRouter = express.Router();
 gameRouter.get('/games', getGames);
 
 //populate games of the current week making a call to api sports
-gameRouter.get('/games-of-the-week', populateGames)
+gameRouter.get('/games-of-the-week-api', populateGamesApi)
+
+//populate games of the current week from the database 
+gameRouter.get('/games-of-the-week', populateGamesOfTheWeek)
 
 // Get a single game by id
 gameRouter.get('/game/:gameId', findGameById, getGameById);

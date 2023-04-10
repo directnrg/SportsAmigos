@@ -39,7 +39,7 @@ export const getGameById = async (req,res) => {
  * calling this method will populate games from the sports api once. the games to be populated 
  * are going to be the current games of the current week.
  */
-export const populateGames = async (req, res) => {
+export const populateGamesApi = async (req, res) => {
 
   try {
     const currentDate = new Date();
@@ -116,6 +116,39 @@ export const updateGameResultManually = async (req, res) => {
     res.status(500).json({ message: 'Error updating game result manually' });
   }
 }
+
+/**
+ * populate games of the game FROM the database instead of the API
+ * @param {*} req 
+ * @param {*} res 
+ * @returns 
+ */
+export const populateGamesOfTheWeek = async (req, res) => {
+  try {
+    const currentDate = new Date();
+    const weekStart = new Date(currentDate);
+    weekStart.setDate(currentDate.getDate() - currentDate.getDay() + (currentDate.getDay() === 0 ? -5 : 1)); // Monday of the current week
+    const weekEnd = new Date(weekStart);
+    weekEnd.setDate(weekStart.getDate() + 6); // Sunday of the current week
+
+    // Fetch games from the Game model in the database for the current week
+    const games = await Game.find({
+      startTime: {
+        $gte: weekStart,
+        $lte: weekEnd
+      }
+    });
+
+    if (!games.length) {
+      return res.status(404).json({ message: 'No games found for the current week' });
+    }
+
+    res.status(200).json({ message: 'Games fetched successfully from Database', games: games });
+  } catch (error) {
+    console.error('Error fetching games:', error);
+    res.status(500).json({ message: 'Error fetching games' });
+  }
+};
 
 /**
  * Update games in our database with cron. 

@@ -38,7 +38,6 @@ app.set('view engine', 'ejs');
 //routing
 import userRouter from '../routes/user.js';
 import articleRoute from '../routes/articleRoute.js';
-import myLeagueRoute from '../routes/myLeagueRoute.js';
 import leagueRoute from '../routes/leagueRoute.js';
 import gameRouter from '../routes/gameRoute.js';
 import guessRouter from '../routes/guessRoute.js';
@@ -48,7 +47,6 @@ import apiSportsRouter from '../routes/apiSportsRoute.js';
 const apiBase = '/api';
 app.use(apiBase, userRouter);
 app.use(apiBase, articleRoute);
-app.use(apiBase, myLeagueRoute);
 app.use(apiBase, leagueRoute);
 app.use(apiBase, gameRouter);
 app.use(apiBase, guessRouter);
