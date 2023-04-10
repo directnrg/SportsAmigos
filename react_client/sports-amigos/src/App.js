@@ -19,8 +19,7 @@ import { faL } from '@fortawesome/free-solid-svg-icons';
 import jwt from 'jwt-decode'
 
 
-export const MyContext = createContext();
-
+export const MyContext = createContext(
 
 function SportsAmigosApp() {
 
@@ -105,8 +104,6 @@ function SportsAmigosApp() {
 
 
       </>
-
-
     );
 
   }

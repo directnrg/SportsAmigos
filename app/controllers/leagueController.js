@@ -1,4 +1,5 @@
 import League from '../models/league.js';
+import Guess from '../models/guess.js';
 
 export const createLeague = async (req, res) => {
   try {
@@ -10,6 +11,31 @@ export const createLeague = async (req, res) => {
   }
 };
 
+//TODO - document method get all leagues by user id
+/**
+ * 
+ */
+export const getAllLeaguesByUserId = async (req, res) => {
+  try {
+    const userId = req.params.userId;
+
+    const leagues = await League.find({ users: userId })
+      .populate(['games', 'guesses'])
+      .exec();
+
+    res.status(200).json(leagues);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+};
+
+
+
+//TODO - add documentation for methods
+/**
+ * 
+ */
 export const getLeagues = async (req, res) => {
   try {
     const leagues = await League.find().populate('users guesses games');
@@ -36,6 +62,11 @@ export const getLeague = async (req, res) => {
   }
 };
 
+
+//TODO - add documentation for methods
+/**
+ * 
+ */
 export const updateLeagueName = async (req, res) => {
   const { leagueId } = req.params;
 
@@ -64,6 +95,11 @@ export const updateLeagueName = async (req, res) => {
   }
 };
 
+
+//TODO - add documentation for methods
+/**
+ * 
+ */
 export const userJoinLeague = async (req, res) => {
   const { leagueId, userId } = req.body;
 
