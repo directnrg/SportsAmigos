@@ -1,9 +1,9 @@
 import {React} from 'react';
 import axios from 'axios';
 
-const get = async (path, obj)=>{
+const get = async (path, config)=>{
     try{
-        const {data} = await axios.get(path,obj)
+        const {data} = await axios.get(path,config)
         return data; 
 
     }
@@ -11,9 +11,9 @@ const get = async (path, obj)=>{
    
 }
 
-const post = async (path, obj)=>{
+const post = async (path, obj, config)=>{
     try{
-        const {data} = await axios.post(path, obj)
+        const {data} = await axios.post(path, obj,config)
         return data;
 
     }

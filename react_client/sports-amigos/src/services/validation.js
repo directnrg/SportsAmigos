@@ -6,12 +6,15 @@ const name = new RegExp('^[A-Za-z]+$')//a string is not null, doesn't contain sp
 
 const path = new RegExp('^(\/[a-zA-Z0-9_-]+)+$') //a string is in the form of a directory path
 
+const fullName = new RegExp('^[A-Za-z]+(?:\s+[A-Za-z]+)*$/');
+
 const validation = {
 
     email: email,
     password: password,
     name: name,
-    path:path
+    path:path,
+    fullName:fullName
 }
 
 export {validation}

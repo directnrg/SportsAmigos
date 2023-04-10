@@ -19,7 +19,7 @@ export default function SignUp() {
 
   const navigate = useNavigate();
 
-  const URL = 'http://localhost:3100/api/user'//'https://catfact.ninja/fact' // 'http://localhost:3000/';
+  const URL = 'http://localhost:3100/api/register'//'https://catfact.ninja/fact' // 'http://localhost:3000/';
   //Using Refs
   const firstNameRef = useRef('');
   const lastNameRef = useRef('');
