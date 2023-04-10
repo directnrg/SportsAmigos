@@ -20,7 +20,7 @@ import CreateLeague from './components/Leagues/CreateLeague';
 import jwt from 'jwt-decode'
 
 
-export const MyContext = createContext();
+export const MyContext = createContext()
 
 function SportsAmigosApp() {
 
