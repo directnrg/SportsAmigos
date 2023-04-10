@@ -3,20 +3,28 @@ import { httpService } from "../../services/service";
 import Table from 'react-bootstrap/Table';
 import Container from 'react-bootstrap/Container';
 import jwt from 'jwt-decode'
-//import { MyContext } from '../App';
 import { MyContext } from "../../App";
+import LeagueModalGrid from "./LeagueModalGrid";
+
 
 
 
 export default function MyLeagues() {
   const { loginData, setLoginData } = useContext(MyContext);
   const [showLeagueModal, setShowLeagueModal] = useState(false);
-  const [leaguesList, setLeagueList] = useState([]);
-  const [selectedLeague, setSelectedLeague] = useState({});
+  const [myLeaguesList, setMyLeaguesList] = useState([]);
+  const [mySelectedLeague, setMySelectedLeague] = useState({});
+  const [myLeaguesModalShow, setMyLeaguesModalShow] = useState(false);
   const token = JSON.parse(sessionStorage.getItem('login'))
   const decodedToken = jwt(token.token); 
 
-  const URL = 'http://localhost:3100/api/leagues'
+  const URL = 'http://localhost:3100/api/leagues';
+
+  const modalProps = {
+    show:myLeaguesModalShow,
+     onHide:() => setMyLeaguesModalShow(false),
+     league:mySelectedLeague
+  }
 
   const getLeagues = async ()=>{
     
@@ -28,7 +36,7 @@ export default function MyLeagues() {
       console.log('headers',{ headers: { 'x-auth-token':token.token }});
       const res = await httpService.get(URL,{ headers: { 'x-auth-token':token.token }});
       console.log('MyLeagues:',res)
-      setLeagueList(res)
+      setMyLeaguesList(res)
 
     }
     catch(e){
@@ -50,19 +58,13 @@ export default function MyLeagues() {
     , []);
 
     useEffect(()=>{
-      console.log("League List:",leaguesList)
+      console.log("League List:",myLeaguesList)
     })
 
   const onLeagueClick=(league)=>{
-    setSelectedLeague(league)
-    toggleLeagueModal();
+    setMySelectedLeague(league)
+    setMyLeaguesModalShow(true);
   }
-
-  //toggle function
-  const toggleLeagueModal = () => {
-    setShowLeagueModal(!showLeagueModal);
-  };
-
 
   return (
     <Container>
@@ -75,7 +77,7 @@ export default function MyLeagues() {
               </tr>
             </thead>
             <tbody>
-            { leaguesList.map((league, index)=>{
+            { myLeaguesList.map((league, index)=>{
               return(
               <tr onClick={()=>onLeagueClick(league)} key={index}>
                 <td>{league.name}</td>
@@ -88,25 +90,7 @@ export default function MyLeagues() {
 
             
           </Table>
+          <LeagueModalGrid modalProps={modalProps}  />
     </Container>
   );
-
-  // return (
-  //   <>
-  //     <div>MyLeagues</div>
-  //     {/**TODO - button should be per league */}
-  //     {sampleLeagueList.length > 0 && (
-  //       sampleLeagueList.map((league) => (
-  //         <div key={league._id}>
-  //           <button onClick={toggleLeagueModal}>Details</button>
-  //           {showLeagueModal && (
-  //             <LeagueModal
-  //               leagueModalToggle={setShowLeagueModal}
-  //               leagueId={league._id}
-  //             />
-  //           )}
-  //         </div>
-  //       )))}
-  //   </>
-  // );
 }
