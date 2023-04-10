@@ -6,6 +6,7 @@ import Modal from 'react-bootstrap/Modal';
 import Row from 'react-bootstrap/Row';
 import Table from 'react-bootstrap/Table';
 import Alert from 'react-bootstrap/Alert';
+import jwt from 'jwt-decode'
 import { MyContext } from '../App';
 import {
   MDBBtn,
@@ -17,7 +18,6 @@ import {
   MDBInput,
 }
   from 'mdb-react-ui-kit';
-
 import {httpService} from '../services/service';
 import {validation} from '../services/validation';
 
@@ -30,7 +30,7 @@ export default function LoginModal({modalProps}) {
 
   const emailRef = useRef();
   const passwordRef = useRef();
-  const { data, setData } = useContext(MyContext);
+  const { loginData, setLoginData } = useContext(MyContext);
   
   
     const onLogin = async()=>{
@@ -68,7 +68,7 @@ export default function LoginModal({modalProps}) {
           console.log('Authenticating')
           const res = await httpService.post(URL+'/auth',user)
           console.log('Token:',res.token)
-
+          
           //Storing token in session storage
           sessionStorage.setItem('login',JSON.stringify(
             {
@@ -77,13 +77,13 @@ export default function LoginModal({modalProps}) {
             }
           ))
 
-        
+         const token = JSON.parse(sessionStorage.getItem('login'))
+         const decodedToken = jwt(token.token);
+         const userId= decodedToken.user.id
 
          //Storing data in the context
-          setData({login:true,
-                  loggedEmail:email})
+          setLoginData({login:true, userId:userId})
           modalProps.onHide();
-      
           }
 
           
