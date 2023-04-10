@@ -1,25 +1,34 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext} from "react";
 import { httpService } from "../../services/service";
 import Table from 'react-bootstrap/Table';
 import Container from 'react-bootstrap/Container';
+import jwt from 'jwt-decode'
+//import { MyContext } from '../App';
+import { MyContext } from "../../App";
+
 
 
 export default function MyLeagues() {
+  const { loginData, setLoginData } = useContext(MyContext);
   const [showLeagueModal, setShowLeagueModal] = useState(false);
   const [leaguesList, setLeagueList] = useState([]);
   const [selectedLeague, setSelectedLeague] = useState({});
+  const token = JSON.parse(sessionStorage.getItem('login'))
+  const decodedToken = jwt(token.token); 
 
   const URL = 'http://localhost:3100/api/leagues'
 
   const getLeagues = async ()=>{
+    
     try{
-      const token = JSON.parse(sessionStorage.getItem('login'))
-      
+    
+      console.log(" token",token.token)
+      console.log("Decoded token",decodedToken)
+      console.log("User ID: ", decodedToken.user.id)
       console.log('headers',{ headers: { 'x-auth-token':token.token }});
       const res = await httpService.get(URL,{ headers: { 'x-auth-token':token.token }});
-     
-    console.log('Leagues:',res)
-    setLeagueList(res)
+      console.log('MyLeagues:',res)
+      setLeagueList(res)
 
     }
     catch(e){
