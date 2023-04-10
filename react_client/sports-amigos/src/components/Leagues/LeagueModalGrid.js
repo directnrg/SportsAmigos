@@ -5,6 +5,7 @@ import Container from 'react-bootstrap/Container';
 import Modal from 'react-bootstrap/Modal';
 import Row from 'react-bootstrap/Row';
 import Table from 'react-bootstrap/Table';
+import jwt from 'jwt-decode'
 
 
 export default function LeagueModalGrid({modalProps}) {
@@ -43,7 +44,6 @@ export default function LeagueModalGrid({modalProps}) {
                 <th>Away</th>
                 <th>Started</th>
                 <th>Result</th>
-                <th>Action</th>
               </tr>
             </thead>
             <tbody>
@@ -54,7 +54,6 @@ export default function LeagueModalGrid({modalProps}) {
                 <td>{game.awayTeam}</td>
                 <td>{game.startTime}</td>
                 <td>{game.result}</td>
-                <td><Button onClick={()=>{onCreateGuess(game)}}>Create guess</Button></td>
               </tr>)
             }) 
             }
@@ -126,7 +125,7 @@ export default function LeagueModalGrid({modalProps}) {
       </Modal.Body>
       <Modal.Footer>
         <Button onClick={modalProps.onHide}>Close</Button>
-        <Button onClick={modalProps.onHide}>Create guess</Button>
+        <Button onClick={modalProps.onHide}>Create guesses</Button>
       </Modal.Footer>
     </Modal>
   );
