@@ -1,4 +1,4 @@
-import React, { useState,useEffect, useRef } from 'react';
+import React, { useState,useEffect, useRef, useContext} from 'react';
 import Button from 'react-bootstrap/Button';
 import Col from 'react-bootstrap/Col';
 import Container from 'react-bootstrap/Container';
@@ -6,6 +6,7 @@ import Modal from 'react-bootstrap/Modal';
 import Row from 'react-bootstrap/Row';
 import Table from 'react-bootstrap/Table';
 import Alert from 'react-bootstrap/Alert';
+import { MyContext } from '../App';
 import {
   MDBBtn,
   MDBContainer,
@@ -23,10 +24,13 @@ import {validation} from '../services/validation';
 export default function LoginModal({modalProps}) {
   const URL = 'http://localhost:3100/api'
 
+
   const [loginErrorMsgs, setLoginErrorMsg] =  useState([]);
+
 
   const emailRef = useRef();
   const passwordRef = useRef();
+  const { data, setData } = useContext(MyContext);
   
     const onLogin = async()=>{
       console.log('Login Clicked')
@@ -53,7 +57,7 @@ export default function LoginModal({modalProps}) {
 
       console.log(canPost)
 
-      if(canPost){
+      if(sessionStorage.getItem('login')){
 
         const user = {
           email:email,
@@ -62,9 +66,24 @@ export default function LoginModal({modalProps}) {
         try{
           console.log('Authenticating')
           const res = await httpService.post(URL+'/auth',user)
-          console.log('Auth:',res)
+          console.log('Token:',res.token)
+
+          //Storing token in session storage
+          sessionStorage.setItem('login',JSON.stringify(
+            {
+              login:true,
+              token:res.token
+            }
+          ))
+
+         //Storing data in the context
+          setData({login:true,
+                  loggedEmail:email})
+          modalProps.onHide();
       
           }
+
+          
           catch(e){
             console.log(e.message)
           }
@@ -77,6 +96,7 @@ export default function LoginModal({modalProps}) {
     }
     useEffect(()=>{
         console.log("Modal props",modalProps);
+        console.log("Session data", sessionStorage.getItem('login'))
     });
 
     useEffect(()=>{
