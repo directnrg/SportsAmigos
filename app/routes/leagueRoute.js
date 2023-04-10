@@ -1,7 +1,7 @@
 import express from 'express';
 import {
   createLeague,
-  getMyLeague,
+  getAllLeaguesByUserId,
   getLeagues,
   getLeague,
   updateLeagueName,
@@ -13,7 +13,7 @@ import {
 const leagueRouter = express.Router();
 
 leagueRouter.get('/leagues', getLeagues); //return all leagues
-leagueRouter.get('/league/:userId', getMyLeague);
+leagueRouter.get('/leagues/:userId', getAllLeaguesByUserId); //get all leagues by user Id
 leagueRouter.post('/league', createLeague); //create a League
 leagueRouter.get('/league/:leagueId', getLeague); //get specific league
 leagueRouter.patch('/league/join', userJoinLeague); //join user to existing league. Parameter JSON body "leagueId" & "userId"

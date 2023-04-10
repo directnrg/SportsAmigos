@@ -11,7 +11,11 @@ export const createLeague = async (req, res) => {
   }
 };
 
-export const getMyLeague = async (req, res) => {
+//TODO - document method get all leagues by user id
+/**
+ * 
+ */
+export const getAllLeaguesByUserId = async (req, res) => {
   try {
     const userId = req.params.userId;
 
@@ -19,30 +23,7 @@ export const getMyLeague = async (req, res) => {
       .populate(['games', 'guesses'])
       .exec();
 
-    const guesses = await Guess.find({ user: userId }).populate('game').exec();
-
-    const games = [];
-    const isPrivate = [];
-    const leagueNames = [];
-    leagues.forEach((league) => {
-      league.games.forEach((game) => {
-        if (!games.some((g) => g._id.toString() === game._id.toString())) {
-          games.push(game);
-        }
-      });
-      isPrivate.push(league.isPrivate);
-      leagueNames.push(league.name);
-    });
-
-    const myLeagueView = {
-      user: userId,
-      guesses,
-      games,
-      isPrivate,
-      leagueNames,
-    };
-
-    res.status(200).json(myLeagueView);
+    res.status(200).json(leagues);
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: 'Internal server error' });
@@ -50,6 +31,11 @@ export const getMyLeague = async (req, res) => {
 };
 
 
+
+//TODO - add documentation for methods
+/**
+ * 
+ */
 export const getLeagues = async (req, res) => {
   try {
     const leagues = await League.find().populate('users guesses games');
@@ -76,6 +62,11 @@ export const getLeague = async (req, res) => {
   }
 };
 
+
+//TODO - add documentation for methods
+/**
+ * 
+ */
 export const updateLeagueName = async (req, res) => {
   const { leagueId } = req.params;
 
@@ -104,6 +95,11 @@ export const updateLeagueName = async (req, res) => {
   }
 };
 
+
+//TODO - add documentation for methods
+/**
+ * 
+ */
 export const userJoinLeague = async (req, res) => {
   const { leagueId, userId } = req.body;
 

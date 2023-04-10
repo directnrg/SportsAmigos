@@ -51,7 +51,7 @@ export const populateGamesApi = async (req, res) => {
     const fromDateString = weekStart.toISOString().split('T')[0];
     const toDateString = weekEnd.toISOString().split('T')[0];
 
-    const url = `https://v3.football.api-sports.io/fixtures?league=${MEXICAN_LEAGUE}&season=${SEASON_MEXICAN_LEAGUE}&from=${fromDateString}&to=${toDateString}`;
+    const url = `https://v3.football.api-sports.io/fixtures?league=${MEXICAN_LEAGUE}&season=${SEASON_MEXICAN_LEAGUE}&from=${fromDateString}&to=${toDateString}&timezone=America/Toronto`;
     const response = await axios.get(url, {
       headers: { 'x-apisports-key': apiKey, 'x-apisports-host': apiHost },
     });
@@ -95,9 +95,6 @@ export const populateGamesApi = async (req, res) => {
 
 /**
  * To update game result in case it is required.
- * 
- * @param req.game
- * @param res.game
  */
 export const updateGameResultManually = async (req, res) => {
   try {
@@ -119,9 +116,6 @@ export const updateGameResultManually = async (req, res) => {
 
 /**
  * populate games of the game FROM the database instead of the API
- * @param {*} req 
- * @param {*} res 
- * @returns 
  */
 export const populateGamesOfTheWeek = async (req, res) => {
   try {
@@ -150,6 +144,7 @@ export const populateGamesOfTheWeek = async (req, res) => {
   }
 };
 
+
 /**
  * Update games in our database with cron. 
  * cron function will make this method run every week, monday 12:00 AM
@@ -167,7 +162,7 @@ export const updateGames = async () => {
     const fromDateString = fromDate.toISOString().split('T')[0];
     const toDateString = toDate.toISOString().split('T')[0];
 
-    const url = `https://v3.football.api-sports.io/fixtures?league=${MEXICAN_LEAGUE}&season=${SEASON_MEXICAN_LEAGUE}&from=${fromDateString}&to=${toDateString}`;
+    const url = `https://v3.football.api-sports.io/fixtures?league=${MEXICAN_LEAGUE}&season=${SEASON_MEXICAN_LEAGUE}&from=${fromDateString}&to=${toDateString}&timezone=America/Toronto`;
     const response = await axios.get(url, { headers: { 'x-apisports-key': apiKey, 'x-apisports-host': apiHost } });
 
     const fixtures = response.data.response; // Access the response fixtures
@@ -204,7 +199,10 @@ export const updateGames = async () => {
 cron.schedule('0 0 * * 1', updateGames);
 
 
-
+//TODO - document method updateGameWinnerDaily
+/**
+ * 
+ */
 export const updateGameWinnerDaily = async () => {
   try {
     // Create Date calculation logic for constructing URL
@@ -215,7 +213,7 @@ export const updateGameWinnerDaily = async () => {
     const fromDateString = fromDate.toISOString().split('T')[0];
     const toDateString = toDate.toISOString().split('T')[0];
 
-    const url = `https://v3.football.api-sports.io/fixtures?league=${MEXICAN_LEAGUE}&season=${SEASON_MEXICAN_LEAGUE}&from=${fromDateString}&to=${toDateString}`;
+    const url = `https://v3.football.api-sports.io/fixtures?league=${MEXICAN_LEAGUE}&season=${SEASON_MEXICAN_LEAGUE}&from=${fromDateString}&to=${toDateString}&timezone=America/Toronto`;
     const response = await axios.get(url, { headers: { 'x-apisports-key': apiKey, 'x-apisports-host': apiHost } });
 
     const fixtures = response.data.response; // Access the response fixtures
@@ -254,7 +252,13 @@ export const updateGameWinnerDaily = async () => {
 cron.schedule('0 0 * * *', updateGameWinnerDaily);
 
 
-// Delete a game
+
+
+
+//TODO - document method deleteGame
+/**
+ * 
+ */
 export const deleteGame = async (req, res) => {
   try {
     const { id } = req.game;
