@@ -18,7 +18,9 @@ export default function MyLeagues() {
   const token = JSON.parse(sessionStorage.getItem('login'))
   const decodedToken = jwt(token.token); 
 
-  const URL = 'http://localhost:3100/api/leagues';
+  //http://localhost:3100/api/leagues/643339c9da183ad9cc24d0e4
+  const URL = `http://localhost:3100/api/leagues/${loginData.userId}`;
+  
 
   const modalProps = {
     show:myLeaguesModalShow,
