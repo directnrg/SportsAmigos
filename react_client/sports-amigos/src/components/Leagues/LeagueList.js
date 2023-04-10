@@ -15,9 +15,12 @@ export default function LeagueList() {
 
   const getLeagues = async ()=>{
     try{
-      const res = await httpService.get(URL,{});
-    console.log('Leagues:',res)
-    setAllLeagueList(res)
+      const token = JSON.parse(sessionStorage.getItem('login'))
+      
+      console.log('headers',{ headers: { 'x-auth-token':token.token }});
+      const res = await httpService.get(URL,{ headers: { 'x-auth-token':token.token }});
+      console.log('Leagues:',res)
+      setAllLeagueList(res)
 
     }
     catch(e){

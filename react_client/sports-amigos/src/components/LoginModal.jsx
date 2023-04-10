@@ -32,6 +32,7 @@ export default function LoginModal({modalProps}) {
   const passwordRef = useRef();
   const { data, setData } = useContext(MyContext);
   
+  
     const onLogin = async()=>{
       console.log('Login Clicked')
       let canPost = true;
@@ -57,7 +58,7 @@ export default function LoginModal({modalProps}) {
 
       console.log(canPost)
 
-      if(sessionStorage.getItem('login')){
+      if(!sessionStorage.getItem('login')){
 
         const user = {
           email:email,
@@ -75,6 +76,8 @@ export default function LoginModal({modalProps}) {
               token:res.token
             }
           ))
+
+        
 
          //Storing data in the context
           setData({login:true,

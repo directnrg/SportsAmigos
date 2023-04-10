@@ -41,6 +41,12 @@ function SportsAmigosApp() {
 
   }
 
+  const onLogout=()=>{
+    sessionStorage.clear();
+    setData({login:false});
+
+  }
+
   useEffect(() => {
     document.title = 'Sports Pool';
   }, []);
@@ -66,7 +72,7 @@ function SportsAmigosApp() {
                   <Nav.Link as={Link} to="/guides">Guides</Nav.Link>
                   <Nav.Link as={Link} to="/league-list">League List</Nav.Link>
                   <Nav.Link as={Link} to="/my-leagues">My Leagues</Nav.Link>
-                  <Button as={Link} to="/" onClick={loginToggle} >Log Out</Button>{' '}
+                  <Button as={Link} to="/" onClick={onLogout} >Log Out</Button>{' '}
 
                 </Nav>
               </Navbar.Collapse>
