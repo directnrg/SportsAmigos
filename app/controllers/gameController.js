@@ -18,12 +18,21 @@ const SEASON_MEXICAN_LEAGUE = 2022;
 // Get all games - if needed
 export const getGames = async (req, res) => {
   try {
-    const games = await Game.find();
+    const games = await Game.find({});
     res.status(200).json({ games });
   } catch (error) {
     res.status(400).json({ error });
   }
 };
+
+export const getGameById = async (req,res) => {
+  try {
+    const game = req.game
+    res.status(200).json(game);
+  } catch (error) {
+    res.status(400).json({ error: error });
+  }
+}
 
 /**
  * To populate games with api call without the need of cron or scheduled call.
@@ -215,8 +224,11 @@ cron.schedule('0 0 * * *', updateGameWinnerDaily);
 // Delete a game
 export const deleteGame = async (req, res) => {
   try {
-    const game = await Game.findByIdAndDelete(req.params.id);
-    res.status(200).json({ game });
+    const { id } = req.game;
+    //TODO - MISSING logic to not allow deleting a game that is already attached to a user guess or any other related relationships.
+
+    const game = await Game.findOneAndDelete({_id: id});
+    res.status(200).json({ deletedGame: game });
   } catch (error) {
     res.status(400).json({ error });
   }
