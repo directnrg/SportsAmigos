@@ -11,16 +11,29 @@ export const createLeague = async (req, res) => {
   }
 };
 
-//TODO - document method get all leagues by user id
+
 /**
+ * Retrieve all the leagues associated with a specific user by their ID.
  * 
+ * @async
+ * @function getAllLeaguesByUserId
+ * @param {Object} req - Express request object
+ * @param {Object} res - Express response object
+ * @param {string} req.params.userId - The ID of the user whose leagues are being retrieved
+ * @throws 500 error if there is an internal server error
+ * @returns {Object} JSON object representing an array of league objects
+ * with games, guesses, and user information populated (user id and fullname)
  */
 export const getAllLeaguesByUserId = async (req, res) => {
   try {
     const userId = req.params.userId;
 
     const leagues = await League.find({ users: userId })
-      .populate(['games', 'guesses'])
+      .populate([
+        'games',
+        'guesses',
+        { path: 'users', select: '_id fullName' },
+      ])
       .exec();
 
     res.status(200).json(leagues);
@@ -29,8 +42,6 @@ export const getAllLeaguesByUserId = async (req, res) => {
     res.status(500).json({ message: 'Internal server error' });
   }
 };
-
-
 
 //TODO - add documentation for methods
 /**
