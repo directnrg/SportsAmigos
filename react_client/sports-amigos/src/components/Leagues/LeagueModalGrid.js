@@ -6,9 +6,16 @@ import Modal from 'react-bootstrap/Modal';
 import Row from 'react-bootstrap/Row';
 import Table from 'react-bootstrap/Table';
 import jwt from 'jwt-decode'
+import { useNavigate } from 'react-router-dom';
 
 
 export default function LeagueModalGrid({modalProps}) {
+
+  const navigate = useNavigate();
+
+  const handleButtonClick = () => {
+    navigate('/create-guesses');
+  };
 
     const onCreateGuess = (guessProps)=>{
 
@@ -125,7 +132,7 @@ export default function LeagueModalGrid({modalProps}) {
       </Modal.Body>
       <Modal.Footer>
         <Button onClick={modalProps.onHide}>Close</Button>
-        <Button href='/create-guesses'>Create guesses</Button>
+        <Button onClick={handleButtonClick}>Create guesses</Button>
       </Modal.Footer>
     </Modal>
   );

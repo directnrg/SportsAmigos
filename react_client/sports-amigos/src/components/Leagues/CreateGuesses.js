@@ -1,9 +1,18 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import axios from 'axios';
 import { Table, Form, Button } from 'react-bootstrap';
+import { MyContext } from '../../App';
 
 export default function CreateGuesses() {  
+  const { loginData, setLoginData } = useContext(MyContext);
     const [games, setGames] = useState([]);
+    const [guesses, setGuesses] = useState({
+      user: '',
+      game: '',
+      league: '',
+      guess: '',
+      userPoints: ''
+    })
 
     useEffect(() => {
       const fetchData = async () => {
@@ -13,9 +22,28 @@ export default function CreateGuesses() {
       fetchData();
     }, []);
   
-    const handleSubmit = (event) => {
+    const handleSubmit = async (event) => {
       event.preventDefault();
-      // handle form submission here
+      const newGuesses = [];
+      games.forEach((game) => {
+        const winner = document.querySelector(`input[name="winner-${game._id}"]:checked`)?.value;
+        if (winner) {
+          newGuesses.push({
+            user: loginData.userId,
+            game: game._id,
+            league: game.league,
+            guess: winner === "home" ? "1" : winner === "tie" ? "X" : "2",
+            userPoints: 0
+          });
+        }
+      });
+      try {
+        const response = await axios.post("http://localhost:3100/api/user-guesses", { guesses: newGuesses });
+        console.log(response.data);
+        setGuesses(response.data.guesses);
+      } catch (error) {
+        console.log(error);
+      }
     };
   
     return (
@@ -41,13 +69,19 @@ export default function CreateGuesses() {
                     <Form.Check
                       type="radio"
                       name={`winner-${game._id}`}
-                      value={game.homeTeam}
+                      value="home"
                       label={game.homeTeam}
                     />
                     <Form.Check
                       type="radio"
+                      name='tie'
+                      value="tie"
+                      label="Tie"
+                    />
+                    <Form.Check
+                      type="radio"
                       name={`winner-${game._id}`}
-                      value={game.awayTeam}
+                      value="away"
                       label={game.awayTeam}
                     />
                   </td>
@@ -59,4 +93,4 @@ export default function CreateGuesses() {
         </Form>
       </div>
     );
-  };
+}

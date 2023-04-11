@@ -51,6 +51,30 @@ export default function CreateLeague() {
       })
       .catch((err) => console.error(err));
     }, []);
+
+    const createLeague = async() => {
+      let leagueTest = null;
+
+      const selectedUsers = users.filter((user) => user.isSelected);
+  
+      const data = {
+        name: league.name,
+        users: selectedUsers.map((user) => user._id),
+        isPrivate: league.isPrivate,
+        games: weekGames,
+      };
+      try {
+        const response = await axios.post('http://localhost:3100/api/league', data);
+        console.log("DATA POST", response.data);
+        leagueTest = response.data;
+        return leagueTest;
+      }
+      catch(e) {
+        console.log(e.message);
+
+      }
+
+    }
   
     const handleNameChange = (event) => {
       setLeague({ ...league, name: event.target.value });
@@ -67,30 +91,27 @@ export default function CreateLeague() {
       );
       setUsers(updatedUsers);
     };
-  
-    const handleSubmit = (event) => {
+
+    const handleSubmit = async(event) => {
       event.preventDefault();
+
+      const leagueCreated = await createLeague();
+
+
+     console.log("como la chu", leagueCreated);
   
-      const selectedUsers = users.filter((user) => user.isSelected);
-  
-      const data = {
-        name: league.name,
-        users: selectedUsers.map((user) => user._id),
-        isPrivate: league.isPrivate,
-        games: weekGames
-      };
-  
-      axios
+   /*   axios
         .post('http://localhost:3100/api/league', data)
         .then((response) => {
-          console.log(response.data);
-          console.log(weekGames);
+          console.log("DATA POST", response.data);
         })
         .catch((error) => {
           console.log(error);
-        });
+        }); */
+
 
         navigate('/my-leagues');
+      
     };
   
     return (

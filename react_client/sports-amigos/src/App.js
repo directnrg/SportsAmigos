@@ -76,12 +76,12 @@ function SportsAmigosApp() {
                   <Nav.Link as={Link} to="/create-league">Create a League</Nav.Link>
                   <Nav.Link as={Link} to="/league-list">League List</Nav.Link>
                   <Nav.Link as={Link} to="/my-leagues">My Leagues</Nav.Link>
+                  <Nav.Link as={Link} to="/create-guesses">Create Guesses</Nav.Link>
                   <Button as={Link} to="/" onClick={onLogout} >Log Out</Button>{' '}
                 </Nav>
               </Navbar.Collapse>
             </Container>
           </Navbar>
-
 
           <div>
             <Routes>
@@ -140,7 +140,6 @@ function SportsAmigosApp() {
             <Route path="/guides/" element={<HowToPlay />} />
             <Route path="/guides/article/:id" element={<Article />} />
             <Route path="/log-in" element={<Login />} />
-            <Route path='/create-guesses' element={<CreateGuesses />} />
 
             {/*Add the route to your component if necessary */}
           </Routes>
