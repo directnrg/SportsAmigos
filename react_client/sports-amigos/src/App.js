@@ -24,9 +24,6 @@ export const MyContext = createContext()
 
 function SportsAmigosApp() {
 
-
-
-
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [loginModalShow, setLoginModalShow] = useState(false);
   const [loginData, setLoginData] = useState({login:false});

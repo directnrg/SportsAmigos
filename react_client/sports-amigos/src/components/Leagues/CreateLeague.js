@@ -1,12 +1,17 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import Container from 'react-bootstrap/esm/Container';
 import Row from 'react-bootstrap/esm/Row';
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
 import Col from 'react-bootstrap/esm/Col';
 import axios from 'axios';
+import { MyContext } from '../../App';
+import {useNavigate} from 'react-router-dom';
 
 export default function CreateLeague() {
+
+    const navigate = useNavigate();
+    const { loginData, setLoginData } = useContext(MyContext);
     const [users, setUsers] = useState([]);
     const [weekGames, setWeekGames] = useState([]);
     const [league, setLeague] = useState({
@@ -19,15 +24,19 @@ export default function CreateLeague() {
     });
   
     const usersUrl = 'http://localhost:3100/api/users/';
-    const gamesUrl = 'http://localhost:3100/api/games/';
+    const gamesUrl = 'http://localhost:3100/api/games-of-the-week/';
   
     useEffect(() => {
       axios
         .get(usersUrl)
         .then((res) => {
-          setUsers(res.data.map((user) => ({ ...user, isSelected: false })));
+          const usersWithSelection = res.data.map((user) => ({
+            ...user,
+            isSelected: user._id === loginData.userId, // Set isSelected to true if user id matches the logged in user id
+          }));
+          setUsers(usersWithSelection);
           //debug
-          console.log(res.data);
+          console.log(usersWithSelection);
         })
         .catch((err) => console.error(err));
     }, []);
@@ -80,6 +89,8 @@ export default function CreateLeague() {
         .catch((error) => {
           console.log(error);
         });
+
+        navigate('/my-leagues');
     };
   
     return (
