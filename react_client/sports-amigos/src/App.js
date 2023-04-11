@@ -18,6 +18,7 @@ import LoginModal from './components/LoginModal';
 import { faL } from '@fortawesome/free-solid-svg-icons';
 import CreateLeague from './components/Leagues/CreateLeague';
 import jwt from 'jwt-decode'
+import Standings from './components/Leagues/Standings';
 
 
 export const MyContext = createContext()
@@ -90,6 +91,7 @@ function SportsAmigosApp() {
               <Route path="/guides/article/:id" element={<Article />} />
               <Route path="/log-in" element={<Login />} />
               <Route path="/league-list" element={<LeagueList />} />
+              <Route path="/standings/:id" element={<Standings />} />
               <Route path="/my-leagues" element={<MyLeagues />} />
               <Route path='/create-league' element={<CreateLeague />} />
 
