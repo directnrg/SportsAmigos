@@ -12,18 +12,7 @@ export const createLeague = async (req, res) => {
 };
 
 
-/**
- * Retrieve all the leagues associated with a specific user by their ID.
- * 
- * @async
- * @function getAllLeaguesByUserId
- * @param {Object} req - Express request object
- * @param {Object} res - Express response object
- * @param {string} req.params.userId - The ID of the user whose leagues are being retrieved
- * @throws 500 error if there is an internal server error
- * @returns {Object} JSON object representing an array of league objects
- * with games, guesses, and user information populated (user id and fullname)
- */
+
 export const getAllLeaguesByUserId = async (req, res) => {
   try {
     const userId = req.params.userId;
@@ -45,11 +34,29 @@ export const getAllLeaguesByUserId = async (req, res) => {
 
 //TODO - add documentation for methods
 /**
- * 
+ *
  */
 export const getLeagues = async (req, res) => {
   try {
-    const leagues = await League.find().populate('users guesses games');
+    const leagues = await League.find()
+      .populate('users')
+      .populate({
+        path: 'guesses',
+        populate: [
+          {
+            path: 'user',
+            model: 'User',
+            select: 'fullName',
+          },
+          {
+            path: 'game',
+            model: 'Game',
+            select: 'homeTeam awayTeam startTime result',
+          },
+        ],
+      })
+      .populate('games');
+
     res.status(200).json(leagues);
   } catch (error) {
     console.error('Error in getLeagues:', error); // Log the error to the console
@@ -59,9 +66,25 @@ export const getLeagues = async (req, res) => {
 
 export const getLeague = async (req, res) => {
   try {
-    const league = await League.findById(req.params.leagueId).populate(
-      'users guesses games'
-    );
+    const league = await League.findById(req.params.leagueId)
+      .populate('users')
+      .populate({
+        path: 'guesses',
+        populate: [
+          {
+            path: 'user',
+            model: 'User',
+            select: 'fullName',
+          },
+          {
+            path: 'game',
+            model: 'Game',
+            select: 'homeTeam awayTeam startTime result',
+          },
+        ],
+      })
+      .populate('games');
+
     if (league) {
       res.status(200).json(league);
     } else {
@@ -73,10 +96,9 @@ export const getLeague = async (req, res) => {
   }
 };
 
-
 //TODO - add documentation for methods
 /**
- * 
+ *
  */
 export const updateLeagueName = async (req, res) => {
   const { leagueId } = req.params;
@@ -106,10 +128,9 @@ export const updateLeagueName = async (req, res) => {
   }
 };
 
-
 //TODO - add documentation for methods
 /**
- * 
+ *
  */
 export const userJoinLeague = async (req, res) => {
   const { leagueId, userId } = req.body;
