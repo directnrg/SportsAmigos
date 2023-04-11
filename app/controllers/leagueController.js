@@ -13,7 +13,7 @@ export const createLeague = async (req, res) => {
 
 //TODO - document method get all leagues by user id
 /**
- * 
+ *
  */
 export const getAllLeaguesByUserId = async (req, res) => {
   try {
@@ -30,15 +30,31 @@ export const getAllLeaguesByUserId = async (req, res) => {
   }
 };
 
-
-
 //TODO - add documentation for methods
 /**
- * 
+ *
  */
 export const getLeagues = async (req, res) => {
   try {
-    const leagues = await League.find().populate('users guesses games');
+    const leagues = await League.find()
+      .populate('users')
+      .populate({
+        path: 'guesses',
+        populate: [
+          {
+            path: 'user',
+            model: 'User',
+            select: 'fullName',
+          },
+          {
+            path: 'game',
+            model: 'Game',
+            select: 'homeTeam awayTeam startTime result',
+          },
+        ],
+      })
+      .populate('games');
+
     res.status(200).json(leagues);
   } catch (error) {
     console.error('Error in getLeagues:', error); // Log the error to the console
@@ -48,9 +64,25 @@ export const getLeagues = async (req, res) => {
 
 export const getLeague = async (req, res) => {
   try {
-    const league = await League.findById(req.params.leagueId).populate(
-      'users guesses games'
-    );
+    const league = await League.findById(req.params.leagueId)
+      .populate('users')
+      .populate({
+        path: 'guesses',
+        populate: [
+          {
+            path: 'user',
+            model: 'User',
+            select: 'fullName',
+          },
+          {
+            path: 'game',
+            model: 'Game',
+            select: 'homeTeam awayTeam startTime result',
+          },
+        ],
+      })
+      .populate('games');
+
     if (league) {
       res.status(200).json(league);
     } else {
@@ -62,10 +94,9 @@ export const getLeague = async (req, res) => {
   }
 };
 
-
 //TODO - add documentation for methods
 /**
- * 
+ *
  */
 export const updateLeagueName = async (req, res) => {
   const { leagueId } = req.params;
@@ -95,10 +126,9 @@ export const updateLeagueName = async (req, res) => {
   }
 };
 
-
 //TODO - add documentation for methods
 /**
- * 
+ *
  */
 export const userJoinLeague = async (req, res) => {
   const { leagueId, userId } = req.body;
