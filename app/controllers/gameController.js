@@ -14,6 +14,7 @@ const apiHost = process.env.API_SPORTS_HOST;
 //league - MEXICAN LEAGUE
 const MEXICAN_LEAGUE = 262;
 const SEASON_MEXICAN_LEAGUE = 2022;
+const TIME_ZONE = 'America/Toronto'
 
 // Get all games - if needed
 export const getGames = async (req, res) => {
@@ -51,7 +52,7 @@ export const populateGamesApi = async (req, res) => {
     const fromDateString = weekStart.toISOString().split('T')[0];
     const toDateString = weekEnd.toISOString().split('T')[0];
 
-    const url = `https://v3.football.api-sports.io/fixtures?league=${MEXICAN_LEAGUE}&season=${SEASON_MEXICAN_LEAGUE}&from=${fromDateString}&to=${toDateString}&timezone=America/Toronto`;
+    const url = `https://v3.football.api-sports.io/fixtures?league=${MEXICAN_LEAGUE}&season=${SEASON_MEXICAN_LEAGUE}&from=${fromDateString}&to=${toDateString}&timezone=${TIME_ZONE}`;
     const response = await axios.get(url, {
       headers: { 'x-apisports-key': apiKey, 'x-apisports-host': apiHost },
     });
@@ -162,7 +163,7 @@ export const updateGames = async () => {
     const fromDateString = fromDate.toISOString().split('T')[0];
     const toDateString = toDate.toISOString().split('T')[0];
 
-    const url = `https://v3.football.api-sports.io/fixtures?league=${MEXICAN_LEAGUE}&season=${SEASON_MEXICAN_LEAGUE}&from=${fromDateString}&to=${toDateString}&timezone=America/Toronto`;
+const url = `https://v3.football.api-sports.io/fixtures?league=${MEXICAN_LEAGUE}&season=${SEASON_MEXICAN_LEAGUE}&from=${fromDateString}&to=${toDateString}&timezone=${TIME_ZONE}`;
     const response = await axios.get(url, { headers: { 'x-apisports-key': apiKey, 'x-apisports-host': apiHost } });
 
     const fixtures = response.data.response; // Access the response fixtures
@@ -213,7 +214,7 @@ export const updateGameWinnerDaily = async () => {
     const fromDateString = fromDate.toISOString().split('T')[0];
     const toDateString = toDate.toISOString().split('T')[0];
 
-    const url = `https://v3.football.api-sports.io/fixtures?league=${MEXICAN_LEAGUE}&season=${SEASON_MEXICAN_LEAGUE}&from=${fromDateString}&to=${toDateString}&timezone=America/Toronto`;
+const url = `https://v3.football.api-sports.io/fixtures?league=${MEXICAN_LEAGUE}&season=${SEASON_MEXICAN_LEAGUE}&from=${fromDateString}&to=${toDateString}&timezone=${TIME_ZONE}`;
     const response = await axios.get(url, { headers: { 'x-apisports-key': apiKey, 'x-apisports-host': apiHost } });
 
     const fixtures = response.data.response; // Access the response fixtures
