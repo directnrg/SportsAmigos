@@ -14,11 +14,11 @@ export const fecthMexicanLeagues = async (req, res) => {
     const options = {
       method: 'GET',
       url: 'https://v3.football.api-sports.io/leagues',
-      params: {country: 'Mexico', current: 'true'},
+      params: {country: 'Mexico', current: 'true', timezone: 'America/Toronto'},
       headers: {
         'Content-Type': 'application/json',
-        'x-rapidapi-key': apiKey,
-        'x-rapidapi-host': apiHost
+        'x-apisports-key': apiKey,
+        'x-apisports-host': apiHost
       }
     };
     
