@@ -1,4 +1,5 @@
 import Standing from '../models/standing.js';
+import User from '../models/user.js';
 import { check, validationResult } from 'express-validator';
 
 /***
@@ -75,9 +76,9 @@ export const getStandingById = async (req, res) => {
     res.status(200).json(standing);
   } catch (error) {
     console.error(error.message);
-    res.status(500).json({ message: "Standing not found", error: error });
+    res.status(500).json({ message: 'Standing not found', error: error });
   }
-}
+};
 
 /***
 parameter   GET League.id
@@ -85,8 +86,10 @@ parameter   GET League.id
 ***/
 export const getStandingByLeagueId = async (req, res) => {
   try {
-    const { leagueId } = req.params;
-    const standing = await Standing.findOne({ league: leagueId })
+    const { id } = req.params;
+    console.log('League ID:', id);
+
+    const standing = await Standing.findOne({ league: id })
       .populate({
         path: 'standings.user',
         select: 'fullName',
@@ -95,6 +98,8 @@ export const getStandingByLeagueId = async (req, res) => {
         path: 'league',
         select: 'name',
       });
+
+    console.log('Found standing:', standing);
 
     if (!standing) {
       return res
@@ -108,7 +113,6 @@ export const getStandingByLeagueId = async (req, res) => {
     res.status(500).send('Server Error');
   }
 };
-
 
 /***
 parameter   PUT
@@ -167,11 +171,10 @@ export const updateStanding = async (req, res) => {
   }
 };
 
-
 /**
- * This method will first find the standing with the specified league ID from the request parameters.. 
+ * This method will first find the standing with the specified league ID from the request parameters..
  * If the standing is not found, it will return a 404 error.
- * @param req.standing 
+ * @param req.standing
  */
 export const deleteStandingByLeague = async (req, res) => {
   const { league } = req.params;
@@ -191,8 +194,8 @@ export const deleteStandingByLeague = async (req, res) => {
 
 /**
  * To delete a standing by mongo db id
- * @param req 
- * @param res 
+ * @param req
+ * @param res
  */
 export const deleteStanding = async (req, res) => {
   try {
@@ -210,14 +213,14 @@ export const deleteStanding = async (req, res) => {
 };
 
 /**
-*parameter   PATCH user.id
-*
-*This method will first find all the standings with the specified user ID from the request parameters. 
-* If the user exists in any standings:
-* If the user is the only one in the standings, it will return error message.
-* Else, delete the user from the standings and returns the updated standings. 
-* If the user is not found in any standings, it will return a 404 error.
-**/
+ *parameter   PATCH user.id
+ *
+ *This method will first find all the standings with the specified user ID from the request parameters.
+ * If the user exists in any standings:
+ * If the user is the only one in the standings, it will return error message.
+ * Else, delete the user from the standings and returns the updated standings.
+ * If the user is not found in any standings, it will return a 404 error.
+ **/
 
 export const removeUserInStanding = async (req, res) => {
   const { user } = req.params;
@@ -265,13 +268,13 @@ parameter   PATCH
 */
 
 /**
-* This method will first find the standing with the specified league ID from the request body. 
-* If the league is found in the standings, it checks if the user from the request body
-* exists in the standings array.
-* If the user is the only one in the standings, it will return error message. 
-* Else, delete the user from the standings and returns the updated standings. 
-* If the user or league is not found in any standings, it will return a 404 error
-*/
+ * This method will first find the standing with the specified league ID from the request body.
+ * If the league is found in the standings, it checks if the user from the request body
+ * exists in the standings array.
+ * If the user is the only one in the standings, it will return error message.
+ * Else, delete the user from the standings and returns the updated standings.
+ * If the user or league is not found in any standings, it will return a 404 error
+ */
 
 //TODO review - name convention seems strange. the remove operation seems to be
 //removing the user but not the points property in the json object
@@ -291,7 +294,9 @@ export const removeUserStandingInLeague = async (req, res) => {
     );
 
     if (userIndex === -1) {
-      return res.status(404).json({ msg: 'User not found in league standings' });
+      return res
+        .status(404)
+        .json({ msg: 'User not found in league standings' });
     }
 
     if (standing.standings.length <= 1) {
@@ -307,5 +312,68 @@ export const removeUserStandingInLeague = async (req, res) => {
   } catch (error) {
     console.error(error.message);
     res.status(500).send('Server Error');
+  }
+};
+
+export const joinUserInStanding = async (req, res) => {
+  const { leagueId, users } = req.body;
+
+  if (!users || users.length === 0) {
+    res.status(400).json({ message: 'No users provided' });
+    return;
+  }
+
+  try {
+    const standing = await Standing.findOne({ league: leagueId });
+
+    if (!standing) {
+      res.status(404).json({ message: 'Standing not found' });
+      return;
+    }
+
+    for (const userId of users) {
+      if (!userId || userId.trim() === '') {
+        res.status(400).json({ message: 'Invalid user id provided' });
+        return;
+      }
+
+      const user = await User.findById(userId);
+
+      if (!user) {
+        res.status(404).json({ message: `User with id ${userId} not found` });
+        return;
+      }
+
+      if (
+        !standing.standings.some((stand) => stand.user.toString() === userId)
+      ) {
+        standing.standings.push({ user: userId });
+      }
+    }
+
+    await standing.save();
+
+    res.status(200).json(standing);
+  } catch (error) {
+    console.error('Error in joinUserInStanding:', error);
+    res.status(500).json({ message: 'Internal server error', error: {} });
+  }
+};
+
+export const getAllStanding = async (req, res) => {
+  try {
+    const standings = await Standing.find().populate({
+      path: 'league standings.user',
+    });
+
+    if (!standings) {
+      res.status(404).json({ message: 'No standings found' });
+      return;
+    }
+
+    res.status(200).json(standings);
+  } catch (error) {
+    console.error('Error in getAllStanding:', error);
+    res.status(500).json({ message: 'Internal server error', error: {} });
   }
 };
