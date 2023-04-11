@@ -1,7 +1,17 @@
-import Guess from '../models/guess.js'
-import Game from '../models/game.js';
+import Guess from '../models/guess.js';
 import Standing from '../models/standing.js';
 
+
+/**
+ * Creates a new guess object and saves it to the database.
+ *
+ * @async
+ * @function createGuess
+ * @param {Object} req - Express request object
+ * @param {Object} res - Express response object
+ * @throws {Error} 400 error if there is an error creating the guess
+ * @returns {Object} JSON object with success message and the populated `Guess` object
+ */
 export const createGuess = async (req, res) => {
     try {
         const newGuess = new Guess(req.body);
@@ -15,10 +25,18 @@ export const createGuess = async (req, res) => {
 }
 
 /**
- * to add multiple user guesses from frontend that assumes that all
- * guesses sent in the request are going to have the same ID of user.
- * this method will serve the purpose of handling a single request for adding multiple
- * user guesses.
+ * Add multiple guesses for a single user in a single request.
+ * assumes that all guesses sent in the request are going to have the same ID of user.
+ * 
+ * @async
+ * @function addAllUserGuesses
+ * @param {Object} req - Express request object
+ * @param {Object} req.body - Array of guess objects with a common user ID
+ * @param {string} req.body[].userId - User ID for all the guesses in the array
+ * @throws 400 error if user IDs in the array are not the same
+ * @returns {Object} JSON object representing the stored guesses
+ * @returns {string} Object.message - success message
+ * @returns {Object[]} Object.guesses - Array of stored guess objects
  */
 export const addAllUserGuesses = async (req, res) => {
     try {
@@ -47,7 +65,14 @@ export const addAllUserGuesses = async (req, res) => {
 };
 
 /**
- * get all guesses in the database.
+ * Retrieve all guesses, populated with user and game data.
+ *
+ * @async
+ * @function getAllGuesses
+ * @param {Object} req - Express request object
+ * @param {Object} res - Express response object
+ * @returns {Object} JSON object representing all guesses
+ * @throws {Error} 400 error if there was an error fetching the guesses
  */
 export const getAllGuesses = async (req, res) => {
     try {
@@ -58,21 +83,44 @@ export const getAllGuesses = async (req, res) => {
     }
 }
 
+/**
+ * Retrieves a guess by ID.
+ *
+ * @async
+ * @function getGuessById
+ * @param {Object} req - Express request object
+ * @param {Object} res - Express response object
+ * @throws {Error} 400 error if guess is not found
+ * @returns {Object} JSON object representing the retrieved guess
+ */
 export const getGuessById = async (req, res) => {
     try {
         const guess = req.guess
         res.status(200).json(guess);
     } catch (error) {
-        res.status(400).json({ message: 'Error fetching guesses', error: error });
+        res.status(400).json({ message: 'Guess not found', error: error });
     }
 }
 
+/**
+ * Update a guess by ID.
+ *
+ * @async
+ * @function updateGuess
+ * @param {Object} req - Express request object
+ * @param {Object} req.guess - Guess object to be updated, obtained from middleware
+ * @param {Object} req.body - Request body containing fields to update
+ * @param {Object} res - Express response object
+ * @throws {Error} 404 error if guess is not found
+ * @throws {Error} 400 error if there's an error updating the guess
+ * @returns {Object} JSON object representing the updated guess
+ */
 export const updateGuess = async (req, res) => {
     try {
         const { id } = req.guess;
-        const { user, betamount, game, guess, userPoints } = req.body;
+        const { user, game, guess, userPoints } = req.body;
         const updatedGuess = await Guess.findOneAndUpdate({ _id: id },
-            { user, betamount, game, guess, userPoints },
+            { user, game, guess, userPoints },
             { new: true, runValidators: true }
         );
         if (!updatedGuess) {
@@ -84,6 +132,16 @@ export const updateGuess = async (req, res) => {
     }
 }
 
+/**
+ * Delete a guess by ID.
+ *
+ * @async
+ * @function deleteGuess
+ * @param {Object} req - Express request object
+ * @param {Object} res - Express response object
+ * @throws {Error} 404 error if guess is not found
+ * @returns {Object} JSON object indicating successful deletion of guess
+ */
 export const deleteGuess = async (req, res) => {
     try {
         const { id } = req.guess;
