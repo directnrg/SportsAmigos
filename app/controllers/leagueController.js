@@ -11,16 +11,18 @@ export const createLeague = async (req, res) => {
   }
 };
 
-//TODO - document method get all leagues by user id
-/**
- *
- */
+
+
 export const getAllLeaguesByUserId = async (req, res) => {
   try {
     const userId = req.params.userId;
 
     const leagues = await League.find({ users: userId })
-      .populate(['games', 'guesses'])
+      .populate([
+        'games',
+        'guesses',
+        { path: 'users', select: '_id fullName' },
+      ])
       .exec();
 
     res.status(200).json(leagues);

@@ -17,7 +17,7 @@ export default function LeagueModalGrid({modalProps}) {
         console.log("Modal props",modalProps);
     });
   return (
-    <Modal {...modalProps} aria-labelledby="contained-modal-title-vcenter">
+    <Modal {...modalProps} aria-labelledby="contained-modal-title-vcenter" size="lg">
       <Modal.Header closeButton>
         <Modal.Title id="contained-modal-title-vcenter">
          League details:
@@ -52,7 +52,7 @@ export default function LeagueModalGrid({modalProps}) {
               <tr  key={index}>
                 <td>{game.homeTeam}</td>
                 <td>{game.awayTeam}</td>
-                <td>{game.startTime}</td>
+                <td>{new Date(game.startTime).toLocaleString('en-US',{  year: 'numeric', month: 'long', day: 'numeric',hour: 'numeric'})}</td>
                 <td>{game.result}</td>
               </tr>)
             }) 
@@ -125,7 +125,7 @@ export default function LeagueModalGrid({modalProps}) {
       </Modal.Body>
       <Modal.Footer>
         <Button onClick={modalProps.onHide}>Close</Button>
-        <Button onClick={modalProps.onHide}>Create guesses</Button>
+        <Button href='/create-guesses'>Create guesses</Button>
       </Modal.Footer>
     </Modal>
   );
