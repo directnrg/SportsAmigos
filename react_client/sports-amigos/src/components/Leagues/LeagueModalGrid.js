@@ -125,7 +125,7 @@ export default function LeagueModalGrid({modalProps}) {
       </Modal.Body>
       <Modal.Footer>
         <Button onClick={modalProps.onHide}>Close</Button>
-        <Button onClick={modalProps.onHide}>Create guesses</Button>
+        <Button href='/create-guesses'>Create guesses</Button>
       </Modal.Footer>
     </Modal>
   );

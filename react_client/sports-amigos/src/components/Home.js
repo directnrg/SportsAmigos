@@ -3,9 +3,6 @@ import { Container, Row, Col, Button } from 'react-bootstrap';
 import {useNavigate} from "react-router-dom";
 
 export default function Home() {
-
-  const navigate = useNavigate();
-
   return (
     <Container fluid>
       <Row className="justify-content-center align-items-center text-center">
