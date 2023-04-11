@@ -66,6 +66,7 @@ export default function CreateLeague() {
       try {
         const response = await axios.post('http://localhost:3100/api/league', data);
         console.log("DATA POST", response.data);
+        setLeague(leagueTest)
         leagueTest = response.data;
         return leagueTest;
       }
@@ -96,20 +97,22 @@ export default function CreateLeague() {
       event.preventDefault();
 
       const leagueCreated = await createLeague();
+      console.log("como la chu", leagueCreated);
+      const standings = {
+        name: leagueCreated._id,
+        users: league.users
+      }
 
+      console.log(standings);
 
-     console.log("como la chu", leagueCreated);
-  
-   /*   axios
-        .post('http://localhost:3100/api/league', data)
-        .then((response) => {
-          console.log("DATA POST", response.data);
-        })
-        .catch((error) => {
-          console.log(error);
-        }); */
+     try {
+      const response = await axios.post('http://localhost:3100/api/standings', standings);
+      console.log("STANDINGS POST", response.data)
+    }
+    catch(e) {
+      console.log(e.message);
 
-
+    }
         navigate('/my-leagues');
       
     };
