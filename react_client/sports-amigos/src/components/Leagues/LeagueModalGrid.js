@@ -131,6 +131,7 @@ export default function LeagueModalGrid({modalProps}) {
       </Modal.Body>
       <Modal.Footer>
         <Button onClick={modalProps.onHide}>Close</Button>
+        <Button onClick={modalProps.onHide}>Create guesses</Button>
         <Button href={`/standings/${modalProps.league._id}`}>Test</Button>
         <Button onClick={ ()=>{onCheckStandings()}}>Check Standings</Button>
       </Modal.Footer>

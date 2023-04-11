@@ -17,6 +17,7 @@ import Article from './components/Guides/Article';
 import LoginModal from './components/LoginModal';
 import { faL } from '@fortawesome/free-solid-svg-icons';
 import CreateLeague from './components/Leagues/CreateLeague';
+import CreateGuesses from './components/Leagues/CreateGuesses';
 import jwt from 'jwt-decode'
 import Standings from './components/Leagues/Standings';
 
@@ -94,6 +95,7 @@ function SportsAmigosApp() {
               <Route path="/standings/:id" element={<Standings />} />
               <Route path="/my-leagues" element={<MyLeagues />} />
               <Route path='/create-league' element={<CreateLeague />} />
+              <Route path='/create-guesses' element={<CreateGuesses />} />
 
               {/*Add the route to your component if necessary */}
             </Routes>
@@ -140,6 +142,7 @@ function SportsAmigosApp() {
             <Route path="/guides/" element={<HowToPlay />} />
             <Route path="/guides/article/:id" element={<Article />} />
             <Route path="/log-in" element={<Login />} />
+            <Route path='/create-guesses' element={<CreateGuesses />} />
 
             {/*Add the route to your component if necessary */}
           </Routes>
