@@ -29,6 +29,10 @@ const leagueSchema = new Schema({
         type: Boolean,
         default: false,
     },
+    endDate: {
+        type: Date,
+        required: true
+    }
 });
 
 const League = model('League', leagueSchema);
