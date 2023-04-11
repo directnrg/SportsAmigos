@@ -5,13 +5,16 @@ import League from '../models/league.js';
 
 export const createGuess = async (req, res) => {
   try {
-    const { league, guesses } = req.body;
+    const { league, user, guesses } = req.body;
     const createdGuesses = [];
 
     for (const guessData of guesses) {
       const newGuess = new Guess({
-        ...guessData,
+        user: user,
+        game: guessData.game,
+        guess: guessData.guess,
         league: league,
+        date: new Date(),
       });
 
       await newGuess.save();
@@ -19,10 +22,7 @@ export const createGuess = async (req, res) => {
 
       // Add guess to the league
       const leagueToUpdate = await League.findById(league);
-      leagueToUpdate.guesses.push({
-        guess: newGuess._id,
-        date: new Date(),
-      });
+      leagueToUpdate.guesses.push(newGuess._id);
       leagueToUpdate.games.push(guessData.game); // Add the game id to League games array
       await leagueToUpdate.save();
     }
@@ -40,38 +40,38 @@ export const createGuess = async (req, res) => {
  * this method will serve the purpose of handling a single request for adding multiple
  * user guesses.
  */
-export const addAllUserGuesses = async (req, res) => {
-  try {
-    //array of guesses
-    const userGuesses = req.body;
+// export const addAllUserGuesses = async (req, res) => {
+//   try {
+//     //array of guesses
+//     const userGuesses = req.body;
 
-    // Get the user ID from the request body (assuming all guesses have the same user ID)
-    const userId = userGuesses[0].userId;
+//     // Get the user ID from the request body (assuming all guesses have the same user ID)
+//     const userId = userGuesses[0].userId;
 
-    // Validate that all user IDs are the same
-    const allUserIdsSame = userGuesses.every(
-      (guess) => guess.userId === userId
-    );
+//     // Validate that all user IDs are the same
+//     const allUserIdsSame = userGuesses.every(
+//       (guess) => guess.userId === userId
+//     );
 
-    if (!allUserIdsSame) {
-      return res
-        .status(400)
-        .json({ message: 'All user IDs in the array must be the same' });
-    }
+//     if (!allUserIdsSame) {
+//       return res
+//         .status(400)
+//         .json({ message: 'All user IDs in the array must be the same' });
+//     }
 
-    // Save all the guesses in parallel
-    await Promise.all(userGuesses.map((guess) => new Guess(guess).save()));
+//     // Save all the guesses in parallel
+//     await Promise.all(userGuesses.map((guess) => new Guess(guess).save()));
 
-    // Return the stored guesses filtered by the user's ID
-    const storedGuesses = await Guess.find({ userId });
-    res.status(201).json({
-      message: 'Successfully added all guesses of user',
-      guesses: storedGuesses,
-    });
-  } catch (error) {
-    res.status(400).json({ message: 'Error creating guess', error });
-  }
-};
+//     // Return the stored guesses filtered by the user's ID
+//     const storedGuesses = await Guess.find({ userId });
+//     res.status(201).json({
+//       message: 'Successfully added all guesses of user',
+//       guesses: storedGuesses,
+//     });
+//   } catch (error) {
+//     res.status(400).json({ message: 'Error creating guess', error });
+//   }
+// };
 
 /**
  * get all guesses in the database.

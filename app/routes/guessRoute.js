@@ -5,7 +5,7 @@ import {
   getGuessById,
   updateGuess,
   deleteGuess,
-  addAllUserGuesses,
+//   addAllUserGuesses,
 } from '../controllers/guessController.js';
 import {
   findGuessById,
@@ -18,7 +18,7 @@ const guessRouter = Router();
 guessRouter.post('/guess', createGuess);
 
 // add all guesses from a user
-guessRouter.post('/user-guesses', addAllUserGuesses);
+// guessRouter.post('/user-guesses', addAllUserGuesses);
 
 // Get all guesses
 guessRouter.get('/guesses', getAllGuesses);

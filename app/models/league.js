@@ -21,14 +21,8 @@ const leagueSchema = new Schema({
   },
   guesses: [
     {
-      guess: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Guess',
-      },
-      date: {
-        type: Date,
-        default: null,
-      },
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Guess',
     },
   ],
   games: [
@@ -40,6 +34,10 @@ const leagueSchema = new Schema({
   isPrivate: {
     type: Boolean,
     default: false,
+  },
+  endDate: {
+    type: Date,
+    default: null,
   },
 });
 
