@@ -26,6 +26,10 @@ const guessSchema = new Schema({
     type: Number,
     default: 0,
   },
+  date: {
+    type: Date,
+    default: null,
+  },
 });
 
 const Guess = model('Guess', guessSchema);
