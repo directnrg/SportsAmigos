@@ -76,7 +76,6 @@ function SportsAmigosApp() {
                   <Nav.Link as={Link} to="/create-league">Create a League</Nav.Link>
                   <Nav.Link as={Link} to="/league-list">League List</Nav.Link>
                   <Nav.Link as={Link} to="/my-leagues">My Leagues</Nav.Link>
-                  <Nav.Link as={Link} to="/create-guesses">Create Guesses</Nav.Link>
                   <Button as={Link} to="/" onClick={onLogout} >Log Out</Button>{' '}
                 </Nav>
               </Navbar.Collapse>

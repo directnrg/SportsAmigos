@@ -65,9 +65,9 @@ export default function CreateLeague() {
       };
       try {
         const response = await axios.post('http://localhost:3100/api/league', data);
-        console.log("DATA POST", response.data);
-        setLeague(leagueTest)
+        console.log("LEAGUE POST", response.data);
         leagueTest = response.data;
+        setLeague(leagueTest)
         return leagueTest;
       }
       catch(e) {
@@ -97,23 +97,24 @@ export default function CreateLeague() {
       event.preventDefault();
 
       const leagueCreated = await createLeague();
-      console.log("como la chu", leagueCreated);
+      console.log("League Created:", leagueCreated);
       const standings = {
-        name: leagueCreated._id,
-        users: league.users
+        leagueId: leagueCreated._id,
+        users: leagueCreated.users
       }
 
-      console.log(standings);
+      console.log("Standings object before being send:",standings);
 
      try {
       const response = await axios.post('http://localhost:3100/api/standings', standings);
       console.log("STANDINGS POST", response.data)
+      navigate('/my-leagues');
     }
     catch(e) {
       console.log(e.message);
 
     }
-        navigate('/my-leagues');
+        
       
     };
   
