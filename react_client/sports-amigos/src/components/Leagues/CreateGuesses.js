@@ -16,7 +16,7 @@ export default function CreateGuesses() {
       setGames(result.data.games);
     };
     fetchData();
-  }, []);
+  }, [id]);
 
   const handleSubmit = async (event) => {
     event.preventDefault();
