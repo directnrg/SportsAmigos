@@ -44,20 +44,12 @@ export default function LeagueList() {
   }
 
   useEffect(() => {
-
-
     getLeagues();
-
-
-
   }
-
-
     , []);
 
   useEffect(() => {
-    console.log("League List:", allLeagueList)
-      
+    console.log("League List:", allLeagueList) 
   })
 
   const onLeagueClick = (league) => {
@@ -68,7 +60,7 @@ export default function LeagueList() {
   const modalProps = {
     show: leagueListModalShow,
     onHide: () => setLeagueListModalShow(false),
-    league: allSelectedLeague
+    league: allSelectedLeague,
   }
 
   return (

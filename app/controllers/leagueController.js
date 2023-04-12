@@ -12,17 +12,6 @@ import { torontoDateTimeFormat } from '../helpers/TorontoDateFormatter.js';
  * @returns {JSON} The newly created league object.
  * @throws {object} The error object with message and error properties.
  */
-/**
- * Creates a new league.
- *
- * @async
- * @function createLeague
- * @param {object} req - The HTTP request object.
- * @param {object} res - The HTTP response object.
- * @param {object} req.body - The object containing the league data.
- * @returns {JSON} The newly created league object.
- * @throws {object} The error object with message and error properties.
- */
 export const createLeague = async (req, res) => {
   try {
     const league = new League(req.body);
@@ -67,7 +56,7 @@ export const getAllLeaguesByUserId = async (req, res) => {
               select: 'homeTeam awayTeam startTime result',
             },
           ],
-          select: 'league createdAt',
+          select: 'guessPoints guess createdAt',
         },
       ])
       .populate([{
@@ -139,7 +128,7 @@ export const getLeagues = async (req, res) => {
             select: 'homeTeam awayTeam startTime result',
           },
         ],
-        select: 'league createdAt',
+        select: 'guessPoints guess createdAt',
       })
       .populate('games');
 

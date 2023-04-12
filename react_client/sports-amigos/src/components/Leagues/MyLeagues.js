@@ -14,7 +14,7 @@ import { Badge } from 'react-bootstrap';
 
 
 export default function MyLeagues() {
-  const { loginData, setLoginData } = useContext(MyContext);
+  const {loginData} = useContext(MyContext);
   const [showLeagueModal, setShowLeagueModal] = useState(false);
   const [myLeaguesList, setMyLeaguesList] = useState([]);
   const [mySelectedLeague, setMySelectedLeague] = useState({});
@@ -30,7 +30,7 @@ export default function MyLeagues() {
   const modalProps = {
     show:myLeaguesModalShow,
      onHide:() => setMyLeaguesModalShow(false),
-     league:mySelectedLeague
+     league:mySelectedLeague,
   }
   const onLeagueTypeChange = () => {
     setAreMyLeaguesPrivate(!areMyLeaguesPrivate)
