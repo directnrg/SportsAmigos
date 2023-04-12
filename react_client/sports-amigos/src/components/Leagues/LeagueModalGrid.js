@@ -16,6 +16,7 @@ export default function LeagueModalGrid({modalProps}) {
 
 
   const navigate = useNavigate();
+  const [isGuessesDisabled, setIsGuessesDisabled] = useState(false);
   const onCheckStandings = (guessProps)=>{
     console.log("Modal props onCheckStandings", modalProps)
 
@@ -46,6 +47,16 @@ export default function LeagueModalGrid({modalProps}) {
         console.log("Modal props",modalProps);
 
   },[]);
+
+        console.log("Guesses length", modalProps?.league?.guesses?.length)
+        if( modalProps?.league?.guesses?.length >0){
+          setIsGuessesDisabled(true)
+        } else {
+          setIsGuessesDisabled(false);
+        }
+
+    });
+
   return (
     <Modal {...modalProps} aria-labelledby="contained-modal-title-vcenter" size="lg">
       <Modal.Header closeButton>
@@ -159,7 +170,7 @@ export default function LeagueModalGrid({modalProps}) {
       </Modal.Body>
       <Modal.Footer>
         <Button onClick={modalProps.onHide}>Close</Button>
-        <Button onClick={ ()=>{onCreateGuesses()}}>Create guesses</Button>
+        <Button onClick={ ()=>{onCreateGuesses()}} disabled={isGuessesDisabled}>Create guesses</Button>
         <Button onClick={ ()=>{onCheckStandings()}}>Check Standings</Button>
       </Modal.Footer>
     </Modal>
