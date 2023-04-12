@@ -11,7 +11,6 @@ import { check, validationResult } from 'express-validator';
 
 // Getting all users
 const getAllUsers = async (req, res) => {
-  console.log('inside getAllUsers');
   try {
     const users = await User.find();
     res.json(users);

@@ -24,8 +24,9 @@ export default function CreateLeague() {
     });
   
     const usersUrl = 'http://localhost:3100/api/users/';
-    const gamesUrl = 'http://localhost:3100/api/games-of-the-week/';
-  
+    const gamesCurrentWeekUrl = 'http://localhost:3100/api/games-of-the-week/';
+    const gamesLastWeekUrl = 'http://localhost:3100/api/games-of-the-last-week';
+
     useEffect(() => {
       axios
         .get(usersUrl)
@@ -43,7 +44,7 @@ export default function CreateLeague() {
 
     useEffect(() => {
       axios
-      .get(gamesUrl)
+      .get(gamesLastWeekUrl)
       .then((res) => {
         const gameIds = res.data.games.map((game) => game._id);
         console.log('gameids', gameIds);

@@ -22,13 +22,13 @@ const guessSchema = new Schema({
     default: null,
   },
   // 0 or 1 points for accuracy
-  userPoints: {
+  guessPoints: {
     type: Number,
     default: 0,
   },
-  date: {
+  createdAt: {
     type: Date,
-    default: null,
+    default: Date.now,
   },
 });
 

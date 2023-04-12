@@ -1,6 +1,8 @@
+import { validationResult } from 'express-validator';
 import Standing from '../models/standing.js';
 import User from '../models/user.js';
-import { check, validationResult } from 'express-validator';
+import Guess from '../models/guess.js';
+import mongoose from 'mongoose';
 
 /***
 parameter   POST
@@ -8,9 +10,20 @@ parameter   POST
   "league": "60a4b4a40c12345a6789d0b1",
   "user": "60a4b4a40c12345a6789d0c1",
 }
-//Create a League
-***/
 
+/**
+ * Creates a new league standing with a specified league ID and user ID.
+ *
+ * @async
+ * @function createLeagueStanding
+ * @param {Object} req - The HTTP request object.
+ * @param {Object} req.body - The HTTP request body containing the league and user IDs.
+ * @param {string} req.body.league - The ID of the league to create the standing for.
+ * @param {string} req.body.user - The ID of the user to create the standing for.
+ * @param {Object} res - The HTTP response object.
+ * @throws {Error} Will throw an error if the database operation fails. The error message will be included in the response body.
+ * @returns {JSON} Sends an HTTP response to the client with a JSON object containing the new standing object if successful, or sends an error response if unsuccessful.
+ */
 export const createLeagueStanding = async (req, res) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
@@ -52,10 +65,17 @@ export const createLeagueStanding = async (req, res) => {
   }
 };
 
-/***
-parameter   GET User.id
-//Get League standing belong to user
-***/
+/**
+ * Retrieves all standings for a specified user ID.
+ *
+ * @async
+ * @function getAllUserStandings
+ * @param {Object} req - The HTTP request object.
+ * @param {string} req.params.userId - The ID of the user to retrieve the standings for.
+ * @param {Object} res - The HTTP response object.
+ * @throws Will throw an error if the database operation fails. The error message will be included in the response body.
+ * @returns {JSON} Sends an HTTP response to the client with a JSON object containing the standings.
+ */
 export const getAllUserStandings = async (req, res) => {
   try {
     const userId = req.params.userId;
@@ -72,6 +92,17 @@ export const getAllUserStandings = async (req, res) => {
   }
 };
 
+/**
+ * Retrieves a single league standing by ID.
+ *
+ * @async
+ * @function getStandingById
+ * @param {Object} req - The HTTP request object.
+ * @param {Object} req.standing - The league standing object, retrieved from the database by the middleware.
+ * @param {Object} res - The HTTP response object.
+ * @throws {Error} Will throw an error if the database operation fails. The error message will be included in the response body.
+ * @returns {JSON} Sends an HTTP response to the client with a JSON object containing the standing.
+ */
 export const getStandingById = async (req, res) => {
   try {
     const standing = req.standing;
@@ -83,10 +114,17 @@ export const getStandingById = async (req, res) => {
   }
 };
 
-/***
-parameter   GET League.id
-//Standings for that league
-***/
+/**
+ * Retrieves a league standing by league ID, including the user and league objects.
+ *
+ * @async
+ * @function getStandingByLeagueId
+ * @param {Object} req - The HTTP request object.
+ * @param {string} req.params.leagueId - The ID of the league to retrieve the standing for.
+ * @param {Object} res - The HTTP response object.
+ * @throws {Error} Will throw an error if the database operation fails. The error message will be included in the response body.
+ * @returns {void} Sends an HTTP response to the client with a JSON object containing the standing, including the user and league objects.
+ */
 export const getStandingByLeagueId = async (req, res) => {
   try {
     const { id } = req.params;
@@ -136,9 +174,22 @@ parameter   PUT
     }
   ]
 }
-//Update user points for the league
-***/
 
+*/
+
+/**
+ * Updates a league standing with new point values for each user.
+ *
+ * @async
+ * @function updateStanding
+ * @param {Object} req - The HTTP request object.
+ * @param {Object} req.body - The request body object containing the league and new standings data.
+ * @param {string} req.body.league - The ID of the league to update the standing for.
+ * @param {Array} req.body.standings - An array of user objects with updated points values.
+ * @param {Object} res - The HTTP response object.
+ * @throws {Error} Will throw an error if the database operation fails. The error message will be included in the response body.
+ * @returns {void} Sends an HTTP response to the client with a JSON object containing the updated standing.
+ */
 export const updateStanding = async (req, res) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
@@ -175,9 +226,16 @@ export const updateStanding = async (req, res) => {
 };
 
 /**
- * This method will first find the standing with the specified league ID from the request parameters..
- * If the standing is not found, it will return a 404 error.
- * @param req.standing
+ * Deletes a standing by a league ID.
+ *
+ * @async
+ * @function deleteStandingByLeague
+ * @param {Object} req - The HTTP request object.
+ * @param {Object} req.params - The parameters object containing the ID of the league to delete the standing for.
+ * @param {string} req.params.league - The ID of the league to delete the standing for.
+ * @param {Object} res - The HTTP response object.
+ * @throws {Error} Will throw an error if the database operation fails. The error message will be included in the response body.
+ * @returns {void} Sends an HTTP response to the client with a JSON object containing a success message.
  */
 export const deleteStandingByLeague = async (req, res) => {
   const { league } = req.params;
@@ -195,10 +253,17 @@ export const deleteStandingByLeague = async (req, res) => {
   }
 };
 
+
 /**
- * To delete a standing by mongo db id
- * @param req
- * @param res
+ * Deletes a league standing by its ID.
+ *
+ * @async
+ * @function deleteStanding
+ * @param {Object} req - The HTTP request object.
+ * @param {Object} req.standing - The standing object to be deleted, as returned by the middleware that retrieves the standing from the database.
+ * @param {Object} res - The HTTP response object.
+ * @throws {Error} Will throw an error if the database operation fails. The error message will be included in the response body.
+ * @returns {void} Sends an HTTP response to the client with a JSON object containing a success message.
  */
 export const deleteStanding = async (req, res) => {
   try {
@@ -216,15 +281,17 @@ export const deleteStanding = async (req, res) => {
 };
 
 /**
- *parameter   PATCH user.id
+ * Removes the specified user from all standings they are a part of
  *
- *This method will first find all the standings with the specified user ID from the request parameters.
- * If the user exists in any standings:
- * If the user is the only one in the standings, it will return error message.
- * Else, delete the user from the standings and returns the updated standings.
- * If the user is not found in any standings, it will return a 404 error.
- **/
-
+ * @async
+ * @function removeUserInStanding
+ * @param {Object} req - Express request object
+ * @param {Object} req.params - Request parameters object
+ * @param {string} req.params.user - The ID of the user to be removed from standings
+ * @param {Object} res - Express response object
+ * @throws {Error} Will throw an error if an error occurs while deleting user from standings
+ * @returns {Object} The updated standing JSON object(s) after the user has been removed
+ */
 export const removeUserInStanding = async (req, res) => {
   const { user } = req.params;
 
@@ -270,13 +337,24 @@ parameter   PATCH
 * }
 */
 
+
 /**
- * This method will first find the standing with the specified league ID from the request body.
- * If the league is found in the standings, it checks if the user from the request body
- * exists in the standings array.
- * If the user is the only one in the standings, it will return error message.
- * Else, delete the user from the standings and returns the updated standings.
- * If the user or league is not found in any standings, it will return a 404 error
+* Finds the standing with the specified league ID from the request body. 
+* If the league is found in the standings, it checks if the user from the request body
+* exists in the standings array.
+* If the user is the only one in the standings, it will return error message. 
+* Else, delete the user from the standings and returns the updated standings. 
+* If the user or league is not found in any standings, it will return a 404 error
+
+@async
+ * @function removeUserStandingInLeague
+ * @param {Object} req - Express request object
+ * @param {Object} res - Express response object
+ * @param {string} req.body.league - League ID to remove user from
+ * @param {string} req.body.user - User ID to remove from league standing
+ * @throws {Error} 404 error if league is not found or user is not found in league standing
+ * @throws {Error} 400 error if league standing only has one user
+ * @returns {Object} JSON object representing the updated league standing
  */
 
 //TODO review - name convention seems strange. the remove operation seems to be
@@ -318,7 +396,20 @@ export const removeUserStandingInLeague = async (req, res) => {
   }
 };
 
-export const joinUserInStanding = async (req, res) => {
+/**
+ * Joins one or more users to a standing in a league by leagueId.
+ *
+ * @async
+ * @function joinUserInStandingByLeagueId
+ * @param {Object} req The request object.
+ * @param {Object} req.body The request body object containing `leagueId` and `users`.
+ * @param {string} req.body.leagueId The ID of the league to join.
+ * @param {Array.<string>} req.body.users The array of user IDs to join to the league.
+ * @param {Object} res The response object.
+ * @returns {Promise.<void>} A Promise that resolves when the joining process is complete.
+ * @throws Error If there's an error while processing the request.
+ */
+export const joinUserInStandingByLeagueId = async (req, res) => {
   const { leagueId, users } = req.body;
 
   if (!users || users.length === 0) {
@@ -363,6 +454,20 @@ export const joinUserInStanding = async (req, res) => {
   }
 };
 
+
+/**
+ * Gets all standings with their corresponding leagues and users.
+ *
+ * @async
+ * @function getAllStanding
+ * @param {Object} req The request object.
+ * @param {Object} res The response object.
+ * @returns {Promise.<Array.<Object>>} A Promise that resolves with an array of objects, each containing a `league` 
+ * field with the corresponding league document, and a `standings` field with an array of objects, each containing 
+ * a `user` field with the corresponding user document and a `score` field with the user's current score in the league.
+ * @throws If there's an error while processing the request, such as a database error.
+ * @throws If no standings are found in the database.
+ */
 export const getAllStanding = async (req, res) => {
   try {
     const standings = await Standing.find().populate({
@@ -378,5 +483,74 @@ export const getAllStanding = async (req, res) => {
   } catch (error) {
     console.error('Error in getAllStanding:', error);
     res.status(500).json({ message: 'Internal server error', error: {} });
+  }
+};
+
+//TODO - pending testing
+export const calculateUsersOverallPoints = async (req, res) => {
+  try {
+    // Get the start and end dates for the current week
+    const currentDate = new Date();
+    const startOfWeek = new Date(currentDate);
+    startOfWeek.setDate(currentDate.getDate() - currentDate.getDay() + (currentDate.getDay() === 0 ? -5 : 1));
+    const endOfWeek = new Date(startOfWeek);
+    endOfWeek.setDate(startOfWeek.getDate() + 6);
+
+    // Find all guesses made in the current week
+    const guesses = await Guess.find({
+      createdAt: {
+        $gte: startOfWeek,
+        $lte: endOfWeek
+      },
+    })
+      .populate('user')
+      .populate('game');
+
+    // Create a Map to store users' total points
+    const guessPointsMap = new Map();
+
+    // Loop through the guesses
+    for (const guess of guesses) {
+      if (guess.guess === guess.game.result) {
+        const userId = guess.user._id.toString();
+        const leagueId = guess.game.league.toString();
+
+        // Initialize the user points for this user and league combination
+        if (!guessPointsMap.has(userId)) {
+          guessPointsMap.set(userId, new Map());
+        }
+        const userLeaguesMap = guessPointsMap.get(userId);
+
+        if (!userLeaguesMap.has(leagueId)) {
+          userLeaguesMap.set(leagueId, 0);
+        }
+
+        // Increment the user's points by 1
+        userLeaguesMap.set(leagueId, userLeaguesMap.get(leagueId) + 1);
+      }
+    }
+
+    const updatedStandings = []
+    for (const [userId, userLeaguesMap] of guessPointsMap.entries()) {
+      for (const [leagueId, points] of userLeaguesMap.entries()) {
+        const updatedStanding = await Standing.findOneAndUpdate(
+          {
+            'standings.user': mongoose.Types.ObjectId(userId),
+            league: mongoose.Types.ObjectId(leagueId),
+          },
+          {
+            $inc: {
+              'standings.$.points': points,
+            },
+          },
+          { new: true } // Return the updated document
+        );
+        updatedStandings.push(updatedStanding);
+      }
+    }
+    res.status(200).json({ message: 'Standings updated', standings: updatedStandings });
+  } catch (error) {
+    console.error('Error updating guess points:', error);
+    res.status(500).json({ message: 'Internal server error', error: error.message });
   }
 };
