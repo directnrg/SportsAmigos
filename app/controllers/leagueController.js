@@ -1,5 +1,17 @@
 import League from '../models/league.js';
+import { torontoDateTimeFormat } from '../helpers/TorontoDateFormatter.js';
 
+/**
+ * Creates a new league.
+ *
+ * @async
+ * @function createLeague
+ * @param {object} req - The HTTP request object.
+ * @param {object} res - The HTTP response object.
+ * @param {object} req.body - The object containing the league data.
+ * @returns {JSON} The newly created league object.
+ * @throws {object} The error object with message and error properties.
+ */
 /**
  * Creates a new league.
  *
@@ -54,12 +66,40 @@ export const getAllLeaguesByUserId = async (req, res) => {
               model: 'Game',
               select: 'homeTeam awayTeam startTime result',
             },
-          ]
+          ],
+          select: 'league createdAt',
         },
       ])
+      .populate([{
+        path: 'users',
+        model: 'User',
+        select: 'fullName',
+      }])
       .exec();
 
-    res.status(200).json(leagues);
+    //Date formatting into Toronto time
+    const leaguesWithConvertedDates = leagues.map(league => {
+      const newLeague = league.toObject();
+      newLeague.games = newLeague.games.map(game => {
+        const newGame = { ...game };
+        newGame.startTime = torontoDateTimeFormat.format(new Date(game.startTime));
+        return newGame;
+      });
+
+      //check if guesses exist. If not, ignore
+      if (newLeague.guesses) {
+        newLeague.guesses = newLeague.guesses.map(guess => {
+          const newGuess = { ...guess };
+          newGuess.createdAt = torontoDateTimeFormat.format(new Date(guess.createdAt));
+          newGuess.game.startTime = torontoDateTimeFormat.format(new Date(guess.game.startTime));
+          return newGuess;
+        });
+      }
+
+      return newLeague;
+    });
+
+    res.status(200).json(leaguesWithConvertedDates);
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: 'Internal server error' });
@@ -79,9 +119,14 @@ export const getAllLeaguesByUserId = async (req, res) => {
 export const getLeagues = async (req, res) => {
   try {
     const leagues = await League.find()
-      .populate('users')
+      .populate([{
+        path: 'users',
+        model: 'User',
+        select: 'fullName',
+      }])
       .populate({
         path: 'guesses',
+        model: 'Guess',
         populate: [
           {
             path: 'user',
@@ -94,19 +139,34 @@ export const getLeagues = async (req, res) => {
             select: 'homeTeam awayTeam startTime result',
           },
         ],
+        select: 'league createdAt',
       })
       .populate('games');
-    const torontoDateTimeFormat = new Intl.DateTimeFormat('en-US', {
-      timeZone: 'America/Toronto',
-      year: 'numeric',
-      month: '2-digit',
-      day: '2-digit',
-      hour: '2-digit',
-      minute: '2-digit',
-      second: '2-digit',
-      hour12: false,
+
+
+    //Date formatting into Toronto time
+    const leaguesWithConvertedDates = leagues.map(league => {
+      const newLeague = league.toObject();
+      newLeague.games = newLeague.games.map(game => {
+        const newGame = { ...game };
+        newGame.startTime = torontoDateTimeFormat.format(new Date(game.startTime));
+        return newGame;
+      });
+
+      //check if guesses exist. If not, ignore
+      if (newLeague.guesses) {
+        newLeague.guesses = newLeague.guesses.map(guess => {
+          const newGuess = { ...guess };
+          newGuess.createdAt = torontoDateTimeFormat.format(new Date(guess.createdAt));
+          newGuess.game.startTime = torontoDateTimeFormat.format(new Date(guess.game.startTime));
+          return newGuess;
+        });
+      }
+
+      return newLeague;
     });
 
+    res.status(200).json(leaguesWithConvertedDates)
   } catch (error) {
     console.error('Error in getLeagues:', error); // Log the error to the console
     res.status(500).json({ message: 'Internal server error', error });
@@ -125,10 +185,14 @@ export const getLeagues = async (req, res) => {
  * @throws 500 error if there is an internal server error
  * @returns {JSON} JSON object representing the requested league, with related data populated
  */
-export const getLeague = async (req, res) => {
+export const getLeagueByLeagueId = async (req, res) => {
   try {
     const league = await League.findById(req.params.leagueId)
-      .populate('users')
+      .populate([{
+        path: 'users',
+        model: 'User',
+        select: 'fullName',
+      }])
       .populate({
         path: 'guesses',
         populate: [
@@ -146,8 +210,26 @@ export const getLeague = async (req, res) => {
       })
       .populate('games');
 
+
+    //Date formatting into Toronto time
     if (league) {
-      res.status(200).json(league);
+      const formattedLeague = league.toObject();
+      formattedLeague.games = formattedLeague.games.map(game => {
+        const newGame = { ...game };
+        newGame.startTime = torontoDateTimeFormat.format(new Date(game.startTime));
+        return newGame;
+      });
+
+      if (formattedLeague.guesses) {
+        formattedLeague.guesses = formattedLeague.guesses.map(guess => {
+          const newGuess = { ...guess };
+          newGuess.createdAt = torontoDateTimeFormat.format(new Date(guess.createdAt));
+          newGuess.game.startTime = torontoDateTimeFormat.format(new Date(guess.game.startTime));
+          return newGuess;
+        });
+      }
+
+      res.status(200).json(formattedLeague);
     } else {
       res.status(404).json({ message: 'League not found' });
     }
@@ -195,7 +277,7 @@ export const updateLeagueName = async (req, res) => {
 
     res.status(200).json(league);
   } catch (error) {
-    console.error('Error in updateLeague:', error);
+    console.error('Error in updateLeagueName:', error);
     res.status(500).json({ message: 'Internal server error', error: error });
   }
 };

@@ -22,7 +22,7 @@ parameter   POST
  * @param {string} req.body.user - The ID of the user to create the standing for.
  * @param {Object} res - The HTTP response object.
  * @throws {Error} Will throw an error if the database operation fails. The error message will be included in the response body.
- * @returns {void} Sends an HTTP response to the client with a JSON object containing the new standing object if successful, or sends an error response if unsuccessful.
+ * @returns {JSON} Sends an HTTP response to the client with a JSON object containing the new standing object if successful, or sends an error response if unsuccessful.
  */
 export const createLeagueStanding = async (req, res) => {
   const errors = validationResult(req);
@@ -73,8 +73,8 @@ export const createLeagueStanding = async (req, res) => {
  * @param {Object} req - The HTTP request object.
  * @param {string} req.params.userId - The ID of the user to retrieve the standings for.
  * @param {Object} res - The HTTP response object.
- * @throws {Error} Will throw an error if the database operation fails. The error message will be included in the response body.
- * @returns {void} Sends an HTTP response to the client with a JSON object containing the standings.
+ * @throws Will throw an error if the database operation fails. The error message will be included in the response body.
+ * @returns {JSON} Sends an HTTP response to the client with a JSON object containing the standings.
  */
 export const getAllUserStandings = async (req, res) => {
   try {
@@ -101,7 +101,7 @@ export const getAllUserStandings = async (req, res) => {
  * @param {Object} req.standing - The league standing object, retrieved from the database by the middleware.
  * @param {Object} res - The HTTP response object.
  * @throws {Error} Will throw an error if the database operation fails. The error message will be included in the response body.
- * @returns {void} Sends an HTTP response to the client with a JSON object containing the standing.
+ * @returns {JSON} Sends an HTTP response to the client with a JSON object containing the standing.
  */
 export const getStandingById = async (req, res) => {
   try {
@@ -396,7 +396,20 @@ export const removeUserStandingInLeague = async (req, res) => {
   }
 };
 
-export const joinUserInStanding = async (req, res) => {
+/**
+ * Joins one or more users to a standing in a league by leagueId.
+ *
+ * @async
+ * @function joinUserInStandingByLeagueId
+ * @param {Object} req The request object.
+ * @param {Object} req.body The request body object containing `leagueId` and `users`.
+ * @param {string} req.body.leagueId The ID of the league to join.
+ * @param {Array.<string>} req.body.users The array of user IDs to join to the league.
+ * @param {Object} res The response object.
+ * @returns {Promise.<void>} A Promise that resolves when the joining process is complete.
+ * @throws Error If there's an error while processing the request.
+ */
+export const joinUserInStandingByLeagueId = async (req, res) => {
   const { leagueId, users } = req.body;
 
   if (!users || users.length === 0) {
@@ -441,6 +454,20 @@ export const joinUserInStanding = async (req, res) => {
   }
 };
 
+
+/**
+ * Gets all standings with their corresponding leagues and users.
+ *
+ * @async
+ * @function getAllStanding
+ * @param {Object} req The request object.
+ * @param {Object} res The response object.
+ * @returns {Promise.<Array.<Object>>} A Promise that resolves with an array of objects, each containing a `league` 
+ * field with the corresponding league document, and a `standings` field with an array of objects, each containing 
+ * a `user` field with the corresponding user document and a `score` field with the user's current score in the league.
+ * @throws If there's an error while processing the request, such as a database error.
+ * @throws If no standings are found in the database.
+ */
 export const getAllStanding = async (req, res) => {
   try {
     const standings = await Standing.find().populate({
@@ -459,8 +486,8 @@ export const getAllStanding = async (req, res) => {
   }
 };
 
-
-export const calculateUsersPoints =  async (req, res) => {
+//TODO - pending testing
+export const calculateUsersOverallPoints = async (req, res) => {
   try {
     // Get the start and end dates for the current week
     const currentDate = new Date();
@@ -471,16 +498,16 @@ export const calculateUsersPoints =  async (req, res) => {
 
     // Find all guesses made in the current week
     const guesses = await Guess.find({
-        createdAt: {
-          $gte: startOfWeek,
-          $lte: endOfWeek
-        },
-      })
+      createdAt: {
+        $gte: startOfWeek,
+        $lte: endOfWeek
+      },
+    })
       .populate('user')
       .populate('game');
 
     // Create a Map to store users' total points
-    const userPointsMap = new Map();
+    const guessPointsMap = new Map();
 
     // Loop through the guesses
     for (const guess of guesses) {
@@ -489,10 +516,10 @@ export const calculateUsersPoints =  async (req, res) => {
         const leagueId = guess.game.league.toString();
 
         // Initialize the user points for this user and league combination
-        if (!userPointsMap.has(userId)) {
-          userPointsMap.set(userId, new Map());
+        if (!guessPointsMap.has(userId)) {
+          guessPointsMap.set(userId, new Map());
         }
-        const userLeaguesMap = userPointsMap.get(userId);
+        const userLeaguesMap = guessPointsMap.get(userId);
 
         if (!userLeaguesMap.has(leagueId)) {
           userLeaguesMap.set(leagueId, 0);
@@ -504,7 +531,7 @@ export const calculateUsersPoints =  async (req, res) => {
     }
 
     const updatedStandings = []
-    for (const [userId, userLeaguesMap] of userPointsMap.entries()) {
+    for (const [userId, userLeaguesMap] of guessPointsMap.entries()) {
       for (const [leagueId, points] of userLeaguesMap.entries()) {
         const updatedStanding = await Standing.findOneAndUpdate(
           {
@@ -513,7 +540,7 @@ export const calculateUsersPoints =  async (req, res) => {
           },
           {
             $inc: {
-              'standings.points': points,
+              'standings.$.points': points,
             },
           },
           { new: true } // Return the updated document
