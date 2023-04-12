@@ -8,10 +8,12 @@ import Table from 'react-bootstrap/Table';
 import jwt from 'jwt-decode'
 import {useNavigate} from "react-router-dom";
 import { Badge } from 'react-bootstrap';
- 
+import axios from 'axios';
 
 
 export default function LeagueModalGrid({modalProps}) {
+  const [weekGames, setWeekGames] = useState([]);
+
 
   const navigate = useNavigate();
   const onCheckStandings = (guessProps)=>{
@@ -19,19 +21,31 @@ export default function LeagueModalGrid({modalProps}) {
 
     console.log('/standings/'+modalProps.league._id);
     navigate('/standings/'+modalProps.league._id)
-    }
-    const onCreateGuesses = (guessProps)=>{
-      console.log("Modal props onCreateGuesses", modalProps)
+  }
   
-      console.log('/create-guesses/'+modalProps.league._id);
-      navigate('/create-guesses/'+modalProps.league._id)
-      }
+  const onCreateGuesses = (guessProps)=>{
+    console.log("Modal props onCreateGuesses", modalProps)
+  
+    console.log('/create-guesses/'+modalProps.league._id);
+    navigate('/create-guesses/'+modalProps.league._id)
+  }
 
-    
+  const gamesCurrentWeekUrl = 'http://localhost:3100/api/games-of-the-week';
+  const gamesLastWeekUrl = 'http://localhost:3100/api/games-of-the-last-week';
 
-    useEffect(()=>{
+
+  useEffect(()=>{
+    axios
+    .get(gamesLastWeekUrl)
+    .then((res) => {
+      console.log('res data', res.data.games);
+      setWeekGames(res.data.games);
+    })
+    .catch((err) => console.error(err));
+
         console.log("Modal props",modalProps);
-    });
+
+  },[]);
   return (
     <Modal {...modalProps} aria-labelledby="contained-modal-title-vcenter" size="lg">
       <Modal.Header closeButton>
@@ -64,12 +78,12 @@ export default function LeagueModalGrid({modalProps}) {
               </tr>
             </thead>
             <tbody>
-            { modalProps?.league?.games?.map((game, index)=>{
+            { weekGames.map((game, index)=>{
               return(
               <tr  key={index}>
                 <td>{game.homeTeam}</td>
                 <td>{game.awayTeam}</td>
-                <td>{new Date(game.startTime).toLocaleString('en-US',{  year: 'numeric', month: 'long', day: 'numeric',hour: 'numeric'})}</td>
+                <td>{game.startTime}</td>
                 <td>{game.result}</td>
               </tr>)
             }) 
@@ -96,6 +110,7 @@ export default function LeagueModalGrid({modalProps}) {
                 <th>Points</th>
               </tr>
             </thead>
+            
             <tbody>
             { modalProps?.league?.guesses?.map((guess, index)=>{
               return(
@@ -103,7 +118,7 @@ export default function LeagueModalGrid({modalProps}) {
                 <td>{guess.user.fullName}</td>
                 <td>{guess.game.homeTeam} vs {guess.game.awayTeam}</td>
                 <td>{guess.guess}</td>
-                <td>{guess.userPoints}</td>
+                <td>{guess.guessPoints}</td>
               </tr>)
             }) 
             }
@@ -126,6 +141,7 @@ export default function LeagueModalGrid({modalProps}) {
               </tr>
             </thead>
             <tbody>
+            {console.log('users from props:' ,  modalProps?.league?.users)}
             { modalProps?.league?.users?.map((user, index)=>{
               return(
               <tr  key={index}>
