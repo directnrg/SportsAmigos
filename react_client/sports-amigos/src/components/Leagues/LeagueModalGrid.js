@@ -1,4 +1,4 @@
-import React, { useState,useEffect } from 'react';
+import React, { useState,useEffect} from 'react';
 import Button from 'react-bootstrap/Button';
 import Col from 'react-bootstrap/Col';
 import Container from 'react-bootstrap/Container';
@@ -6,19 +6,32 @@ import Modal from 'react-bootstrap/Modal';
 import Row from 'react-bootstrap/Row';
 import Table from 'react-bootstrap/Table';
 import jwt from 'jwt-decode'
+<<<<<<< HEAD
 import { useNavigate } from 'react-router-dom';
+=======
+import {useNavigate} from "react-router-dom";
+import { Badge } from 'react-bootstrap';
+ 
+>>>>>>> main
 
 
 export default function LeagueModalGrid({modalProps}) {
 
   const navigate = useNavigate();
+<<<<<<< HEAD
 
   const handleButtonClick = () => {
     navigate('/create-guesses');
   };
 
     const onCreateGuess = (guessProps)=>{
+=======
+  const onCheckStandings = (guessProps)=>{
+    console.log("Modal props onCheckStandings", modalProps)
+>>>>>>> main
 
+    console.log('/standings/'+modalProps.league._id);
+    navigate('/standings/'+modalProps.league._id)
     }
     useEffect(()=>{
         console.log("Modal props",modalProps);
@@ -27,20 +40,21 @@ export default function LeagueModalGrid({modalProps}) {
     <Modal {...modalProps} aria-labelledby="contained-modal-title-vcenter" size="lg">
       <Modal.Header closeButton>
         <Modal.Title id="contained-modal-title-vcenter">
-         League details:
+        <h2 className='text-center'><Badge bg="dark"> League details</Badge></h2> 
         </Modal.Title>
       </Modal.Header>
       <Modal.Body className="show-grid">
         <Container>
           <Row>
             <Col xs={12} md={6}>
-             Name: {modalProps.league.name}
+            <h2 className='text-center'><Badge bg="dark">  Name: {modalProps.league.name} </Badge></h2> 
             </Col>
         
           </Row>
 
           <Row>
-            <Col xs={6} md={4}>Games: </Col>
+           { /*<Col xs={6} md={4}>  <h2 className='text-center'><Badge bg="dark">   Games </Badge></h2>  </Col>*/}
+           <h2 className='text-center'><Badge bg="dark">   Games </Badge></h2>
         
           </Row>
           <Row>
@@ -72,7 +86,8 @@ export default function LeagueModalGrid({modalProps}) {
           </Row>
 
           <Row>
-            <Col xs={6} md={4}>Guesses: </Col>
+          <h2 className='text-center'><Badge bg="dark">   Guesses </Badge></h2>
+           
         
           </Row>
           <Row>
@@ -104,7 +119,7 @@ export default function LeagueModalGrid({modalProps}) {
           </Row>
 
           <Row>
-            <Col xs={6} md={4}>Users: </Col>
+          <h2 className='text-center'><Badge bg="dark">   Users </Badge></h2>
         
           </Row>
           <Row>
@@ -132,7 +147,12 @@ export default function LeagueModalGrid({modalProps}) {
       </Modal.Body>
       <Modal.Footer>
         <Button onClick={modalProps.onHide}>Close</Button>
+<<<<<<< HEAD
         <Button onClick={handleButtonClick}>Create guesses</Button>
+=======
+        <Button onClick={modalProps.onHide}>Create guesses</Button>
+        <Button onClick={ ()=>{onCheckStandings()}}>Check Standings</Button>
+>>>>>>> main
       </Modal.Footer>
     </Modal>
   );
