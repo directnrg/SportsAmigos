@@ -1,6 +1,6 @@
 const email = new RegExp('^[a-zA-Z0-9._:$!%-]+@[a-zA-Z0-9.-]+.[a-zA-Z]$');
 
-const password = new RegExp('^(?=.*[0-9])(?=.*[^a-zA-Z0-9])(?!.*\s).+$') //a string is not null, doesn't contain any spaces, and has at least one number and special character:
+const password = new RegExp('^(?=.*[0-9])(?=.*[^a-zA-Z0-9])(?!.*\\s)[^\\s]+$') //a string is not null, doesn't contain any spaces, and has at least one number and special character:
 
 const name = new RegExp('^[A-Za-z]+$')//a string is not null, doesn't contain spaces, numbers or special characters:
 
