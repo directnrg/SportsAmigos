@@ -9,6 +9,7 @@ import Table from 'react-bootstrap/Table';
 import jwt from 'jwt-decode'
 import { useNavigate } from "react-router-dom";
 import { useParams } from 'react-router-dom';
+import { Badge } from 'react-bootstrap';
 
 export default function Standings() {
 
@@ -32,11 +33,16 @@ export default function Standings() {
     }
 
     useEffect(()=>{
+        getStandings()
+    },[])
+
+    useEffect(()=>{
         console.log("Standings",standings)
+      
     })
     
     //Conditional Rendering
-    if (standings !==null) {
+    if (standings ==null) {
         return (
             <>
                 <h1>No standings yet</h1>
@@ -47,8 +53,8 @@ export default function Standings() {
     else {
         return (
             <Container>
-                <h1>League: {standings?.league?.name}</h1>
-                <h2>Standings</h2>
+                <h2 className='text-center'><Badge bg="dark"> {standings?.league?.name}</Badge></h2>
+              
                 <Table striped bordered hover variant="dark" className='text-center'>
                     <thead>
                         <tr>
