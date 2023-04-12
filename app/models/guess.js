@@ -11,7 +11,11 @@ const guessSchema = new Schema({
     ref: 'Game',
     required: true,
   },
-
+  league: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'League',
+    required: true,
+  },
   guess: {
     type: String,
     enum: ['home', 'away', 'tie', null],
@@ -21,6 +25,10 @@ const guessSchema = new Schema({
   userPoints: {
     type: Number,
     default: 0,
+  },
+  date: {
+    type: Date,
+    default: null,
   },
 });
 

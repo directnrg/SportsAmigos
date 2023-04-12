@@ -21,8 +21,8 @@ const standingRouter = express.Router();
 standingRouter.post(
   '/standings',
   [
-    check('league', 'league is required').notEmpty(),
-    check('user', 'user is required').notEmpty(),
+    check('leagueId', 'league is required').notEmpty(),
+    check('users', 'user(s) is required').notEmpty(),
   ],
   createLeagueStanding
 );

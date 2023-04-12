@@ -16,15 +16,15 @@ import LeagueStandings from './components/Leagues/LeagueStandings';
 import Article from './components/Guides/Article';
 import LoginModal from './components/LoginModal';
 import { faL } from '@fortawesome/free-solid-svg-icons';
+import CreateLeague from './components/Leagues/CreateLeague';
+import CreateGuesses from './components/Leagues/CreateGuesses';
 import jwt from 'jwt-decode'
+import Standings from './components/Leagues/Standings';
 
 
 export const MyContext = createContext()
 
 function SportsAmigosApp() {
-
-
-
 
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [loginModalShow, setLoginModalShow] = useState(false);
@@ -74,10 +74,10 @@ function SportsAmigosApp() {
                 <Nav className="me-auto">
                   <Nav.Link as={Link} to="/">Home</Nav.Link>
                   <Nav.Link as={Link} to="/guides">Guides</Nav.Link>
+                  <Nav.Link as={Link} to="/create-league">Create a League</Nav.Link>
                   <Nav.Link as={Link} to="/league-list">League List</Nav.Link>
                   <Nav.Link as={Link} to="/my-leagues">My Leagues</Nav.Link>
                   <Button as={Link} to="/" onClick={onLogout} >Log Out</Button>{' '}
-
                 </Nav>
               </Navbar.Collapse>
             </Container>
@@ -92,7 +92,10 @@ function SportsAmigosApp() {
               <Route path="/guides/article/:id" element={<Article />} />
               <Route path="/log-in" element={<Login />} />
               <Route path="/league-list" element={<LeagueList />} />
+              <Route path="/standings/:id" element={<Standings />} />
               <Route path="/my-leagues" element={<MyLeagues />} />
+              <Route path='/create-league' element={<CreateLeague />} />
+              <Route path='/create-guesses' element={<CreateGuesses />} />
 
               {/*Add the route to your component if necessary */}
             </Routes>
@@ -139,6 +142,7 @@ function SportsAmigosApp() {
             <Route path="/guides/" element={<HowToPlay />} />
             <Route path="/guides/article/:id" element={<Article />} />
             <Route path="/log-in" element={<Login />} />
+            <Route path='/create-guesses' element={<CreateGuesses />} />
 
             {/*Add the route to your component if necessary */}
           </Routes>

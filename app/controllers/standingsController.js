@@ -30,28 +30,31 @@ export const createLeagueStanding = async (req, res) => {
     return res.status(400).json({ errors: errors.array() });
   }
 
-  const { league, user } = req.body;
+  const { leagueId, users } = req.body;
 
-  // Check if league or user is an array
-  if (Array.isArray(league) || Array.isArray(user)) {
+  // Check if leagueId is an array
+  if (Array.isArray(leagueId)) {
     return res.status(400).json({
       errors: [
         {
-          msg: 'Only one league and one user value are allowed.',
+          msg: 'Only one league value is allowed.',
         },
       ],
     });
   }
 
   try {
+    // Create an array of user standings
+    const userStandings = users.map((user) => {
+      return {
+        user,
+        points: 0,
+      };
+    });
+
     const newStanding = new Standing({
-      league,
-      standings: [
-        {
-          user,
-          points: 0,
-        },
-      ],
+      league: leagueId,
+      standings: userStandings,
     });
 
     await newStanding.save();
