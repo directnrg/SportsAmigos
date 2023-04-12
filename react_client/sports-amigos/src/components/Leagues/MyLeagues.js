@@ -5,6 +5,10 @@ import Container from 'react-bootstrap/Container';
 import jwt from 'jwt-decode'
 import { MyContext } from "../../App";
 import LeagueModalGrid from "./LeagueModalGrid";
+import Form from 'react-bootstrap/Form';
+import Row from 'react-bootstrap/Row';
+import Col from 'react-bootstrap/Col';
+import { Badge } from 'react-bootstrap';
 
 
 
@@ -17,6 +21,7 @@ export default function MyLeagues() {
   const [myLeaguesModalShow, setMyLeaguesModalShow] = useState(false);
   const token = JSON.parse(sessionStorage.getItem('login'))
   const decodedToken = jwt(token.token); 
+  const [areMyLeaguesPrivate, setAreMyLeaguesPrivate] = useState(false);
 
   //http://localhost:3100/api/leagues/643339c9da183ad9cc24d0e4
   const URL = `http://localhost:3100/api/leagues/${loginData.userId}`;
@@ -26,6 +31,10 @@ export default function MyLeagues() {
     show:myLeaguesModalShow,
      onHide:() => setMyLeaguesModalShow(false),
      league:mySelectedLeague
+  }
+  const onLeagueTypeChange = () => {
+    setAreMyLeaguesPrivate(!areMyLeaguesPrivate)
+    console.log(areMyLeaguesPrivate)
   }
 
   const getLeagues = async ()=>{
@@ -70,6 +79,14 @@ export default function MyLeagues() {
 
   return (
     <Container>
+       <Container >
+        <Row xs="auto" className="justify-content-md-center">
+          <Col>  <h4 className='text-center'><Badge bg="dark">Public</Badge></h4></Col>
+          <Col> <Form.Switch type="switch" onChange={onLeagueTypeChange}  ></Form.Switch></Col>
+          <Col> <h4 className='text-center'><Badge bg="dark">Private</Badge></h4></Col>
+        </Row>
+
+      </Container>
         <Table striped bordered hover variant="dark" className='text-center'>
             <thead>
               <tr>
@@ -79,14 +96,25 @@ export default function MyLeagues() {
               </tr>
             </thead>
             <tbody>
-            { myLeaguesList.map((league, index)=>{
+            { areMyLeaguesPrivate? myLeaguesList.filter(league => league.isPrivate === true).map((league, index)=>{
               return(
               <tr onClick={()=>onLeagueClick(league)} key={index}>
                 <td>{league.name}</td>
                 <td>{league.isPrivate? 'private': 'public'}</td>
                 <td>{league.users.length>0?league.users.length:0}</td>
               </tr>)
-            })}
+            })
+            :
+
+            myLeaguesList.filter(league => league.isPrivate === false).map((league, index)=>{
+              return(
+              <tr onClick={()=>onLeagueClick(league)} key={index}>
+                <td>{league.name}</td>
+                <td>{league.isPrivate? 'private': 'public'}</td>
+                <td>{league.users.length>0?league.users.length:0}</td>
+              </tr>)
+            })
+          }
 
             </tbody>
 
