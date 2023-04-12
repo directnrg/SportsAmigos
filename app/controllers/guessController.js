@@ -23,7 +23,7 @@ export const createGuess = async (req, res) => {
       // Add guess to the league
       const leagueToUpdate = await League.findById(league);
       leagueToUpdate.guesses.push(newGuess._id);
-      leagueToUpdate.games.push(guessData.game); // Add the game id to League games array
+      //leagueToUpdate.games.push(guessData.game); // Add the game id to League games array
       await leagueToUpdate.save();
     }
 

@@ -51,6 +51,31 @@ export default function CreateLeague() {
       })
       .catch((err) => console.error(err));
     }, []);
+
+    const createLeague = async() => {
+      let leagueTest = null;
+
+      const selectedUsers = users.filter((user) => user.isSelected);
+  
+      const data = {
+        name: league.name,
+        users: selectedUsers.map((user) => user._id),
+        isPrivate: league.isPrivate,
+        games: weekGames,
+      };
+      try {
+        const response = await axios.post('http://localhost:3100/api/league', data);
+        console.log("LEAGUE POST", response.data);
+        leagueTest = response.data;
+        setLeague(leagueTest)
+        return leagueTest;
+      }
+      catch(e) {
+        console.log(e.message);
+
+      }
+
+    }
   
     const handleNameChange = (event) => {
       setLeague({ ...league, name: event.target.value });
@@ -67,30 +92,30 @@ export default function CreateLeague() {
       );
       setUsers(updatedUsers);
     };
-  
-    const handleSubmit = (event) => {
-      event.preventDefault();
-  
-      const selectedUsers = users.filter((user) => user.isSelected);
-  
-      const data = {
-        name: league.name,
-        users: selectedUsers.map((user) => user._id),
-        isPrivate: league.isPrivate,
-        games: weekGames
-      };
-  
-      axios
-        .post('http://localhost:3100/api/league', data)
-        .then((response) => {
-          console.log(response.data);
-          console.log(weekGames);
-        })
-        .catch((error) => {
-          console.log(error);
-        });
 
-        navigate('/my-leagues');
+    const handleSubmit = async(event) => {
+      event.preventDefault();
+
+      const leagueCreated = await createLeague();
+      console.log("League Created:", leagueCreated);
+      const standings = {
+        leagueId: leagueCreated._id,
+        users: leagueCreated.users
+      }
+
+      console.log("Standings object before being send:",standings);
+
+     try {
+      const response = await axios.post('http://localhost:3100/api/standings', standings);
+      console.log("STANDINGS POST", response.data)
+      navigate('/my-leagues');
+    }
+    catch(e) {
+      console.log(e.message);
+
+    }
+        
+      
     };
   
     return (

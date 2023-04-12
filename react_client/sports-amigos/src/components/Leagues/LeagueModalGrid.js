@@ -20,6 +20,15 @@ export default function LeagueModalGrid({modalProps}) {
     console.log('/standings/'+modalProps.league._id);
     navigate('/standings/'+modalProps.league._id)
     }
+    const onCreateGuesses = (guessProps)=>{
+      console.log("Modal props onCreateGuesses", modalProps)
+  
+      console.log('/create-guesses/'+modalProps.league._id);
+      navigate('/create-guesses/'+modalProps.league._id)
+      }
+
+    
+
     useEffect(()=>{
         console.log("Modal props",modalProps);
     });
@@ -134,7 +143,7 @@ export default function LeagueModalGrid({modalProps}) {
       </Modal.Body>
       <Modal.Footer>
         <Button onClick={modalProps.onHide}>Close</Button>
-        <Button onClick={modalProps.onHide}>Create guesses</Button>
+        <Button onClick={ ()=>{onCreateGuesses()}}>Create guesses</Button>
         <Button onClick={ ()=>{onCheckStandings()}}>Check Standings</Button>
       </Modal.Footer>
     </Modal>
