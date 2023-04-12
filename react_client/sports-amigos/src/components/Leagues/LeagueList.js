@@ -96,7 +96,7 @@ export default function LeagueList() {
               <tr onClick={() => onLeagueClick(league)} key={index}>
                 <td>{league.name}</td>
                 <td>{league.isPrivate ? 'private' : 'public'}</td>
-                <td>{league.users.length > 0 ? league.users.length : 0}</td>
+                <td>{league.users.length > 0 ? league.users.length : 0}/7</td>
               </tr>)
           })
           :
@@ -105,7 +105,7 @@ export default function LeagueList() {
               <tr onClick={() => onLeagueClick(league)} key={index}>
                 <td>{league.name}</td>
                 <td>{league.isPrivate ? 'private' : 'public'}</td>
-                <td>{league.users.length > 0 ? league.users.length : 0}</td>
+                <td>{league.users.length > 0 ? league.users.length : 0}/7</td>
               </tr>)
           })
           
