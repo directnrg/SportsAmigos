@@ -52,6 +52,17 @@ function SportsAmigosApp() {
 
   useEffect(() => {
     document.title = 'Sports Pool';
+    if(sessionStorage.getItem("login")!==null){
+      
+      const token = JSON.parse(sessionStorage.getItem("login"));
+      const decodedToken = jwt(token.token);
+      const userId = decodedToken.user.id;
+
+      //Storing data in the context
+      setLoginData({ login: true, userId: userId });
+
+    }
+   
   }, []);
 
   useEffect(() => {
