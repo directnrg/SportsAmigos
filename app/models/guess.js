@@ -26,6 +26,11 @@ const guessSchema = new Schema({
     type: Number,
     default: 0,
   },
+   // Flag to track whether the guess points have already been calculated or not
+   pointsCalculated: {
+    type: Boolean,
+    default: false,
+  },
   createdAt: {
     type: Date,
     default: Date.now,

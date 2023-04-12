@@ -1,4 +1,4 @@
-import React, { useState,useEffect} from 'react';
+import React, { useState,useEffect, useContext} from 'react';
 import Button from 'react-bootstrap/Button';
 import Col from 'react-bootstrap/Col';
 import Container from 'react-bootstrap/Container';
@@ -8,11 +8,13 @@ import Table from 'react-bootstrap/Table';
 import jwt from 'jwt-decode'
 import {useNavigate} from "react-router-dom";
 import { Badge } from 'react-bootstrap';
+import { MyContext } from "../../App";
 import axios from 'axios';
 
 
 export default function LeagueModalGrid({modalProps}) {
   const [weekGames, setWeekGames] = useState([]);
+  const {loginData} = useContext(MyContext);
 
 
   const navigate = useNavigate();
@@ -34,6 +36,14 @@ export default function LeagueModalGrid({modalProps}) {
   const gamesCurrentWeekUrl = 'http://localhost:3100/api/games-of-the-week';
   const gamesLastWeekUrl = 'http://localhost:3100/api/games-of-the-last-week';
 
+  const onRefreshGuessPoints = () => {
+    axios
+      .get("http://localhost:3100/api/guesses/calc-guesses-points-user/" + loginData.userId)
+      .then((res) => {
+        console.log(res);
+      })
+      .catch((error) => console.log(error));
+  };
 
   useEffect(()=>{
     axios
@@ -45,9 +55,6 @@ export default function LeagueModalGrid({modalProps}) {
     .catch((err) => console.error(err));
 
         console.log("Modal props",modalProps);
-
-  },[]);
-
         console.log("Guesses length", modalProps?.league?.guesses?.length)
         if( modalProps?.league?.guesses?.length >0){
           setIsGuessesDisabled(true)
@@ -55,7 +62,7 @@ export default function LeagueModalGrid({modalProps}) {
           setIsGuessesDisabled(false);
         }
 
-    });
+  },[]);
 
   return (
     <Modal {...modalProps} aria-labelledby="contained-modal-title-vcenter" size="lg">
@@ -172,6 +179,7 @@ export default function LeagueModalGrid({modalProps}) {
         <Button onClick={modalProps.onHide}>Close</Button>
         <Button onClick={ ()=>{onCreateGuesses()}} disabled={isGuessesDisabled}>Create guesses</Button>
         <Button onClick={ ()=>{onCheckStandings()}}>Check Standings</Button>
+        <Button variant="success" onClick={ ()=>{onRefreshGuessPoints()}}>Refresh Guess Points</Button>
       </Modal.Footer>
     </Modal>
   );

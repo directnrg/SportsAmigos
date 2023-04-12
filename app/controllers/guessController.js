@@ -173,7 +173,10 @@ export const calculateGuessPointsOfAllUsers = async () => {
         model: 'User',
         select: 'fullName'
       })
-      .populate('game');
+      .populate({
+        path: 'game',
+        select: 'homeTeam awayTeam startTime result', // Add homeTeam and awayTeam here
+      });
 
 
     for (const guess of guesses) {
@@ -193,7 +196,7 @@ export const calculateGuessPointsOfAllUsers = async () => {
 };
 
 
-//function to calculate the guesses done in a week
+//function to calculate the guesses done by user
 export const calculateGuessPointsOfUserByUserId = async (req, res) => {
   console.log('calculateGuessPointsOfUserByUserId called');
 
@@ -204,21 +207,29 @@ export const calculateGuessPointsOfUserByUserId = async (req, res) => {
       user: userId
     })
       .populate({ path: 'user', select: 'fullName' })
-      .populate({ path: 'game', select: 'result' })
+      .populate({
+        path: 'game',
+        select: 'homeTeam awayTeam startTime result', // Add homeTeam and awayTeam here
+      });
 
-    const updatedGuesses = []
-    for (const guess of guesses) {
-      console.log(`Processing guess: ${guess._id}, user: ${guess.user.fullName}, game: ${guess.game._id}`);
-      if (guess.guess === guess.game.result) {
-        console.log(`Correct guess: ${guess.guess}, result: ${guess.game.result}`);
-        // Increment the user's points by 1
-        guess.guessPoints += 1;
-        await guess.save();
-        updatedGuesses.push(guess);
-      } else {
-        console.log(`Incorrect guess: ${guess.guess}, result: ${guess.game.result}`);
-      }
+    const updatedGuesses = [];
+for (const guess of guesses) {
+  if (!guess.pointsCalculated) {
+    console.log(`Processing guess: ${guess._id}, user: ${guess.user.fullName}, game: ${guess.game._id}`);
+    if (guess.guess === guess.game.result) {
+      console.log(`Correct guess: ${guess.guess}, result: ${guess.game.result}`);
+      // Increment the user's points by 1
+      guess.guessPoints += 1;
+      guess.pointsCalculated = true;
+      await guess.save();
+      updatedGuesses.push(guess);
+    } else {
+      guess.pointsCalculated = true;
+      await guess.save();
+      console.log(`Incorrect guess: ${guess.guess}, result: ${guess.game.result}`);
     }
+  }
+}
     res.status(200).json({ updatedGuesses: updatedGuesses })
   } catch (error) {
     console.error('Error updating guess points:', error);
