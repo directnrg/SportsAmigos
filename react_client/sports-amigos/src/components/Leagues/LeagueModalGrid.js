@@ -6,33 +6,29 @@ import Modal from 'react-bootstrap/Modal';
 import Row from 'react-bootstrap/Row';
 import Table from 'react-bootstrap/Table';
 import jwt from 'jwt-decode'
-<<<<<<< HEAD
-import { useNavigate } from 'react-router-dom';
-=======
 import {useNavigate} from "react-router-dom";
 import { Badge } from 'react-bootstrap';
  
->>>>>>> main
 
 
 export default function LeagueModalGrid({modalProps}) {
 
   const navigate = useNavigate();
-<<<<<<< HEAD
-
-  const handleButtonClick = () => {
-    navigate('/create-guesses');
-  };
-
-    const onCreateGuess = (guessProps)=>{
-=======
   const onCheckStandings = (guessProps)=>{
     console.log("Modal props onCheckStandings", modalProps)
->>>>>>> main
 
     console.log('/standings/'+modalProps.league._id);
     navigate('/standings/'+modalProps.league._id)
     }
+    const onCreateGuesses = (guessProps)=>{
+      console.log("Modal props onCreateGuesses", modalProps)
+  
+      console.log('/create-guesses/'+modalProps.league._id);
+      navigate('/create-guesses/'+modalProps.league._id)
+      }
+
+    
+
     useEffect(()=>{
         console.log("Modal props",modalProps);
     });
@@ -147,12 +143,8 @@ export default function LeagueModalGrid({modalProps}) {
       </Modal.Body>
       <Modal.Footer>
         <Button onClick={modalProps.onHide}>Close</Button>
-<<<<<<< HEAD
-        <Button onClick={handleButtonClick}>Create guesses</Button>
-=======
-        <Button onClick={modalProps.onHide}>Create guesses</Button>
+        <Button onClick={ ()=>{onCreateGuesses()}}>Create guesses</Button>
         <Button onClick={ ()=>{onCheckStandings()}}>Check Standings</Button>
->>>>>>> main
       </Modal.Footer>
     </Modal>
   );
