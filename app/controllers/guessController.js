@@ -30,7 +30,7 @@ export const createGuess = async (req, res) => {
 
       if (existingGuess) {
         return res.status(400).json({
-          message: `User has already made a guess for game ${guessData.game} in league ${league}`,
+          message: `User has already made a guess for the game ${guessData.game} in the league with ID: ${league}`,
         });
       }
 
@@ -214,17 +214,17 @@ export const calculateGuessPointsOfUserByUserId = async (req, res) => {
 
     const updatedGuesses = [];
 for (const guess of guesses) {
-  if (!guess.pointsCalculated) {
+  if (!guess.guessPointsCalculated) {
     console.log(`Processing guess: ${guess._id}, user: ${guess.user.fullName}, game: ${guess.game._id}`);
     if (guess.guess === guess.game.result) {
       console.log(`Correct guess: ${guess.guess}, result: ${guess.game.result}`);
       // Increment the user's points by 1
       guess.guessPoints += 1;
-      guess.pointsCalculated = true;
+      guess.guessPointsCalculated = true;
       await guess.save();
       updatedGuesses.push(guess);
     } else {
-      guess.pointsCalculated = true;
+      guess.guessPointsCalculated = true;
       await guess.save();
       console.log(`Incorrect guess: ${guess.guess}, result: ${guess.game.result}`);
     }

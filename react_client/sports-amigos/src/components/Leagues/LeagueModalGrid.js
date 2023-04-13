@@ -25,6 +25,7 @@ export default function LeagueModalGrid({modalProps}) {
   const [weekGames, setWeekGames] = useState([]);
   const [isGuessesDisabled, setIsGuessesDisabled] = useState(false);
 
+
   //Hooks 
   const navigate = useNavigate();
 
@@ -34,13 +35,39 @@ export default function LeagueModalGrid({modalProps}) {
     console.log("Modal props onCheckStandings", modalProps)
 
     console.log('/standings/'+modalProps.league._id);
+
+    //axios call to update standing points on each check standing event.
+    try {
+      axios
+        .put("http://localhost:3100/api/update-points-league/" + modalProps?.league?._id )
+        .then((res) => {
+          console.log(res);
+        })
+        .catch((error) => console.log(error));
+    } catch (err) {
+      console.log(err);
+    }
+
     navigate('/standings/'+modalProps.league._id)
   }
   
   const onCreateGuesses = (guessProps)=>{
     //Moving to a new page
     console.log("Modal props onCreateGuesses", modalProps)
-  
+
+    //parsing and getting the ids of the users as an array from modalProps
+    const userIds = modalProps?.league?.users.map(user => user._id);
+
+  try {
+    axios
+      .post("http://localhost:3100/api/standings", {  leagueId: modalProps.league._id, users: userIds })
+      .then((res) => {
+        console.log(res);
+      })
+      .catch((error) => console.log(error));
+  } catch (err) {
+    console.log(err);
+  }
     console.log('/create-guesses/'+modalProps.league._id);
     navigate('/create-guesses/'+modalProps.league._id)
   }
