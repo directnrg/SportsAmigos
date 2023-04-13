@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import { httpService } from "../../services/service";
 import Table from 'react-bootstrap/Table';
 import Container from 'react-bootstrap/Container';
-import Button from "react-bootstrap/esm/Button";
 import LeagueModalGrid from "./LeagueModalGrid";
 import Form from 'react-bootstrap/Form';
 import Row from 'react-bootstrap/Row';
