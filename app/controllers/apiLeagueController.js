@@ -12,7 +12,17 @@ const apiHost = process.env.API_SPORTS_HOST;
 //league - MEXICAN LEAGUE
 const MEXICAN_LEAGUE = 262;
 
-//fetch current mexican leagues we migth not need it.
+//fetch current mexican leagues 
+/**
+ * Fetches Mexican football leagues data from the API and returns the leagues with id, logo, name, and end date.
+ *
+ * @async
+ * @function fecthMexicanLeagues
+ * @param {Object} req Express request object
+ * @param {Object} res Express response object
+ * @returns {JSON} JSON object representing the fetched Mexican leagues
+ * @throws 400 error if there is an error with the request or response from the API
+ */
 export const fecthMexicanLeagues = async (req, res) => {
     const options = {
       method: 'GET',

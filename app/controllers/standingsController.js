@@ -1,15 +1,7 @@
 import { validationResult } from 'express-validator';
+import Guess from '../models/guess.js';
 import Standing from '../models/standing.js';
 import User from '../models/user.js';
-import Guess from '../models/guess.js';
-import mongoose from 'mongoose';
-
-/***
-parameter   POST
-{
-  "league": "60a4b4a40c12345a6789d0b1",
-  "user": "60a4b4a40c12345a6789d0c1",
-}
 
 /**
  * Creates a new league standing with a specified league ID and user ID.
@@ -159,28 +151,6 @@ export const getStandingByLeagueId = async (req, res) => {
     res.status(500).send('Server Error');
   }
 };
-
-/***
-parameter   PUT
-{
-  "league": "60a4b4a40c12345a6789d0b1",
-  "standings": [
-    {
-      "user": "60a4b4a40c12345a6789d0c1",
-      "points": 15
-    },
-    {
-      "user": "60a4b4a40c12345a6789d0c2",
-      "points": 10
-    },
-    {
-      "user": "60a4b4a40c12345a6789d0c3",
-      "points": 18
-    }
-  ]
-}
-
-*/
 
 /**
  * Updates a league standing with new point values for each user.
@@ -335,15 +305,6 @@ export const removeUserInStanding = async (req, res) => {
 };
 
 /**
-parameter   PATCH
-*{
-*  "league": "60a4b4a40c12345a6789d0b1",
-*  "user": "60a4b4a40c12345a6789d0c1",
-* }
-*/
-
-
-/**
 * Finds the standing with the specified league ID from the request body. 
 * If the league is found in the standings, it checks if the user from the request body
 * exists in the standings array.
@@ -361,9 +322,6 @@ parameter   PATCH
  * @throws {Error} 400 error if league standing only has one user
  * @returns {Object} JSON object representing the updated league standing
  */
-
-//TODO review - name convention seems strange. the remove operation seems to be
-//removing the user but not the points property in the json object
 
 export const removeUserStandingInLeague = async (req, res) => {
   const { league, user } = req.body;
@@ -491,7 +449,16 @@ export const getAllStanding = async (req, res) => {
   }
 };
 
-
+/**
+ * Updates the standings of all users in a given league based on their correct guesses made in that league
+ * @async
+ * @function updateStandingPointsByLeagueId
+ * @param {Object} req - Express request object
+ * @param {Object} res - Express response object
+ * @param {string} req.params.leagueId - The ID of the league to update standings for
+ * @returns {JSON} JSON object containing the updated standings for all users in the league
+ * @throws 500 error if there is an error updating the standings in the database
+ */
 export const updateStandingPointsByLeagueId  = async (req, res) => {
   const { leagueId } = req.params;
 

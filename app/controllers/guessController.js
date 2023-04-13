@@ -1,8 +1,5 @@
 import Guess from '../models/guess.js';
-import Game from '../models/game.js';
-import Standing from '../models/standing.js';
 import League from '../models/league.js';
-import mongoose from 'mongoose';
 
 
 /**
@@ -64,9 +61,6 @@ export const createGuess = async (req, res) => {
 };
 
 
-
-
-
 /**
  * Retrieve all guesses, populated with user and game data.
  *
@@ -75,7 +69,7 @@ export const createGuess = async (req, res) => {
  * @param {Object} req - Express request object
  * @param {Object} res - Express response object
  * @returns {Object} JSON object representing all guesses
- * @throws {Error} 400 error if there was an error fetching the guesses
+ * @throws 400 error if there was an error fetching the guesses
  */
 export const getAllGuesses = async (req, res) => {
   try {
@@ -97,7 +91,7 @@ export const getAllGuesses = async (req, res) => {
  * @function getGuessById
  * @param {Object} req - Express request object
  * @param {Object} res - Express response object
- * @throws {Error} 400 error if guess is not found
+ * @throws 400 error if guess is not found
  * @returns {Object} JSON object representing the retrieved guess
  */
 export const getGuessById = async (req, res) => {
@@ -118,8 +112,8 @@ export const getGuessById = async (req, res) => {
  * @param {Object} req.guess - Guess object to be updated, obtained from middleware
  * @param {Object} req.body - Request body containing fields to update
  * @param {Object} res - Express response object
- * @throws {Error} 404 error if guess is not found
- * @throws {Error} 400 error if there's an error updating the guess
+ * @throws 404 error if guess is not found
+ * @throws 400 error if there's an error updating the guess
  * @returns {Object} JSON object representing the updated guess
  */
 export const updateGuess = async (req, res) => {
@@ -146,7 +140,7 @@ export const updateGuess = async (req, res) => {
  * @function deleteGuess
  * @param {Object} req - Express request object
  * @param {Object} res - Express response object
- * @throws {Error} 404 error if guess is not found
+ * @throws 404 error if guess is not found
  * @returns {Object} JSON object indicating successful deletion of guess
  */
 export const deleteGuess = async (req, res) => {
@@ -163,10 +157,18 @@ export const deleteGuess = async (req, res) => {
 };
 
 
-//function to calculate the guesses done last week // possibly an admin method
+// An admin method
+/**
+ * Calculates the guess points of all users for all games.
+ *
+ * @async
+ * @function calculateGuessPointsOfAllUsers
+ * @returns {Promise<void>} Promise object representing the completion of the function
+ * @throws Error if there is an error updating guess points
+ */
 export const calculateGuessPointsOfAllUsers = async () => {
   try {
-    // Find all guesses made in the current week
+    // Find all guesses made for all games
     const guesses = await Guess.find({})
       .populate({
         path: 'user',
@@ -175,28 +177,56 @@ export const calculateGuessPointsOfAllUsers = async () => {
       })
       .populate({
         path: 'game',
-        select: 'homeTeam awayTeam startTime result', // Add homeTeam and awayTeam here
+        select: 'homeTeam awayTeam startTime result', 
       });
 
+    // Create an object to store users' total points
+    const guessPoints = {};
 
+    // Loop through the guesses
     for (const guess of guesses) {
-      console.log(`Processing guess: ${guess._id}, user: ${guess.user.fullName}, game: ${guess.game._id}`);
-      if (guess.guess === guess.game.result) {
-        console.log(`Correct guess: ${guess.guess}, result: ${guess.game.result}`);
-        // Increment the user's points by 1
-        guess.guessPoints += 1;
+      if (guess.guess === guess.game.result && !guess.guessPointsCalculated) {
+        const userId = guess.user._id.toString();
+
+        // Increment the user's points
+        if (!guessPoints[userId]) {
+          guessPoints[userId] = 0;
+        }
+        guessPoints[userId] += 1;
+
+        // Update the guessPointsCalculated flag
+        guess.guessPointsCalculated = true;
         await guess.save();
-      } else {
-        console.log(`Incorrect guess: ${guess.guess}, result: ${guess.game.result}`);
+      }
+    }
+
+    // Update the guess points for all users
+    for (const userId in guessPoints) {
+      const points = guessPoints[userId];
+      const userGuesses = await Guess.find({ user: userId });
+      for (const guess of userGuesses) {
+        guess.guessPoints += points;
+        await guess.save();
       }
     }
   } catch (error) {
-    console.error('Error updating guess points of last week:', error);
+    console.error('Error updating guess points:', error);
+    throw new Error('Error updating guess points');
   }
 };
 
 
-//function to calculate the guesses done by user
+/**
+ * Calculates the guess points made by a user for the current week
+ *
+ * @async
+ * @function calculateGuessPointsOfUserByUserId
+ * @param {Object} req Express request object
+ * @param {string} req.params.userId User ID to calculate the guess points for
+ * @param {Object} res Express response object
+ * @returns {JSON} JSON object containing the updated guesses made by the user
+ * @throws 400 error if there is an error updating the user's guess points
+ */
 export const calculateGuessPointsOfUserByUserId = async (req, res) => {
   console.log('calculateGuessPointsOfUserByUserId called');
 
@@ -209,7 +239,7 @@ export const calculateGuessPointsOfUserByUserId = async (req, res) => {
       .populate({ path: 'user', select: 'fullName' })
       .populate({
         path: 'game',
-        select: 'homeTeam awayTeam startTime result', // Add homeTeam and awayTeam here
+        select: 'homeTeam awayTeam startTime result',
       });
 
     const updatedGuesses = [];

@@ -68,7 +68,7 @@ export default function ArticlesCarousel() {
   return (
     <div className="carousel-container">
       <Slider {...settings}>
-        {/*TODO Missing to change articles sample to the articles retrieved from database*/}
+
         {articles.map((article) => (
           <div key={article._id}>
             <div className="card">
