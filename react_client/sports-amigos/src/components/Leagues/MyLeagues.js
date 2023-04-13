@@ -14,31 +14,41 @@ import { Badge } from 'react-bootstrap';
 
 
 export default function MyLeagues() {
+
+  //Context
   const {loginData} = useContext(MyContext);
+
+  //states and hooks
   const [showLeagueModal, setShowLeagueModal] = useState(false);
   const [myLeaguesList, setMyLeaguesList] = useState([]);
   const [mySelectedLeague, setMySelectedLeague] = useState({});
   const [myLeaguesModalShow, setMyLeaguesModalShow] = useState(false);
-  const token = JSON.parse(sessionStorage.getItem('login'))
-  const decodedToken = jwt(token.token); 
   const [areMyLeaguesPrivate, setAreMyLeaguesPrivate] = useState(false);
 
-  //http://localhost:3100/api/leagues/643339c9da183ad9cc24d0e4
+  //Decoding token
+  const token = JSON.parse(sessionStorage.getItem('login'))
+  const decodedToken = jwt(token.token); 
+
+  //Constants
   const URL = `http://localhost:3100/api/leagues/${loginData.userId}`;
   
-
+  //Setting props for modal component
   const modalProps = {
     show:myLeaguesModalShow,
      onHide:() => setMyLeaguesModalShow(false),
      league:mySelectedLeague,
   }
+
+  //Callbacks
   const onLeagueTypeChange = () => {
+    //Toggling state when toggle btn changes
     setAreMyLeaguesPrivate(!areMyLeaguesPrivate)
     console.log(areMyLeaguesPrivate)
   }
 
   const getLeagues = async ()=>{
     
+    //Get leagues by user
     try{
     
       console.log(" token",token.token)
@@ -56,12 +66,17 @@ export default function MyLeagues() {
     
   }
 
+  //Change states on league clicked
+  const onLeagueClick=(league)=>{
+    setMySelectedLeague(league)
+    setMyLeaguesModalShow(true);
+  }
+
+  //Use Effects 
   useEffect(  () => {
    
-
-      getLeagues();
-
-      
+    //Get leagues first time component rendered
+      getLeagues();   
 
     }
 
@@ -72,10 +87,7 @@ export default function MyLeagues() {
       console.log("League List:",myLeaguesList)
     })
 
-  const onLeagueClick=(league)=>{
-    setMySelectedLeague(league)
-    setMyLeaguesModalShow(true);
-  }
+ 
 
   return (
     <Container>
@@ -96,6 +108,7 @@ export default function MyLeagues() {
               </tr>
             </thead>
             <tbody>
+              {/** Displaying public or private leagues depending on toggle switch btn */}
             { areMyLeaguesPrivate? myLeaguesList.filter(league => league.isPrivate === true).map((league, index)=>{
               return(
               <tr onClick={()=>onLeagueClick(league)} key={index}>
