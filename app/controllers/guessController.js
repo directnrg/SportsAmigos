@@ -2,105 +2,132 @@ import Guess from '../models/guess.js';
 import Game from '../models/game.js';
 import Standing from '../models/standing.js';
 import League from '../models/league.js';
+import mongoose from 'mongoose';
 
+
+/**
+ * Creates a new guess object and saves it to the database.
+ *
+ * @async
+ * @function createGuess
+ * @param {Object} req - Express request object
+ * @param {Object} res - Express response object
+ * @throws {Error} 400 error if there is an error creating the guess
+ * @returns {Object} JSON object with success message and the populated `Guess` object
+ */
 export const createGuess = async (req, res) => {
   try {
     const { league, user, guesses } = req.body;
     const createdGuesses = [];
 
     for (const guessData of guesses) {
+      // Check if the user has already guessed for the game in the league
+      const existingGuess = await Guess.findOne({
+        user: user,
+        game: guessData.game,
+        league: league,
+      });
+
+      if (existingGuess) {
+        return res.status(400).json({
+          message: `User has already made a guess for the game ${guessData.game} in the league with ID: ${league}`,
+        });
+      }
+
       const newGuess = new Guess({
         user: user,
         game: guessData.game,
         guess: guessData.guess,
         league: league,
-        date: new Date(),
+        createdAt: new Date(),
       });
 
       await newGuess.save();
       createdGuesses.push(newGuess);
 
-      // Add guess to the league
+      // Add guess to the league an establish one to many relationship between League an Game
       const leagueToUpdate = await League.findById(league);
       leagueToUpdate.guesses.push(newGuess._id);
-      //leagueToUpdate.games.push(guessData.game); // Add the game id to League games array
+
+      // Check if the game is already in the league's games array before adding it
+      if (!leagueToUpdate.games.includes(guessData.game)) {
+        leagueToUpdate.games.push(guessData.game); // Add the game id to League games array
+      }
+      
       await leagueToUpdate.save();
     }
-
     res.status(201).json(createdGuesses);
   } catch (error) {
     console.error(error.message);
-    res.status(500).send('Server Error');
+    res.status(500).send('Server error');
   }
 };
 
-/**
- * to add multiple user guesses from frontend that assumes that all
- * guesses sent in the request are going to have the same ID of user.
- * this method will serve the purpose of handling a single request for adding multiple
- * user guesses.
- */
-// export const addAllUserGuesses = async (req, res) => {
-//   try {
-//     //array of guesses
-//     const userGuesses = req.body;
 
-//     // Get the user ID from the request body (assuming all guesses have the same user ID)
-//     const userId = userGuesses[0].userId;
 
-//     // Validate that all user IDs are the same
-//     const allUserIdsSame = userGuesses.every(
-//       (guess) => guess.userId === userId
-//     );
 
-//     if (!allUserIdsSame) {
-//       return res
-//         .status(400)
-//         .json({ message: 'All user IDs in the array must be the same' });
-//     }
-
-//     // Save all the guesses in parallel
-//     await Promise.all(userGuesses.map((guess) => new Guess(guess).save()));
-
-//     // Return the stored guesses filtered by the user's ID
-//     const storedGuesses = await Guess.find({ userId });
-//     res.status(201).json({
-//       message: 'Successfully added all guesses of user',
-//       guesses: storedGuesses,
-//     });
-//   } catch (error) {
-//     res.status(400).json({ message: 'Error creating guess', error });
-//   }
-// };
 
 /**
- * get all guesses in the database.
+ * Retrieve all guesses, populated with user and game data.
+ *
+ * @async
+ * @function getAllGuesses
+ * @param {Object} req - Express request object
+ * @param {Object} res - Express response object
+ * @returns {Object} JSON object representing all guesses
+ * @throws {Error} 400 error if there was an error fetching the guesses
  */
 export const getAllGuesses = async (req, res) => {
   try {
-    const guesses = await Guess.find().populate('user').populate('game');
+    const guesses = await Guess.find().populate({
+      path: 'user',
+      model: 'User',
+      select: 'fullName email'
+    }).populate('game');
     res.status(200).json(guesses);
   } catch (error) {
     res.status(400).json({ message: 'Error fetching guesses', error });
   }
 };
 
+/**
+ * Retrieves a guess by ID.
+ *
+ * @async
+ * @function getGuessById
+ * @param {Object} req - Express request object
+ * @param {Object} res - Express response object
+ * @throws {Error} 400 error if guess is not found
+ * @returns {Object} JSON object representing the retrieved guess
+ */
 export const getGuessById = async (req, res) => {
   try {
-    const guess = req.guess;
+    const guess = req.guess
     res.status(200).json(guess);
   } catch (error) {
-    res.status(400).json({ message: 'Error fetching guesses', error: error });
+    res.status(400).json({ message: 'Guess not found', error: error });
   }
-};
+}
 
+/**
+ * Update a guess by ID.
+ *
+ * @async
+ * @function updateGuess
+ * @param {Object} req - Express request object
+ * @param {Object} req.guess - Guess object to be updated, obtained from middleware
+ * @param {Object} req.body - Request body containing fields to update
+ * @param {Object} res - Express response object
+ * @throws {Error} 404 error if guess is not found
+ * @throws {Error} 400 error if there's an error updating the guess
+ * @returns {Object} JSON object representing the updated guess
+ */
 export const updateGuess = async (req, res) => {
   try {
     const { id } = req.guess;
-    const { user, betamount, game, guess, userPoints } = req.body;
-    const updatedGuess = await Guess.findOneAndUpdate(
-      { _id: id },
-      { user, betamount, game, guess, userPoints },
+    const { user, game, guess, guessPoints } = req.body;
+    const updatedGuess = await Guess.findOneAndUpdate({ _id: id },
+      { user, game, guess, guessPoints },
       { new: true, runValidators: true }
     );
     if (!updatedGuess) {
@@ -110,8 +137,18 @@ export const updateGuess = async (req, res) => {
   } catch (error) {
     res.status(400).json({ message: 'Error updating guess', error });
   }
-};
+}
 
+/**
+ * Delete a guess by ID.
+ *
+ * @async
+ * @function deleteGuess
+ * @param {Object} req - Express request object
+ * @param {Object} res - Express response object
+ * @throws {Error} 404 error if guess is not found
+ * @returns {Object} JSON object indicating successful deletion of guess
+ */
 export const deleteGuess = async (req, res) => {
   try {
     const { id } = req.guess;
@@ -125,44 +162,77 @@ export const deleteGuess = async (req, res) => {
   }
 };
 
-//function to calculate the guesses done in a week
-export const updateGuessPoints = async () => {
-  try {
-    // Get the start and end dates for the current week
-    const currentDate = new Date();
-    const startOfWeek = new Date(currentDate);
-    startOfWeek.setDate(currentDate.getDate() - currentDate.getDay());
-    const endOfWeek = new Date(startOfWeek);
-    endOfWeek.setDate(startOfWeek.getDate() + 7);
 
+//function to calculate the guesses done last week // possibly an admin method
+export const calculateGuessPointsOfAllUsers = async () => {
+  try {
     // Find all guesses made in the current week
-    const guesses = await Guess.find({
-      createdAt: { $gte: startOfWeek, $lte: endOfWeek },
-    })
-      .populate('user')
-      .populate('game');
+    const guesses = await Guess.find({})
+      .populate({
+        path: 'user',
+        model: 'User',
+        select: 'fullName'
+      })
+      .populate({
+        path: 'game',
+        select: 'homeTeam awayTeam startTime result', // Add homeTeam and awayTeam here
+      });
+
 
     for (const guess of guesses) {
+      console.log(`Processing guess: ${guess._id}, user: ${guess.user.fullName}, game: ${guess.game._id}`);
       if (guess.guess === guess.game.result) {
-        // Find the Standing record for the user in the league
-        let standing = await Standing.findOne({
-          user: guess.user._id,
-          league: guess.game.league,
-        });
-        if (!standing) {
-          standing = new Standing({
-            user: guess.user._id,
-            league: guess.game.league,
-            points: 0,
-          });
-        }
-
+        console.log(`Correct guess: ${guess.guess}, result: ${guess.game.result}`);
         // Increment the user's points by 1
-        standing.points += 1;
-        await standing.save();
+        guess.guessPoints += 1;
+        await guess.save();
+      } else {
+        console.log(`Incorrect guess: ${guess.guess}, result: ${guess.game.result}`);
       }
     }
   } catch (error) {
+    console.error('Error updating guess points of last week:', error);
+  }
+};
+
+
+//function to calculate the guesses done by user
+export const calculateGuessPointsOfUserByUserId = async (req, res) => {
+  console.log('calculateGuessPointsOfUserByUserId called');
+
+  const { userId } = req.params;
+  try {
+    // Find all guesses made in the current week
+    const guesses = await Guess.find({
+      user: userId
+    })
+      .populate({ path: 'user', select: 'fullName' })
+      .populate({
+        path: 'game',
+        select: 'homeTeam awayTeam startTime result', // Add homeTeam and awayTeam here
+      });
+
+    const updatedGuesses = [];
+for (const guess of guesses) {
+  if (!guess.guessPointsCalculated) {
+    console.log(`Processing guess: ${guess._id}, user: ${guess.user.fullName}, game: ${guess.game._id}`);
+    if (guess.guess === guess.game.result) {
+      console.log(`Correct guess: ${guess.guess}, result: ${guess.game.result}`);
+      // Increment the user's points by 1
+      guess.guessPoints += 1;
+      guess.guessPointsCalculated = true;
+      await guess.save();
+      updatedGuesses.push(guess);
+    } else {
+      guess.guessPointsCalculated = true;
+      await guess.save();
+      console.log(`Incorrect guess: ${guess.guess}, result: ${guess.game.result}`);
+    }
+  }
+}
+    res.status(200).json({ updatedGuesses: updatedGuesses })
+  } catch (error) {
     console.error('Error updating guess points:', error);
+    res.status(400).json({ message: `Error updating User guess points of User with ID: ${userId}`, error: error.message });
   }
 };

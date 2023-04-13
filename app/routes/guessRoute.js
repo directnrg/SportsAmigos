@@ -5,6 +5,8 @@ import {
   getGuessById,
   updateGuess,
   deleteGuess,
+  calculateGuessPointsOfAllUsers,
+  calculateGuessPointsOfUserByUserId
 //   addAllUserGuesses,
 } from '../controllers/guessController.js';
 import {
@@ -22,6 +24,12 @@ guessRouter.post('/guess', createGuess);
 
 // Get all guesses
 guessRouter.get('/guesses', getAllGuesses);
+
+//Calcullate guess points of all users - possibly an admin route to update all user guesses at the same time.
+guessRouter.get('/guesses/calc-all-user-guess-points', calculateGuessPointsOfAllUsers)
+
+//Calculate guess points of user by user Id
+guessRouter.get('/guesses/calc-guesses-points-user/:userId', calculateGuessPointsOfUserByUserId)
 
 // Get a single guess by id
 guessRouter.get('/guess/:guessId', findGuessById, getGuessById);

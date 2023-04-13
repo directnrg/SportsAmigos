@@ -3,7 +3,7 @@ import {
   createLeague,
   getAllLeaguesByUserId,
   getLeagues,
-  getLeague,
+  getLeagueByLeagueId,
   updateLeagueName,
   deleteLeague,
   userJoinLeague,
@@ -15,7 +15,7 @@ const leagueRouter = express.Router();
 leagueRouter.get('/leagues', getLeagues); //return all leagues
 leagueRouter.get('/leagues/:userId', getAllLeaguesByUserId); //get all leagues by user Id
 leagueRouter.post('/league', createLeague); //create a League
-leagueRouter.get('/league/:leagueId', getLeague); //get specific league
+leagueRouter.get('/league/:leagueId', getLeagueByLeagueId); //get specific league
 leagueRouter.patch('/league/join', userJoinLeague); //join user to existing league. Parameter JSON body "leagueId" & "userId"
 leagueRouter.patch('/league/remove-user', removeUserInLeague); //Remove user from existing league. Parameter JSON body "leagueId" & "userId"
 leagueRouter.put('/league/:leagueId', updateLeagueName); //Rename the league name. Parameter JSON body "name"

@@ -11,15 +11,19 @@ import { Badge } from 'react-bootstrap';
 
 
 export default function LeagueList() {
+
+  //States
   const [allLeagueList, setAllLeagueList] = useState([]);
   const [allSelectedLeague, setAllSelectedLeague] = useState({});
   const [leagueListModalShow, setLeagueListModalShow] = useState(false);
   const [areAllLeaguesPrivate, setAreAllLeaguesPrivate] = useState(false);
  
-
+  //Constants
   const URL = 'http://localhost:3100/api/leagues'
 
+  //Callbacks
   const getLeagues = async () => {
+    //Call Api and set state
     try {
       const token = JSON.parse(sessionStorage.getItem('login'))
 
@@ -38,39 +42,38 @@ export default function LeagueList() {
 
   }
 
+  //change state when toggle switch changes
   const onLeagueTypeChange = () => {
     setAreAllLeaguesPrivate(!areAllLeaguesPrivate)
     console.log(areAllLeaguesPrivate)
   }
 
-  useEffect(() => {
-
-
-    getLeagues();
-
-
-
-  }
-
-
-    , []);
-
-  useEffect(() => {
-    console.log("League List:", allLeagueList)
-      
-  })
-
+  //Setting state when a league is clicked
   const onLeagueClick = (league) => {
     setAllSelectedLeague(league)
     setLeagueListModalShow(true);
   }
 
+  //Setting props for modal component
   const modalProps = {
     show: leagueListModalShow,
     onHide: () => setLeagueListModalShow(false),
-    league: allSelectedLeague
+    league: allSelectedLeague,
   }
 
+  //Use Effects
+
+  //Populating leagues first time component rendered
+  useEffect(() => {
+    getLeagues();
+  }
+    , []);
+
+  useEffect(() => {
+    console.log("League List:", allLeagueList) 
+  })
+
+ 
   return (
     <Container>
       <Container >
@@ -91,12 +94,13 @@ export default function LeagueList() {
           </tr>
         </thead>
         <tbody>
+          {/** Displaying public or private leagues depending on toggle switch btn */}
           {areAllLeaguesPrivate? allLeagueList.filter(league => league.isPrivate === true).map((league, index) => {
             return (
               <tr onClick={() => onLeagueClick(league)} key={index}>
                 <td>{league.name}</td>
                 <td>{league.isPrivate ? 'private' : 'public'}</td>
-                <td>{league.users.length > 0 ? league.users.length : 0}</td>
+                <td>{league.users.length > 0 ? league.users.length : 0}/7</td>
               </tr>)
           })
           :
@@ -105,7 +109,7 @@ export default function LeagueList() {
               <tr onClick={() => onLeagueClick(league)} key={index}>
                 <td>{league.name}</td>
                 <td>{league.isPrivate ? 'private' : 'public'}</td>
-                <td>{league.users.length > 0 ? league.users.length : 0}</td>
+                <td>{league.users.length > 0 ? league.users.length : 0}/7</td>
               </tr>)
           })
           

@@ -22,13 +22,23 @@ const guessSchema = new Schema({
     default: null,
   },
   // 0 or 1 points for accuracy
-  userPoints: {
+  guessPoints: {
     type: Number,
     default: 0,
   },
-  date: {
+  // Flag to track whether the guess points have already been calculated or not
+  guessPointsCalculated: {
+    type: Boolean,
+    default: false,
+  },
+    // Flag to track whether the standing points have already been calculated or not
+  standingPointsCalculated: {
+    type: Boolean,
+    default: false,
+  },
+  createdAt: {
     type: Date,
-    default: null,
+    default: Date.now,
   },
 });
 
