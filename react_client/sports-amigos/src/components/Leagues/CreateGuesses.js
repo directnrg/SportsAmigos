@@ -1,10 +1,12 @@
-import React, { useState, useEffect, useContext } from 'react';
-import axios from 'axios';
-import { Table, Form, Button } from 'react-bootstrap';
-import { MyContext } from '../../App';
-import { useParams, useNavigate } from 'react-router-dom';
+import React, { useState, useEffect, useContext } from "react";
+import axios from "axios";
+import { Table, Form, Button } from "react-bootstrap";
+import { MyContext } from "../../App";
+import { useParams, useNavigate } from "react-router-dom";
 
 export default function CreateGuesses() {
+  // Constants and States
+  // Login Data is used to retrieve the ID to save Guesses
   const navigate = useNavigate();
   const { id } = useParams();
   const { loginData, setLoginData } = useContext(MyContext);
@@ -12,7 +14,7 @@ export default function CreateGuesses() {
 
   useEffect(() => {
     const fetchData = async () => {
-      const result = await axios(`http://localhost:3100/api/league/${id}`);
+      const result = await axios(`http://localhost:3100/api/league/${id}`); // Retrieve the games from the league
       setGames(result.data.games);
     };
     fetchData();
@@ -21,19 +23,27 @@ export default function CreateGuesses() {
   const handleSubmit = async (event) => {
     event.preventDefault();
     const newGuesses = [];
+    // For each game the guess is generated according to the value checked
     games.forEach((game) => {
-      const winner = document.querySelector(`input[name="winner-${game._id}"]:checked`)?.value;
+      const winner = document.querySelector(
+        `input[name="winner-${game._id}"]:checked`
+      )?.value;
       if (winner) {
         newGuesses.push({
           game: game._id,
-          guess: winner
+          guess: winner,
         });
       }
     });
     try {
-      const response = await axios.post("http://localhost:3100/api/guess", { league: id, user: loginData.userId, guesses: newGuesses });
-      console.log("Guesses post data:",response.data);
-      navigate("/my-leagues");
+      // Post the gusses date with reference to the user and the league
+      const response = await axios.post("http://localhost:3100/api/guess", {
+        league: id,
+        user: loginData.userId,
+        guesses: newGuesses,
+      });
+      console.log("Guesses post data:", response.data);
+      navigate("/my-leagues"); // Navigate to My Leagues page
     } catch (error) {
       console.log(error);
     }
@@ -57,7 +67,14 @@ export default function CreateGuesses() {
               <tr key={game._id}>
                 <td>{game.homeTeam}</td>
                 <td>{game.awayTeam}</td>
-                <td>{new Date(game.startTime).toLocaleString('en-US',{  year: 'numeric', month: 'long', day: 'numeric',hour: 'numeric'})}</td>
+                <td>
+                  {new Date(game.startTime).toLocaleString("en-US", {
+                    year: "numeric",
+                    month: "long",
+                    day: "numeric",
+                    hour: "numeric",
+                  })}
+                </td>
                 <td>
                   <Form.Check
                     type="radio"

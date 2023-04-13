@@ -5,7 +5,6 @@ import Container from 'react-bootstrap/Container';
 import Modal from 'react-bootstrap/Modal';
 import Row from 'react-bootstrap/Row';
 import Table from 'react-bootstrap/Table';
-import jwt from 'jwt-decode'
 import {useNavigate} from "react-router-dom";
 import { Badge } from 'react-bootstrap';
 import { MyContext } from "../../App";
