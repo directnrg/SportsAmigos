@@ -17,15 +17,17 @@ import {validation} from '../services/validation';
 
 export default function SignUp() {
 
-  const navigate = useNavigate();
-
+  //Constants 
   const URL = 'http://localhost:3100/api/register'//'https://catfact.ninja/fact' // 'http://localhost:3000/';
-  //Using Refs
+
+  //Hooks
+  const navigate = useNavigate();
   const firstNameRef = useRef('');
   const lastNameRef = useRef('');
   const emailRef = useRef('');
   const passwordRef = useRef('');
   
+  //States
 
   const [errorMsgs, setErrorMsg] =  useState([]);
 
@@ -67,6 +69,8 @@ export default function SignUp() {
 
 
     if (canPost){
+
+      //Call API: get user from form and send data
       try{
         const newUser = {
           fullName: `${firstName} ${lastName}`,
@@ -75,10 +79,8 @@ export default function SignUp() {
 
         }
         
+        //Await response and check if errors
         const response = await httpService.post(URL,newUser);
-       
-        //navigate('/log-in')
-
         if(response.response && response.response.status===400|500){
           console.log('response status:',response.response.status)
           console.log('response data:',response.response.data)
@@ -108,6 +110,7 @@ export default function SignUp() {
   },);
 
   useEffect(()=>{
+    //setting erros to null when component first rendered
     setErrorMsg([])
   },[])
 
