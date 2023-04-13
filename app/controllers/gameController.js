@@ -109,6 +109,16 @@ export const populateOrUpdateGamesOfLastWeekApi = async (req, res) => {
   }
 }
 
+/**
+ * Populates or updates the games for the Mexican league of the current week.
+ *
+ * @async
+ * @function populateOrUpdateGamesApi
+ * @param {Object} req Express request object
+ * @param {Object} res Express response object
+ * @returns {JSON} JSON object representing the games updated or populated in the database
+ * @throws 500 error if there is an error updating or populating the games in the database
+ */
 export const populateOrUpdateGamesApi = async (req, res) => {
 
   try {
@@ -242,7 +252,17 @@ export const populateGamesOfTheWeek = async (req, res) => {
   }
 };
 
-
+/**
+ * Fetches games from the Game model in the database for the current week and returns them with Toronto time formatting
+ *
+ * @async
+ * @function populateGamesOfTheLastWeek
+ * @param {Object} req - Express request object
+ * @param {Object} res - Express response object
+ * @returns {JSON} JSON object representing the games of the last week with Toronto time formatting
+ * @throws 404 error if there are no games found for the last week
+ * @throws 500 error if there is an error fetching the games from the database
+ */
 export const populateGamesOfTheLastWeek = async (req,res) => {
   try {
     //data calculation to get the games of the last week 
@@ -409,7 +429,6 @@ cron.schedule('0 0 * * *', updateFixtureWinnerDaily);
 export const deleteGame = async (req, res) => {
   try {
     const { id } = req.game;
-    //TODO - MISSING logic to not allow deleting a game that is already attached to a user guess or any other related relationships.
 
     const game = await Game.findOneAndDelete({_id: id});
     res.status(200).json({ deletedGame: game });

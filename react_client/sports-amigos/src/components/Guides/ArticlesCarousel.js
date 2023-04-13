@@ -65,38 +65,10 @@ export default function ArticlesCarousel() {
     prevArrow: <PrevArrow />,
   };
 
-  // //sample data
-  // const articlesSample = [
-  //   {
-  //     id: 1,
-  //     title: "The Benefits of Regular Exercise",
-  //     content:
-  //       "Regular exercise has been shown to have numerous benefits for both physical and mental health. It can improve cardiovascular health, boost the immune system, and even help prevent chronic diseases such as diabetes and heart disease. Exercise has also been shown to improve mood, reduce anxiety and depression, and increase overall feelings of well-being.",
-  //   },
-  //   {
-  //     id: 2,
-  //     title: "The Impact of Social Media on Mental Health",
-  //     content:
-  //       "Social media has become an integral part of many people's lives, but it can also have negative effects on mental health. Studies have shown that excessive social media use can lead to increased feelings of loneliness, depression, and anxiety. It can also contribute to poor sleep quality and decreased self-esteem. However, when used in moderation, social media can have positive effects on mental health, such as providing social support and fostering a sense of community.",
-  //   },
-  //   {
-  //     id: 3,
-  //     title: "The Importance of Sleep for Physical and Mental Health",
-  //     content:
-  //       "Sleep is an essential part of a healthy lifestyle, and lack of sleep can have negative effects on both physical and mental health. It can contribute to weight gain, high blood pressure, and an increased risk of chronic diseases. Sleep also plays a crucial role in regulating mood and emotions, and a lack of sleep can lead to irritability, anxiety, and depression. Getting enough high-quality sleep is important for overall health and well-being.",
-  //   },
-  //   {
-  //     id: 4,
-  //     title: "The Benefits of Mindfulness Meditation",
-  //     content:
-  //       "Mindfulness meditation has become increasingly popular in recent years, and for good reason. Studies have shown that mindfulness meditation can reduce stress and anxiety, improve mood, and even improve immune function. It involves focusing on the present moment and becoming more aware of one's thoughts and feelings, which can help to develop greater emotional resilience and a more positive outlook on life. Incorporating mindfulness meditation into a daily routine can have numerous benefits for both physical and mental health.",
-  //   },
-  // ];
-
   return (
     <div className="carousel-container">
       <Slider {...settings}>
-        {/*TODO Missing to change articles sample to the articles retrieved from database*/}
+
         {articles.map((article) => (
           <div key={article._id}>
             <div className="card">

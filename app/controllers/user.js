@@ -9,11 +9,17 @@ dotenv.config();
 const jwtSecret = process.env.JWTSECRET;
 import { check, validationResult } from 'express-validator';
 
-// Getting all users
+/**
+ * Fetches all users from the database.
+ * @async
+ * @param {Object} req - Express request object.
+ * @param {Object} res - Express response object.
+ * @returns {JSON} - JSON object containing all users.
+ */
 const getAllUsers = async (req, res) => {
   try {
     const users = await User.find();
-    res.json(users);
+    res.status(200).json(users);
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
@@ -28,7 +34,16 @@ const showUserByUserName = (req, res) => {
   res.json(res.user);
 };
 
-//Check Token - for testing purposes only
+/**
+ * for checking validity of the token. Admin purposes.
+ * Controller function to get user data for the authenticated user based on the token in the request header.
+ * @function
+ * @async
+ * @param {Object} req - Express request object.
+ * @param {Object} res - Express response object.
+ * @returns {Promise<Object>} The user object without the password field.
+ * @throws {Error} Server error if there was a problem fetching the user data.
+ */
 const checkToken = async (req, res) => {
   try {
     const user = await User.findById(req.user.id).select('-password');
@@ -39,7 +54,15 @@ const checkToken = async (req, res) => {
   }
 };
 
-//Login the user
+/**
+ * Logs in the user
+ *
+ * @async
+ * @function
+ * @param {object} req - Express request object
+ * @param {object} res - Express response object
+ * @returns {JSON} Returns JSON web token upon successful login
+ */
 const loginUser = async (req, res) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
@@ -86,8 +109,12 @@ const loginUser = async (req, res) => {
   }
 };
 
-//@desc     Register user with jwt
-//@access   Public
+/**
+ * Register a new user with jwt
+ * @param {Object} req - Express request object.
+ * @param {Object} res - Express response object.
+ * @returns {JSON} JSON object containing JWT if successful, error message if unsuccessful.
+ */
 const registerUser = async (req, res) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
@@ -148,7 +175,21 @@ const registerUser = async (req, res) => {
   }
 };
 
-// Creating one user
+/**
+ * Add a new user
+ * @param {Object} req - The request object
+ * @param {Object} req.body - The user object to be added
+ * @param {string} req.body.fullName - The full name of the user
+ * @param {string} req.body.email - The email address of the user
+ * @param {string} req.body.password - The password of the user
+ * @param {string} req.body.phone - The phone number of the user (optional)
+ * @param {string} req.body.avatar - The avatar image of the user (optional)
+ * @param {Date} req.body.date - The of creation of user
+ * @param {Array} [req.body.leagues] - The leagues the user belongs to (optional)
+ * @param {Object} res - The response object
+ * @returns {JSON} - The newly created user object
+ * @throws {Object} - Error message and status code
+ */
 const addUser = async (req, res) => {
   const { fullName, email, password, phone, avatar, date, leagues } = req.body;
 
@@ -179,7 +220,12 @@ const addUser = async (req, res) => {
   }
 };
 
-//Add a new user
+/**
+ * Add a new user
+ * @param {Object} req - The HTTP request object
+ * @param {Object} res - The HTTP response object
+ * @returns {JSON} - The JSON Object response object containing a message and user data
+ */
 const addNewUser = async (req, res) => {
   console.log('Entered /user (post)', req.body);
   if (!req.body.fullName || !req.body.email || !req.body.password) {
@@ -203,7 +249,15 @@ const addNewUser = async (req, res) => {
   }
 };
 
-// Updating One user
+/**
+ * Updates a user by ID
+ *
+ * @async
+ * @param {Object} req - The request object
+ * @param {Object} res - The response object
+ * @returns {JSON} - The updated user object
+ * @throws Error object with message property
+ */
 const updateUserById = async (req, res) => {
   const {
     fullName,
@@ -212,10 +266,7 @@ const updateUserById = async (req, res) => {
     avatar,
     phone,
     date,
-    funds,
     leagues,
-    wallet,
-    paymentMethods,
   } = req.body;
 
   if (fullName !== null) {
@@ -236,29 +287,29 @@ const updateUserById = async (req, res) => {
   if (date !== null) {
     res.user.date = date;
   }
-  if (funds !== null) {
-    res.user.funds = funds;
-  }
+ 
   if (leagues !== null) {
     res.user.leagues = leagues;
   }
-  if (wallet !== null) {
-    res.user.wallet = wallet;
-  }
-  if (paymentMethods !== null) {
-    res.user.paymentMethods = paymentMethods;
-  }
-
   try {
     const updatedUser = await res.user.save();
-    res.json(updatedUser);
+    res.status(200).json(updatedUser);
     console.log('Updated User', updatedUser);
   } catch (err) {
     res.status(400).json({ message: err.message });
   }
 };
 
-// Deleting One user
+/**
+ * Delete a user by ID.
+ * 
+ * @param {Object} req - The request object.
+ * @param {Object} req.params - The parameters passed in the request.
+ * @param {string} req.params.id - The ID of the user to delete.
+ * @param {Object} res - The response object.
+ * @returns {JSON} The response object with a message indicating that the user was deleted.
+ * @throws Error If an error occurs while deleting the user.
+ */
 const deleteUserById = async (req, res) => {
   try {
     await User.findByIdAndRemove(req.params.id);
