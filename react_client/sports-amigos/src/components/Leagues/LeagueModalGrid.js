@@ -18,7 +18,7 @@ export default function LeagueModalGrid({modalProps}) {
 
   //Constants 
   const gamesCurrentWeekUrl = 'http://localhost:3100/api/games-of-the-week';
-  const gamesLastWeekUrl = 'http://localhost:3100/api/games-of-the-last-week';
+  //const gamesLastWeekUrl = 'http://localhost:3100/api/games-of-the-last-week';
 
   //States
   const [weekGames, setWeekGames] = useState([]);
@@ -84,7 +84,7 @@ export default function LeagueModalGrid({modalProps}) {
 
   useEffect(()=>{
     axios
-    .get(gamesLastWeekUrl)
+    .get(gamesCurrentWeekUrl)
     .then((res) => {
       console.log('res data', res.data.games);
       setWeekGames(res.data.games);

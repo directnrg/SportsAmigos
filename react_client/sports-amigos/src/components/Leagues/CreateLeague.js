@@ -27,7 +27,7 @@ export default function CreateLeague() {
   // URLs for the Axios Calls
   const usersUrl = "http://localhost:3100/api/users/";
   const gamesCurrentWeekUrl = "http://localhost:3100/api/games-of-the-week/";
-  const gamesLastWeekUrl = "http://localhost:3100/api/games-of-the-last-week";
+  //const gamesLastWeekUrl = "http://localhost:3100/api/games-of-the-last-week";
 
   useEffect(() => {
     axios
@@ -46,7 +46,7 @@ export default function CreateLeague() {
 
   useEffect(() => {
     axios
-      .get(gamesLastWeekUrl) // Games that are going to be saved in the league
+      .get(gamesCurrentWeekUrl) // Games that are going to be saved in the league
       .then((res) => {
         const gameIds = res.data.games.map((game) => game._id);
         console.log("gameids", gameIds);
