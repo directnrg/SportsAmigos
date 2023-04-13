@@ -19,7 +19,6 @@ export default function MyLeagues() {
   const {loginData} = useContext(MyContext);
 
   //states and hooks
-  const [showLeagueModal, setShowLeagueModal] = useState(false);
   const [myLeaguesList, setMyLeaguesList] = useState([]);
   const [mySelectedLeague, setMySelectedLeague] = useState({});
   const [myLeaguesModalShow, setMyLeaguesModalShow] = useState(false);
