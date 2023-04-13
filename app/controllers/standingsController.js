@@ -25,6 +25,7 @@ parameter   POST
  * @returns {JSON} Sends an HTTP response to the client with a JSON object containing the new standing object if successful, or sends an error response if unsuccessful.
  */
 export const createLeagueStanding = async (req, res) => {
+  console.log("Request Body", req)
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
     return res.status(400).json({ errors: errors.array() });
@@ -34,6 +35,7 @@ export const createLeagueStanding = async (req, res) => {
 
   // Check if leagueId is an array
   if (Array.isArray(leagueId)) {
+    console.log("inside  if (Array.isArray(leagueId)) ")
     return res.status(400).json({
       errors: [
         {
@@ -51,6 +53,9 @@ export const createLeagueStanding = async (req, res) => {
         points: 0,
       };
     });
+
+    console.log("userStandings values ", userStandings);
+
 
     const newStanding = new Standing({
       league: leagueId,
@@ -486,68 +491,51 @@ export const getAllStanding = async (req, res) => {
   }
 };
 
-//TODO - pending testing
-export const calculateUsersOverallPoints = async (req, res) => {
-  try {
-    // Get the start and end dates for the current week
-    const currentDate = new Date();
-    const startOfWeek = new Date(currentDate);
-    startOfWeek.setDate(currentDate.getDate() - currentDate.getDay() + (currentDate.getDay() === 0 ? -5 : 1));
-    const endOfWeek = new Date(startOfWeek);
-    endOfWeek.setDate(startOfWeek.getDate() + 6);
 
+export const updateStandingPointsByLeagueId  = async (req, res) => {
+  const { leagueId } = req.params;
+
+  try {
     // Find all guesses made in the current week
-    const guesses = await Guess.find({
-      createdAt: {
-        $gte: startOfWeek,
-        $lte: endOfWeek
-      },
-    })
+    const guesses = await Guess.find({ league: leagueId })
       .populate('user')
       .populate('game');
 
-    // Create a Map to store users' total points
-    const guessPointsMap = new Map();
+    // Create an object to store users' total points
+    const guessPoints = {};
 
     // Loop through the guesses
     for (const guess of guesses) {
-      if (guess.guess === guess.game.result) {
+      if (guess.guess === guess.game.result && !guess.standingPointsCalculated) {
         const userId = guess.user._id.toString();
-        const leagueId = guess.game.league.toString();
 
-        // Initialize the user points for this user and league combination
-        if (!guessPointsMap.has(userId)) {
-          guessPointsMap.set(userId, new Map());
+        // Increment the user's points
+        if (!guessPoints[userId]) {
+          guessPoints[userId] = 0;
         }
-        const userLeaguesMap = guessPointsMap.get(userId);
+        guessPoints[userId] += 1;
 
-        if (!userLeaguesMap.has(leagueId)) {
-          userLeaguesMap.set(leagueId, 0);
-        }
-
-        // Increment the user's points by 1
-        userLeaguesMap.set(leagueId, userLeaguesMap.get(leagueId) + 1);
+        // Update the standingPointsCalculated flag
+        guess.standingPointsCalculated = true;
+        await guess.save();
       }
     }
 
-    const updatedStandings = []
-    for (const [userId, userLeaguesMap] of guessPointsMap.entries()) {
-      for (const [leagueId, points] of userLeaguesMap.entries()) {
-        const updatedStanding = await Standing.findOneAndUpdate(
-          {
-            'standings.user': mongoose.Types.ObjectId(userId),
-            league: mongoose.Types.ObjectId(leagueId),
-          },
-          {
-            $inc: {
-              'standings.$.points': points,
-            },
-          },
-          { new: true } // Return the updated document
-        );
-        updatedStandings.push(updatedStanding);
+    // Update the standings for all users in the league
+    const updatedStandings = [];
+    for (const userId in guessPoints) {
+      const points = guessPoints[userId];
+      const standing = await Standing.findOne({ 'standings.user': userId, league: leagueId });
+      if (standing) {
+        const userStanding = standing.standings.find(standing => standing.user.toString() === userId);
+        if (userStanding) {
+          userStanding.points += points;
+          await standing.save();
+          updatedStandings.push(standing);
+        }
       }
     }
+
     res.status(200).json({ message: 'Standings updated', standings: updatedStandings });
   } catch (error) {
     console.error('Error updating guess points:', error);
