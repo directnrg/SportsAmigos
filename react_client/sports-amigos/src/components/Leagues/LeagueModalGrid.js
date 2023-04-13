@@ -13,14 +13,25 @@ import axios from 'axios';
 
 
 export default function LeagueModalGrid({modalProps}) {
-  const [weekGames, setWeekGames] = useState([]);
+
+  //Context
   const {loginData} = useContext(MyContext);
 
+  //Constants 
+  const gamesCurrentWeekUrl = 'http://localhost:3100/api/games-of-the-week';
+  const gamesLastWeekUrl = 'http://localhost:3100/api/games-of-the-last-week';
 
-  const navigate = useNavigate();
+  //States
+  const [weekGames, setWeekGames] = useState([]);
   const [isGuessesDisabled, setIsGuessesDisabled] = useState(false);
-  
+
+
+  //Hooks 
+  const navigate = useNavigate();
+
+  //Callbacks
   const onCheckStandings = (guessProps)=>{
+    //Moving to a new page
     console.log("Modal props onCheckStandings", modalProps)
 
     console.log('/standings/'+modalProps.league._id);
@@ -41,6 +52,7 @@ export default function LeagueModalGrid({modalProps}) {
   }
   
   const onCreateGuesses = (guessProps)=>{
+    //Moving to a new page
     console.log("Modal props onCreateGuesses", modalProps)
 
     //parsing and getting the ids of the users as an array from modalProps
@@ -60,8 +72,7 @@ export default function LeagueModalGrid({modalProps}) {
     navigate('/create-guesses/'+modalProps.league._id)
   }
 
-  const gamesCurrentWeekUrl = 'http://localhost:3100/api/games-of-the-week';
-  const gamesLastWeekUrl = 'http://localhost:3100/api/games-of-the-last-week';
+  
 
   const onRefreshGuessPoints = () => {
     axios
@@ -108,7 +119,6 @@ export default function LeagueModalGrid({modalProps}) {
           </Row>
 
           <Row>
-           { /*<Col xs={6} md={4}>  <h2 className='text-center'><Badge bg="dark">   Games </Badge></h2>  </Col>*/}
            <h2 className='text-center'><Badge bg="dark">   Games </Badge></h2>
         
           </Row>

@@ -21,14 +21,21 @@ import { httpService } from "../services/service";
 import { validation } from "../services/validation";
 
 export default function LoginModal({ modalProps }) {
+  //Constants
   const URL = "http://localhost:3100/api";
+
+  //States
 
   const [loginErrorMsgs, setLoginErrorMsg] = useState([]);
 
+  //Hooks
   const emailRef = useRef();
   const passwordRef = useRef();
   const { loginData, setLoginData } = useContext(MyContext);
 
+  //Callbacks
+
+  //validate form, display errors and send data to backend
   const onLogin = async () => {
     console.log("Login Clicked");
     let canPost = true;
@@ -39,6 +46,7 @@ export default function LoginModal({ modalProps }) {
     console.log("email:", email);
     console.log("password:", password);
 
+    //Validating
     if (!validation.password.test(password)) {
       valErrors.push(
         "The password should not be null,  contain any spaces, and should have at least one number and special character"
@@ -52,8 +60,6 @@ export default function LoginModal({ modalProps }) {
       canPost = false;
     }
 
-    
-
     console.log(canPost);
 
     if (!sessionStorage.getItem("login")) {
@@ -61,12 +67,11 @@ export default function LoginModal({ modalProps }) {
         email: email,
         password: password,
       };
+
+      //calling API
       try {
         console.log("Authenticating");
         const res = await httpService.post(URL + "/auth", user);
-        // console.log("Res Response", res.response);
-        // console.log("Res msg: ", res.response.data.msg);
-        // console.log("Token:", res.token);
 
         if (res.response?.status !== 400) {
           //Storing token in session storage
@@ -78,6 +83,7 @@ export default function LoginModal({ modalProps }) {
             })
           );
 
+          //Decoding and storing jwt token
           const token = JSON.parse(sessionStorage.getItem("login"));
           const decodedToken = jwt(token.token);
           const userId = decodedToken.user.id;
@@ -93,8 +99,8 @@ export default function LoginModal({ modalProps }) {
       }
     }
 
+    //Set error state
     setLoginErrorMsg(valErrors);
-  
   };
   useEffect(() => {
     console.log("Modal props", modalProps);
@@ -102,6 +108,7 @@ export default function LoginModal({ modalProps }) {
   });
 
   useEffect(() => {
+    //Setting errors to null each time the component is rendered the first time
     setLoginErrorMsg([]);
   }, []);
   return (
@@ -136,13 +143,15 @@ export default function LoginModal({ modalProps }) {
       <Modal.Footer>
         <Button onClick={modalProps.onHide}>Cancel</Button>
         <Button onClick={onLogin}>Login</Button>
-        
-        {loginErrorMsgs.length > 0? loginErrorMsgs.map((msg, index) => (
-              <Alert key={index} variant={"danger"}>{" "} {msg}</Alert>
+
+        {loginErrorMsgs.length > 0
+          ? loginErrorMsgs.map((msg, index) => (
+              <Alert key={index} variant={"danger"}>
+                {" "}
+                {msg}
+              </Alert>
             ))
           : null}
-        
-        
       </Modal.Footer>
     </Modal>
   );

@@ -13,10 +13,14 @@ import { Badge } from 'react-bootstrap';
 
 export default function Standings() {
 
+    //Constants 
+    const URL = 'http://localhost:3100/api/standing/league/'
+
+    //States
     const [standings, setStandings] = useState({})
     const { id } = useParams();
 
-    const URL = 'http://localhost:3100/api/standing/league/'
+    //Callbacks
     const getStandings = async () => {
         try {
             const token = JSON.parse(sessionStorage.getItem('login'))

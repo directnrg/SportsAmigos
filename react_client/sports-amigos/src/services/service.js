@@ -1,6 +1,7 @@
 import {React} from 'react';
 import axios from 'axios';
 
+//using get axios
 const get = async (path, config)=>{
     try{
         const {data} = await axios.get(path,config)
@@ -11,6 +12,7 @@ const get = async (path, config)=>{
    
 }
 
+//Using post axios
 const post = async (path, obj, config)=>{
     try{
         const {data} = await axios.post(path, obj,config)

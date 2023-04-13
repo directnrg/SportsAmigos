@@ -8,7 +8,6 @@ import Home from './components/Home';
 import SignUp from './components/SignUp';
 import HowToPlay from './components/Guides/HowToPlay';
 import Button from 'react-bootstrap/Button';
-import Login from './components/Login';
 import Footer from './components/Footer';
 import LeagueList from './components/Leagues/LeagueList';
 import MyLeagues from './components/Leagues/MyLeagues';
@@ -25,34 +24,38 @@ export const MyContext = createContext()
 
 function SportsAmigosApp() {
 
+  //Hooks and states
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [loginModalShow, setLoginModalShow] = useState(false);
   const [loginData, setLoginData] = useState({login:false});
   const [loggedId, setLoggedId] = useState({});
+
+
+  //Context props
   const modalProps = {
     show: loginModalShow,
     onHide: () => setLoginModalShow(false),
   }
 
-  const loginToggle = () => {
-    setIsLoggedIn(!isLoggedIn)
+  //Callbacks and methods
 
-  }
-
+  //Open modal onLogin
   const onLogin = () => {
     setLoginModalShow(true)
 
   }
 
+  //Reset states on logout
   const onLogout=()=>{
     sessionStorage.clear();
     setLoginData({login:false});
 
   }
 
+  //Runs once when component is rendered first time
   useEffect(() => {
-    document.title = 'Sports Pool';
-    if(sessionStorage.getItem("login")!==null){
+    document.title = 'Sports Pool'; //Changing page title
+    if(sessionStorage.getItem("login")!==null){ //checking if jwt exist and set state's context
       
       const token = JSON.parse(sessionStorage.getItem("login"));
       const decodedToken = jwt(token.token);
@@ -99,7 +102,6 @@ function SportsAmigosApp() {
               <Route path="sign-up" element={<SignUp />} />
               <Route path="/guides/" element={<HowToPlay />} />
               <Route path="/guides/article/:id" element={<Article />} />
-              <Route path="/log-in" element={<Login />} />
               <Route path="/league-list" element={<LeagueList />} />
               <Route path="/standings/:id" element={<Standings />} />
               <Route path="/my-leagues" element={<MyLeagues />} />
@@ -119,6 +121,8 @@ function SportsAmigosApp() {
     );
 
   }
+
+  //Display if the user is not logged in
   else {
     return (
 
@@ -150,7 +154,7 @@ function SportsAmigosApp() {
             <Route path="sign-up" element={<SignUp />} />
             <Route path="/guides/" element={<HowToPlay />} />
             <Route path="/guides/article/:id" element={<Article />} />
-            <Route path="/log-in" element={<Login />} />
+            
 
             {/*Add the route to your component if necessary */}
           </Routes>
